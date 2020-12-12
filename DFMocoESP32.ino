@@ -1,6 +1,5 @@
 #define DFMOCO_VERSION 1
 #define DFMOCO_VERSION_STRING "1.4.0"
-#include "BluetoothSerial.h"
 
 /*
   DFMoco version 1.4.0
@@ -125,6 +124,7 @@
   #include "CurieTimerOne.h"
 #elif defined(ESP32)
   #define BOARD_ESP32 1
+  #include "BluetoothSerial.h"
 #else
   #error Cannot identify board
 #endif
@@ -535,10 +535,10 @@ void setup()
   #if defined(BOARD_ESP32)
   pinMode(SERIAL_BLUETOOTH_PIN, INPUT);
   if (digitalRead(SERIAL_BLUETOOTH_PIN)) {
+    SERIAL_DEVICE_BT.begin("DFMoCo");
     SERIAL_DEVICE.print("Bluetooth Mode");
     dualSerial.serialBluetoothEnabled = true;
     serialBluetoothEnabled = true;
-    SERIAL_DEVICE_BT.begin("DFMoCo_BT");
   }
   #endif
   
