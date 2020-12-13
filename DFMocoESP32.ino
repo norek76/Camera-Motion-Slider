@@ -131,14 +131,14 @@
 
 // USER: if you want a kill switch, uncomment out the next line by removing the // characters
 #if defined(BOARD_ESP32)
-  //#define KILL_SWITCH_INTERRUPT 34
+  #define KILL_SWITCH_INTERRUPT 26
 #else
   //#define KILL_SWITCH_INTERRUPT 0
 #endif
 
 #define SERIAL_DEVICE Serial
 #if defined(BOARD_ESP32)
-  #define SERIAL_BLUETOOTH_PIN 35
+  #define SERIAL_BLUETOOTH_PIN 25
   #define SERIAL_DEVICE_BT SerialBT
 #endif
 
@@ -247,10 +247,10 @@
   #define MOTOR0_STEP_PIN  16
   
   #define MOTOR1_STEP_PORT 0
-  #define MOTOR1_STEP_PIN  22
+  #define MOTOR1_STEP_PIN  18
 
   #define MOTOR2_STEP_PORT 0
-  #define MOTOR2_STEP_PIN  25
+  #define MOTOR2_STEP_PIN  22
 
   #define MOTOR3_STEP_PORT 0
   #define MOTOR3_STEP_PIN  32
@@ -467,21 +467,12 @@ Motor motors[MOTOR_COUNT];
 hw_timer_t * timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 boolean serialBluetoothEnabled = false;
-  #ifdef KILL_SWITCH_INTERRUPT
-portMUX_TYPE killswitchMux = portMUX_INITIALIZER_UNLOCKED;
-  #endif
 #endif
 
 #ifdef KILL_SWITCH_INTERRUPT
 void killSwitch()
 {
-  #if defined(BOARD_ESP32)
-  portENTER_CRITICAL_ISR(&killswitchMux);
-  #endif
-  hardStopRequested = true;
-  #if defined(BOARD_ESP32)
-  portEXIT_CRITICAL_ISR(&killswitchMux);
-  #endif
+    hardStopRequested = true;
 }
 #endif
 
@@ -533,7 +524,15 @@ void setup()
   SERIAL_DEVICE.begin(57600);
 
   #if defined(BOARD_ESP32)
-  pinMode(SERIAL_BLUETOOTH_PIN, INPUT);
+    #ifdef KILL_SWITCH_INTERRUPT
+      pinMode(KILL_SWITCH_INTERRUPT, INPUT_PULLUP);
+    #endif
+  pinMode(SERIAL_BLUETOOTH_PIN, INPUT_PULLDOWN);
+  
+  bool a = digitalRead(KILL_SWITCH_INTERRUPT);
+  Serial.print("ENDSWITCH");
+  Serial.print(a);
+  
   if (digitalRead(SERIAL_BLUETOOTH_PIN)) {
     SERIAL_DEVICE_BT.begin("DFMoCo");
     SERIAL_DEVICE.print("Bluetooth Mode");
@@ -549,17 +548,14 @@ void setup()
   sendPositionCounter = 10;
   nextMoveLoaded = false;
   hardStopRequested = false;
-
+  
   for (int i = 0; i < 32; i++)
     txBuf[i] = 0;
   
   txBufPtr = txBuf;
   
   #ifdef KILL_SWITCH_INTERRUPT
-    #if defined(BOARD_ESP32)  
-    pinMode(KILL_SWITCH_INTERRUPT, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(KILL_SWITCH_INTERRUPT), killSwitch, CHANGE);
-    #else
+    #if !defined(BOARD_ESP32)
     attachInterrupt(KILL_SWITCH_INTERRUPT, killSwitch, CHANGE);
     #endif
   #endif
@@ -924,7 +920,7 @@ void loop()
 void updateMotorVelocities()
 {
   // process hard stop interrupt request
-  if (hardStopRequested)
+  if (hardStopRequested || !digitalRead(KILL_SWITCH_INTERRUPT))
   {
     hardStopRequested = 0;
     hardStop();

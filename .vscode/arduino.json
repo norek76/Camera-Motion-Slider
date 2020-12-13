@@ -1,0 +1,6 @@
+{
+    "board": "esp32:esp32:firebeetle32",
+    "configuration": "FlashFreq=80,UploadSpeed=921600",
+    "sketch": "DFMocoESP32.ino",
+    "port": "COM2"
+}
