@@ -528,11 +528,7 @@ void setup()
       pinMode(KILL_SWITCH_INTERRUPT, INPUT_PULLUP);
     #endif
   pinMode(SERIAL_BLUETOOTH_PIN, INPUT_PULLDOWN);
-  
-  bool a = digitalRead(KILL_SWITCH_INTERRUPT);
-  Serial.print("ENDSWITCH");
-  Serial.print(a);
-  
+    
   if (digitalRead(SERIAL_BLUETOOTH_PIN)) {
     SERIAL_DEVICE_BT.begin("DFMoCo");
     SERIAL_DEVICE.print("Bluetooth Mode");
