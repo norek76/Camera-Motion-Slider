@@ -166,7 +166,10 @@
 #define VELOCITY_INC(maxrate) (max(1.0f, maxrate / 70.0f))
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
-#define MAX_VELOCITY 20000
+#define MAX_VELOCITY 5000
+#define MIN_VELOCITY 10
+#define MAX_ACCELERATION 2 * MAX_VELOCITY
+#define MIN_ACCELERATION MIN_VELOCITY
 
 // setup step and direction pins
 #if defined(BOARD_101)
@@ -305,6 +308,8 @@ char *txBufPtr;
 #define CMD_JM         70 // jog motor
 #define CMD_IM         71 // inch motor
 
+#define CMD_AC         80 // acceleration
+
 
 #define MSG_HI 01
 #define MSG_MM 02
@@ -317,7 +322,9 @@ char *txBufPtr;
 #define MSG_GO 11
 #define MSG_JM 12
 #define MSG_IM 13
+#define MSG_AC 14
 
+void stopMotor(int motorIndex, bool hardStop = false);
 
 struct UserCmd
 {
@@ -592,7 +599,8 @@ void setup()
     motors[i].nextMotorMoveSteps = 0;
     motors[i].nextMotorMoveSpeed = 0;
     
-    setPulsesPerSecond(i, 5000);
+    setPulsesPerSecond(i, MAX_VELOCITY);
+    setMaxAccelerationPerSecond(i, MAX_ACCELERATION);
   }
 
 
@@ -986,12 +994,25 @@ void updateMotorVelocities()
 /*
  * Set up the axis for pulses per second (approximate)
  */
+void setMaxAccelerationPerSecond(int motorIndex, uint16_t accelerationPerSecond)
+{
+  if (accelerationPerSecond > MAX_ACCELERATION)
+    accelerationPerSecond = MAX_ACCELERATION;
+  if (accelerationPerSecond < MIN_ACCELERATION)
+    accelerationPerSecond = MIN_ACCELERATION;
+    
+  motors[motorIndex].maxAcceleration = accelerationPerSecond;  
+}
+
+/*
+ * Set up the axis for pulses per second (approximate)
+ */
 void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond)
 {
   if (pulsesPerSecond > MAX_VELOCITY)
     pulsesPerSecond = MAX_VELOCITY;
-  if (pulsesPerSecond < 100)
-    pulsesPerSecond = 100;
+  if (pulsesPerSecond < MIN_VELOCITY)
+    pulsesPerSecond = MIN_VELOCITY;
     
   motors[motorIndex].maxVelocity = pulsesPerSecond;
   motors[motorIndex].maxAcceleration = pulsesPerSecond * 0.5f;  
@@ -1016,11 +1037,11 @@ void hardStop()
   // set the destination to the current location, so they won't move any more
   for (int i = 0; i < MOTOR_COUNT; i++)
   {
-    stopMotor(i);
+    stopMotor(i, true);
   }
 }
 
-void stopMotor(int motorIndex)
+void stopMotor(int motorIndex, bool hardStop)
 {
   int32_t delta = (motors[motorIndex].destination - motors[motorIndex].position);
   if (!delta)
@@ -1038,6 +1059,9 @@ void stopMotor(int motorIndex)
 
   float v = VELOCITY_CONVERSION_FACTOR * motors[motorIndex].nextMotorMoveSpeed;
   float maxA = motor->maxAcceleration;
+  if (hardStop) {
+    maxA = MAX_ACCELERATION;
+  }
   float maxV = motor->maxVelocity;
 
   if (v > maxV)
@@ -1190,6 +1214,11 @@ byte processUserMessage(char data)
     else if (lastUserData == 'p' && data == 'r')
     {
       userCmd.command = CMD_PR;
+      msgState = MSG_STATE_DATA;
+    }
+    else if (lastUserData == 'a' && data == 'c')
+    {
+      userCmd.command = CMD_AC;
       msgState = MSG_STATE_DATA;
     }
     else if (lastUserData == 'b' && data == 'f')
@@ -1357,7 +1386,7 @@ void processSerialCommand()
           parseError = (userCmd.argCount != 1 || !isValidMotor(motor));
           if (!parseError)
           {
-            stopMotor(motor);
+            stopMotor(motor, true);
             sendMessage(MSG_SM, motor);
             sendMessage(MSG_MP, motor);
           }
@@ -1378,6 +1407,15 @@ void processSerialCommand()
           {
             setPulsesPerSecond(motor, (uint16_t)userCmd.args[1]);
             sendMessage(MSG_PR, motor);
+          }
+          break;
+
+        case CMD_AC:
+          parseError = (userCmd.argCount != 2 || !isValidMotor(motor));
+          if (!parseError)
+          {
+            setMaxAccelerationPerSecond(motor, (uint16_t)userCmd.args[1]);
+            sendMessage(MSG_AC, motor);
           }
           break;
 
@@ -1551,6 +1589,13 @@ void sendMessage(byte msg, byte motorIndex)
       dualSerial.print((uint16_t)motors[motorIndex].maxVelocity);
       dualSerial.print("\r\n");
       break;
+    case MSG_AC:
+      dualSerial.print("ac ");
+      dualSerial.print(motorIndex + 1);
+      dualSerial.print(" ");
+      dualSerial.print((uint16_t)motors[motorIndex].maxAcceleration);
+      dualSerial.print("\r\n");
+      break;
     case MSG_SM:
       dualSerial.print("sm ");
       dualSerial.print(motorIndex + 1);
@@ -1614,6 +1659,8 @@ void nextMessage()
         break;
       case MSG_PR:
         sprintf(txBuf, "pr %d %u\r\n", motorIndex + 1, (uint16_t)motors[motorIndex].maxVelocity);
+      case MSG_AC:
+        sprintf(txBuf, "ac %d %u\r\n", motorIndex + 1, (uint16_t)motors[motorIndex].maxAcceleration);
         break;
       case MSG_SM:
         sprintf(txBuf, "sm %d\r\n", motorIndex + 1);
