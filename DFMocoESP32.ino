@@ -1,8 +1,8 @@
 #define DFMOCO_VERSION 1
-#define DFMOCO_VERSION_STRING "1.4.0"
+#define DFMOCO_VERSION_STRING "1.4.1"
 
 /*
-  DFMoco version 1.4.0
+  DFMoco version 1.4.1
   
   Multi-axis motion control.
   For use with the Arc motion control system in Dragonframe 4.
@@ -12,6 +12,7 @@
   Control up to eight axes with a Mega or Mega 2560.
 
   Version History
+  Version 1.4.1 Support Acceleration
   Version 1.4.0 ESP32-WROOM-32 support with Serial Bluetooth Classic
   Version 1.3.1 Report if go-motion speed cannot be reached.
   Version 1.3.0 Arduino 101 support. Remove non-Arduino support (chipKit, Maple).
