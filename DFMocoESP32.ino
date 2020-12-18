@@ -113,8 +113,6 @@
         PIN  29   direction
 */
 
-#define ESP32
-
 // detect board type
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   #define BOARD_MEGA 1
@@ -168,7 +166,7 @@
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
 #define MAX_VELOCITY 5000
-#define MIN_VELOCITY 1
+#define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
 
@@ -682,13 +680,11 @@ void setup()
    CurieTimerOne.start(25, &updateStepDirection);
 
  #elif defined(BOARD_ESP32)
-
    timer = timerBegin(0, 80, true);                
    timerAttachInterrupt(timer, &updateStepDirection, true);
    timerAlarmWrite(timer, 25, true);           
    timerAlarmEnable(timer);
-
-  #endif
+ #endif
   
 }
 
@@ -927,9 +923,14 @@ void loop()
 void updateMotorVelocities()
 {
   // process hard stop interrupt request
-  if (hardStopRequested || !digitalRead(KILL_SWITCH_INTERRUPT))
+#if defined(BOARD_ESP32)
+  if (!digitalRead(KILL_SWITCH_INTERRUPT))
+  {
+#else
+  if (hardStopRequested)
   {
     hardStopRequested = 0;
+#endif
     hardStop();
   }
   
@@ -1064,9 +1065,6 @@ void stopMotor(int motorIndex, bool hardStop)
 
   float v = VELOCITY_CONVERSION_FACTOR * motors[motorIndex].nextMotorMoveSpeed;
   float maxA = motor->maxAcceleration;
-  if (maxA < motor->maxVelocity * 0.5f) {
-    maxA = motor->maxVelocity * 0.5f;
-  }
   if (hardStop) {
     maxA = MAX_ACCELERATION * 3;
   }
