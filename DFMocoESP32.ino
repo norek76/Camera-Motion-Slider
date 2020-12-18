@@ -170,7 +170,7 @@
 #define MAX_VELOCITY 5000
 #define MIN_VELOCITY 1
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
-#define MIN_ACCELERATION MIN_VELOCITY
+#define MIN_ACCELERATION 0.1f * MAX_VELOCITY
 
 // setup step and direction pins
 #if defined(BOARD_101)
