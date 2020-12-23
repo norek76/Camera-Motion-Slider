@@ -49,11 +49,11 @@
         PIN  16   step
         PIN  17   direction
   channel 2
+        PIN  18   step
+        PIN  19   direction
+  channel 3
         PIN  22   step
         PIN  23   direction
-  channel 3
-        PIN  25   step
-        PIN  26   direction
   channel 4
         PIN  32   step
         PIN  33   direction
