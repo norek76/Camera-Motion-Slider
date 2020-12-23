@@ -129,15 +129,10 @@
 #endif
 
 // USER: if you want a kill switch, uncomment out the next line by removing the // characters
-#if defined(BOARD_ESP32)
-  #define KILL_SWITCH_INTERRUPT 26
-#else
-  //#define KILL_SWITCH_INTERRUPT 0
-#endif
+//#define KILL_SWITCH_INTERRUPT 0
 
 #define SERIAL_DEVICE Serial
 #if defined(BOARD_ESP32)
-  #define SERIAL_BLUETOOTH_PIN 25
   #define SERIAL_DEVICE_BT SerialBT
 #endif
 
@@ -165,7 +160,7 @@
 #define VELOCITY_INC(maxrate) (max(1.0f, maxrate / 70.0f))
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
-#define MAX_VELOCITY 5000
+#define MAX_VELOCITY 6000
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
@@ -478,7 +473,7 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 boolean serialBluetoothEnabled = false;
 #endif
 
-#ifdef KILL_SWITCH_INTERRUPT
+#ifdef KILL_SWITCH_INTERRUPT && !defined(BOARD_ESP32)
 void killSwitch()
 {
     hardStopRequested = true;
@@ -529,6 +524,15 @@ int readSerial() {
  */
 void setup()
 {
+  pinMode(25, OUTPUT);
+  PIN_OFF(0, 25);
+  pinMode(14, OUTPUT);
+  PIN_ON(0, 14);
+  pinMode(27, OUTPUT);
+  PIN_ON(0, 27);
+  pinMode(26, OUTPUT);
+  PIN_ON(0, 26);
+  
   // setup serial connection
   SERIAL_DEVICE.begin(57600);
 
@@ -536,9 +540,8 @@ void setup()
     #ifdef KILL_SWITCH_INTERRUPT
       pinMode(KILL_SWITCH_INTERRUPT, INPUT_PULLUP);
     #endif
-  pinMode(SERIAL_BLUETOOTH_PIN, INPUT_PULLDOWN);
     
-  if (digitalRead(SERIAL_BLUETOOTH_PIN)) {
+  if (false) {
     SERIAL_DEVICE_BT.begin("DFMoCo");
     SERIAL_DEVICE.print("Bluetooth Mode");
     dualSerial.serialBluetoothEnabled = true;
@@ -923,7 +926,7 @@ void loop()
 void updateMotorVelocities()
 {
   // process hard stop interrupt request
-#if defined(BOARD_ESP32)
+#if defined(BOARD_ESP32) && KILL_SWITCH_INTERRUPT
   if (!digitalRead(KILL_SWITCH_INTERRUPT))
   {
 #else

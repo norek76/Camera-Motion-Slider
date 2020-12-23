@@ -14,10 +14,6 @@ Forked from Dragonframe DFMoCo v.1.3.1
 - channel 4
   - PIN  32   step
   - PIN  33   direction
-- END Switch (Low-Gnd)
-  - PIN  26
-- Serial Bluetooth ON (High-Vcc)/OFF (Low-Gnd)
-  - PIN  25
   
 ## Serial over USB / Bluetooth
 If you want to use Bluetooth Classic, you have to set Pin35 to HIGH(Vcc), after that you can connect any Serial Bluetooth Application to the Board. The name of the bluetooth device is _DFMoCo_BT_.
