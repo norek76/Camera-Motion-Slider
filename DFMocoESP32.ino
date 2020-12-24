@@ -1,6 +1,7 @@
 #define DFMOCO_VERSION 1
 #define DFMOCO_VERSION_STRING "1.4.1"
 
+#define ESP32
 /*
   DFMoco version 1.4.1
   
@@ -134,7 +135,12 @@
 #define SERIAL_DEVICE Serial
 #if defined(BOARD_ESP32)
   #define SERIAL_DEVICE_BT SerialBT
+  #define BLUETOOTH_LED_PIN 26
 #endif
+
+#define FOCUS_PIN 14
+#define SHUTTER_PIN 27
+#define ENABLE_PIN 25
 
 #if defined(BOARD_101) || defined(BOARD_ESP32)
   #define PIN_ON(port, pin)  { digitalWrite(pin, 1); }
@@ -160,7 +166,7 @@
 #define VELOCITY_INC(maxrate) (max(1.0f, maxrate / 70.0f))
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
-#define MAX_VELOCITY 6000
+#define MAX_VELOCITY 15000
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
@@ -305,6 +311,9 @@ char *txBufPtr;
 #define CMD_VE         80 // velocity 
 #define CMD_AC         81 // acceleration
 
+#define CMD_CF         90 // camera focus 
+#define CMD_CS         91 // camera shutter
+#define CMD_CI         92 // camera take image
 
 #define MSG_HI 01
 #define MSG_MM 02
@@ -468,6 +477,8 @@ int     goMoDelayTime;
 Motor motors[MOTOR_COUNT];
       
 #if defined(BOARD_ESP32)
+unsigned long lastBluetoothLedMillis = millis();
+bool lastBluetoothLedState = true;
 hw_timer_t * timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 boolean serialBluetoothEnabled = false;
@@ -519,20 +530,199 @@ int readSerial() {
 #endif 
 }
 
+#if defined(BOARD_ESP32)
+void bluetoothCallback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
+  if(event == ESP_SPP_SRV_OPEN_EVT) {
+    PIN_ON(0, BLUETOOTH_LED_PIN);
+    dualSerial.serialBluetoothEnabled = true;
+    serialBluetoothEnabled = true;
+  }
+  if (event == ESP_SPP_CLOSE_EVT) {
+    dualSerial.serialBluetoothEnabled = false;
+    serialBluetoothEnabled = false;
+    lastBluetoothLedState = false;
+    lastBluetoothLedMillis = millis();
+    PIN_OFF(0, BLUETOOTH_LED_PIN);
+  }
+}
+#endif
+
+
+#if defined(BOARD_101)
+void updateStepDirection(void)
+{
+#elif defined(BOARD_ESP32)
+void IRAM_ATTR updateStepDirection(void)
+{
+  portENTER_CRITICAL_ISR(&timerMux);
+#else
+ISR(TIMER1_OVF_vect)
+{
+#endif
+  toggleStep = !toggleStep;
+  
+  if (toggleStep)
+  {
+    // MOTOR 1
+    if (motorMoveSteps0)
+    {
+      uint16_t a = motorAccumulator0;
+      motorAccumulator0 += motorMoveSpeed0;
+      if (motorAccumulator0 < a)
+      {
+        motorMoveSteps0--;
+        
+        PIN_ON(MOTOR0_STEP_PORT, MOTOR0_STEP_PIN);
+      }
+    }
+
+    // MOTOR 2
+    if (motorMoveSteps1)
+    {
+      uint16_t a = motorAccumulator1;
+      motorAccumulator1 += motorMoveSpeed1;
+      if (motorAccumulator1 < a)
+      {
+        motorMoveSteps1--;
+        
+        PIN_ON(MOTOR1_STEP_PORT, MOTOR1_STEP_PIN);
+      }
+    }
+
+    // MOTOR 3
+    if (motorMoveSteps2)
+    {
+      uint16_t a = motorAccumulator2;
+      motorAccumulator2 += motorMoveSpeed2;
+      if (motorAccumulator2 < a)
+      {
+        motorMoveSteps2--;
+        
+        PIN_ON(MOTOR2_STEP_PORT, MOTOR2_STEP_PIN);
+      }
+    }
+
+    // MOTOR 4
+    if (motorMoveSteps3)
+    {
+      uint16_t a = motorAccumulator3;
+      motorAccumulator3 += motorMoveSpeed3;
+      if (motorAccumulator3 < a)
+      {
+        motorMoveSteps3--;
+        
+        PIN_ON(MOTOR3_STEP_PORT, MOTOR3_STEP_PIN);
+      }
+    }
+
+  #if MOTOR_COUNT > 4
+
+    // MOTOR 5
+    if (motorMoveSteps4)
+    {
+      uint16_t a = motorAccumulator4;
+      motorAccumulator4 += motorMoveSpeed4;
+      if (motorAccumulator4 < a)
+      {
+        motorMoveSteps4--;
+        
+        PIN_ON(MOTOR4_STEP_PORT, MOTOR4_STEP_PIN);
+      }
+    }
+
+    // MOTOR 6
+    if (motorMoveSteps5)
+    {
+      uint16_t a = motorAccumulator5;
+      motorAccumulator5 += motorMoveSpeed5;
+      if (motorAccumulator5 < a)
+      {
+        motorMoveSteps5--;
+        
+        PIN_ON(MOTOR5_STEP_PORT, MOTOR5_STEP_PIN);
+      }
+    }
+
+    // MOTOR 7
+    if (motorMoveSteps6)
+    {
+      uint16_t a = motorAccumulator6;
+      motorAccumulator6 += motorMoveSpeed6;
+      if (motorAccumulator6 < a)
+      {
+        motorMoveSteps6--;
+        
+        PIN_ON(MOTOR6_STEP_PORT, MOTOR6_STEP_PIN);
+      }
+    }
+
+    // MOTOR 8
+    if (motorMoveSteps7)
+    {
+      uint16_t a = motorAccumulator7;
+      motorAccumulator7 += motorMoveSpeed7;
+      if (motorAccumulator7 < a)
+      {
+        motorMoveSteps7--;
+        
+        PIN_ON(MOTOR7_STEP_PORT, MOTOR7_STEP_PIN);
+      }
+    }
+
+  #endif
+
+  }
+  else
+  {
+    velocityUpdateCounter++;
+    if (velocityUpdateCounter == VELOCITY_UPDATE_RATE)
+    {
+      velocityUpdateCounter = 0;
+      
+      if (sendPositionCounter)
+      {
+        sendPositionCounter--;
+      }
+      
+      for (int i = 0; i < MOTOR_COUNT; i++)
+      {
+        if (*motorMoveSpeed[i] && !motors[i].nextMotorMoveSpeed)
+        {
+          bitSet(sendPosition, i);
+        }
+
+        *motorMoveSteps[i] = motors[i].nextMotorMoveSteps;
+        *motorMoveSpeed[i] = motors[i].nextMotorMoveSpeed;
+        digitalWrite(motors[i].dirPin, motors[i].dir);
+
+        *motorAccumulator[i] = 65535;
+      }
+      nextMoveLoaded = false; // ready for new move
+    }
+    
+    PIN_OFF(MOTOR0_STEP_PORT, MOTOR0_STEP_PIN);
+    PIN_OFF(MOTOR1_STEP_PORT, MOTOR1_STEP_PIN);
+    PIN_OFF(MOTOR2_STEP_PORT, MOTOR2_STEP_PIN);
+    PIN_OFF(MOTOR3_STEP_PORT, MOTOR3_STEP_PIN);
+
+    #if MOTOR_COUNT > 4
+      PIN_OFF(MOTOR4_STEP_PORT, MOTOR4_STEP_PIN);
+      PIN_OFF(MOTOR5_STEP_PORT, MOTOR5_STEP_PIN);
+      PIN_OFF(MOTOR6_STEP_PORT, MOTOR6_STEP_PIN);
+      PIN_OFF(MOTOR7_STEP_PORT, MOTOR7_STEP_PIN);
+    #endif
+  }
+#if defined(BOARD_ESP32)
+  portEXIT_CRITICAL_ISR(&timerMux);
+#endif
+}
+
+
 /*
  * setup() gets called once, at the start of the program.
  */
 void setup()
-{
-  pinMode(25, OUTPUT);
-  PIN_OFF(0, 25);
-  pinMode(14, OUTPUT);
-  PIN_ON(0, 14);
-  pinMode(27, OUTPUT);
-  PIN_ON(0, 27);
-  pinMode(26, OUTPUT);
-  PIN_ON(0, 26);
-  
+{  
   // setup serial connection
   SERIAL_DEVICE.begin(57600);
 
@@ -541,13 +731,31 @@ void setup()
       pinMode(KILL_SWITCH_INTERRUPT, INPUT_PULLUP);
     #endif
     
-  if (false) {
-    SERIAL_DEVICE_BT.begin("DFMoCo");
-    SERIAL_DEVICE.print("Bluetooth Mode");
-    dualSerial.serialBluetoothEnabled = true;
-    serialBluetoothEnabled = true;
-  }
+    if(SERIAL_DEVICE_BT.begin("DFMoCo")){
+      SERIAL_DEVICE_BT.register_callback(bluetoothCallback);
+    }
   #endif
+
+  #if defined(FOCUS_PIN)
+  pinMode(FOCUS_PIN, OUTPUT);
+  PIN_OFF(0, FOCUS_PIN);
+  #endif
+  
+  #if defined(SHUTTER_PIN)
+  pinMode(SHUTTER_PIN, OUTPUT);
+  PIN_OFF(0, SHUTTER_PIN);
+  #endif
+  
+  #if defined(ENABLE_PIN)
+  pinMode(ENABLE_PIN, OUTPUT);
+  PIN_OFF(0, ENABLE_PIN);
+  #endif
+  
+  #if defined(BLUETOOTH_LED_PIN)
+  pinMode(BLUETOOTH_LED_PIN, OUTPUT);  
+  PIN_ON(0, BLUETOOTH_LED_PIN);
+  #endif
+
   
   goMoReady = false;
   lastUserData = 0;
@@ -691,232 +899,72 @@ void setup()
   
 }
 
-#if defined(BOARD_101)
-void updateStepDirection(void)
-{
-#elif defined(BOARD_ESP32)
-void updateStepDirection(void)
-{
-   portENTER_CRITICAL_ISR(&timerMux);
-#else
-ISR(TIMER1_OVF_vect)
-{
-#endif
-
- toggleStep = !toggleStep;
- 
- if (toggleStep)
- {
-   // MOTOR 1
-   if (motorMoveSteps0)
-   {
-     uint16_t a = motorAccumulator0;
-     motorAccumulator0 += motorMoveSpeed0;
-     if (motorAccumulator0 < a)
-     {
-       motorMoveSteps0--;
-       
-       PIN_ON(MOTOR0_STEP_PORT, MOTOR0_STEP_PIN);
-     }
-   }
-
-   // MOTOR 2
-   if (motorMoveSteps1)
-   {
-     uint16_t a = motorAccumulator1;
-     motorAccumulator1 += motorMoveSpeed1;
-     if (motorAccumulator1 < a)
-     {
-       motorMoveSteps1--;
-       
-       PIN_ON(MOTOR1_STEP_PORT, MOTOR1_STEP_PIN);
-     }
-   }
-
-   // MOTOR 3
-   if (motorMoveSteps2)
-   {
-     uint16_t a = motorAccumulator2;
-     motorAccumulator2 += motorMoveSpeed2;
-     if (motorAccumulator2 < a)
-     {
-       motorMoveSteps2--;
-       
-       PIN_ON(MOTOR2_STEP_PORT, MOTOR2_STEP_PIN);
-     }
-   }
-
-   // MOTOR 4
-   if (motorMoveSteps3)
-   {
-     uint16_t a = motorAccumulator3;
-     motorAccumulator3 += motorMoveSpeed3;
-     if (motorAccumulator3 < a)
-     {
-       motorMoveSteps3--;
-       
-       PIN_ON(MOTOR3_STEP_PORT, MOTOR3_STEP_PIN);
-     }
-   }
-
-#if MOTOR_COUNT > 4
-
-   // MOTOR 5
-   if (motorMoveSteps4)
-   {
-     uint16_t a = motorAccumulator4;
-     motorAccumulator4 += motorMoveSpeed4;
-     if (motorAccumulator4 < a)
-     {
-       motorMoveSteps4--;
-       
-       PIN_ON(MOTOR4_STEP_PORT, MOTOR4_STEP_PIN);
-     }
-   }
-
-   // MOTOR 6
-   if (motorMoveSteps5)
-   {
-     uint16_t a = motorAccumulator5;
-     motorAccumulator5 += motorMoveSpeed5;
-     if (motorAccumulator5 < a)
-     {
-       motorMoveSteps5--;
-       
-       PIN_ON(MOTOR5_STEP_PORT, MOTOR5_STEP_PIN);
-     }
-   }
-
-   // MOTOR 7
-   if (motorMoveSteps6)
-   {
-     uint16_t a = motorAccumulator6;
-     motorAccumulator6 += motorMoveSpeed6;
-     if (motorAccumulator6 < a)
-     {
-       motorMoveSteps6--;
-       
-       PIN_ON(MOTOR6_STEP_PORT, MOTOR6_STEP_PIN);
-     }
-   }
-
-   // MOTOR 8
-   if (motorMoveSteps7)
-   {
-     uint16_t a = motorAccumulator7;
-     motorAccumulator7 += motorMoveSpeed7;
-     if (motorAccumulator7 < a)
-     {
-       motorMoveSteps7--;
-       
-       PIN_ON(MOTOR7_STEP_PORT, MOTOR7_STEP_PIN);
-     }
-   }
-
-#endif
-
- }
- else
- {
-   velocityUpdateCounter++;
-   if (velocityUpdateCounter == VELOCITY_UPDATE_RATE)
-   {
-     velocityUpdateCounter = 0;
-     
-     if (sendPositionCounter)
-     {
-       sendPositionCounter--;
-     }
-     
-     for (int i = 0; i < MOTOR_COUNT; i++)
-     {
-       if (*motorMoveSpeed[i] && !motors[i].nextMotorMoveSpeed)
-       {
-         bitSet(sendPosition, i);
-       }
-
-       *motorMoveSteps[i] = motors[i].nextMotorMoveSteps;
-       *motorMoveSpeed[i] = motors[i].nextMotorMoveSpeed;
-       digitalWrite(motors[i].dirPin, motors[i].dir);
-
-       *motorAccumulator[i] = 65535;
-     }
-     nextMoveLoaded = false; // ready for new move
-   }
-   
-   PIN_OFF(MOTOR0_STEP_PORT, MOTOR0_STEP_PIN);
-   PIN_OFF(MOTOR1_STEP_PORT, MOTOR1_STEP_PIN);
-   PIN_OFF(MOTOR2_STEP_PORT, MOTOR2_STEP_PIN);
-   PIN_OFF(MOTOR3_STEP_PORT, MOTOR3_STEP_PIN);
-
-   #if MOTOR_COUNT > 4
-     PIN_OFF(MOTOR4_STEP_PORT, MOTOR4_STEP_PIN);
-     PIN_OFF(MOTOR5_STEP_PORT, MOTOR5_STEP_PIN);
-     PIN_OFF(MOTOR6_STEP_PORT, MOTOR6_STEP_PIN);
-     PIN_OFF(MOTOR7_STEP_PORT, MOTOR7_STEP_PIN);
-   #endif
- }
-#if defined(BOARD_ESP32)
-  portEXIT_CRITICAL_ISR(&timerMux);
-#endif
-}
 
 /*
  * For stepper-motor timing, every clock cycle counts.
  */
 void loop()
 {
- int32_t *ramValues = (int32_t *)malloc(sizeof(int32_t) * MOTOR_COUNT);
- int32_t *ramNotValues = (int32_t *)malloc(sizeof(int32_t) * MOTOR_COUNT);
+  int32_t *ramValues = (int32_t *)malloc(sizeof(int32_t) * MOTOR_COUNT);
+  int32_t *ramNotValues = (int32_t *)malloc(sizeof(int32_t) * MOTOR_COUNT);
 
- for (int i = 0; i < MOTOR_COUNT; i++)
- { 
-   if (ramValues[i] == ~ramNotValues[i])
-   {
-     motors[i].position = motors[i].destination = ramValues[i];
-   }
- }  
+  for (int i = 0; i < MOTOR_COUNT; i++)
+  { 
+    if (ramValues[i] == ~ramNotValues[i])
+    {
+      motors[i].position = motors[i].destination = ramValues[i];
+    }
+  }  
 
- while (true)
- {
-   if (!nextMoveLoaded)
-     updateMotorVelocities();
-   
-   processSerialCommand();
-   
-   // check if we have serial output
-   #if defined(BOARD_UNO) || defined(BOARD_MEGA)
-   if (*txBufPtr)
-   {
-     if ((TX_UCSRA) & (1 << TX_UDRE))
-     {
-       TX_UDR = *txBufPtr++;
- 
-       // we are done with this msg, get the next one
-       if (!*txBufPtr)
-         nextMessage();
-     }
-   }
-   #endif
+  while (true)
+  {
+    if (!serialBluetoothEnabled && ((millis() - lastBluetoothLedMillis) > 600)) {
+      if (lastBluetoothLedState) {
+        PIN_OFF(0, BLUETOOTH_LED_PIN);
+      } else {      
+        PIN_ON(0, BLUETOOTH_LED_PIN);
+      }
+      lastBluetoothLedState = !lastBluetoothLedState;
+      lastBluetoothLedMillis = millis();
+    }
+    if (!nextMoveLoaded)
+      updateMotorVelocities();
+    
+    processSerialCommand();
+    
+    // check if we have serial output
+    #if defined(BOARD_UNO) || defined(BOARD_MEGA)
+    if (*txBufPtr)
+    {
+      if ((TX_UCSRA) & (1 << TX_UDRE))
+      {
+        TX_UDR = *txBufPtr++;
+  
+        // we are done with this msg, get the next one
+        if (!*txBufPtr)
+          nextMessage();
+      }
+    }
+    #endif
 
-   if (!sendPositionCounter)
-   {
-     sendPositionCounter = 20;
+    if (!sendPositionCounter)
+    {
+      sendPositionCounter = 20;
 
-     byte i;
-     for (i = 0; i < MOTOR_COUNT; i++)
-     {
-       if (bitRead(motorMoving, i) || bitRead(sendPosition, i))
-       {
-         sendMessage(MSG_MP, i);
-         ramValues[i] = motors[i].position;
-         ramNotValues[i] = ~motors[i].position;
-       }
-     }
+      byte i;
+      for (i = 0; i < MOTOR_COUNT; i++)
+      {
+        if (bitRead(motorMoving, i) || bitRead(sendPosition, i))
+        {
+          sendMessage(MSG_MP, i);
+          ramValues[i] = motors[i].position;
+          ramNotValues[i] = ~motors[i].position;
+        }
+      }
 
-     sendPosition = 0;
-   }
- }
+      sendPosition = 0;
+    }
+  }
 }
 
 /**
@@ -1255,6 +1303,27 @@ byte processUserMessage(char data)
       userCmd.command = CMD_IM;
       msgState = MSG_STATE_DATA;
     }
+#if defined(FOCUS_PIN)
+    else if (lastUserData == 'c' && data == 'f') // cf camera focus [value]
+    {
+      userCmd.command = CMD_CF;
+      msgState = MSG_STATE_DATA;
+    }
+#endif
+#if defined(SHUTTER_PIN)
+    else if (lastUserData == 'c' && data == 's') // cf camera shutter [value]
+    {
+      userCmd.command = CMD_CS;
+      msgState = MSG_STATE_DATA;
+    }
+#endif
+#if defined(FOCUS_PIN) && defined(SHUTTER_PIN)
+    else if (lastUserData == 'c' && data == 'i') // ci camera image
+    {
+      userCmd.command = CMD_CI;
+      msgState = MSG_STATE_DATA;
+    }
+#endif
     else
     {
       // error msg? unknown command?
@@ -1535,6 +1604,35 @@ void processSerialCommand()
             sendMessage(MSG_IM, motor);
           }
           break;
+
+#if defined(FOCUS_PIN)
+        case CMD_CF:
+          parseError = (userCmd.argCount != 1);
+          if (!parseError)
+          {
+            setCameraFocus(userCmd.args[0] == 1);
+          }
+          break;
+#endif
+
+#if defined(SHUTTER_PIN)
+        case CMD_CS:
+          parseError = (userCmd.argCount != 1);
+          if (!parseError)
+          {
+            setCameraShutter(userCmd.args[0] == 1);
+          }
+          break;
+#endif
+
+#if defined(FOCUS_PIN) && defined(SHUTTER_PIN)
+        case CMD_CI:
+          if (userCmd.argCount == 2)
+            takeCameraImage(userCmd.args[0], userCmd.args[1]);
+          else
+            takeCameraImage(3000, 50);
+          break;
+#endif
           
         default:
           parseError = true;
@@ -1614,7 +1712,7 @@ void sendMessage(byte msg, byte motorIndex)
       dualSerial.print("\r\n");
       break;
     case MSG_AC:
-      dualSerial.print("sc ");
+      dualSerial.print("ac ");
       dualSerial.print(motorIndex + 1);
       dualSerial.print(" ");
       dualSerial.print((uint16_t)motors[motorIndex].maxAcceleration);
@@ -1685,7 +1783,7 @@ void nextMessage()
       case MSG_VE:
         sprintf(txBuf, "pr %d %u\r\n", motorIndex + 1, (uint16_t)motors[motorIndex].maxVelocity);
       case MSG_AC:
-        sprintf(txBuf, "sc %d %u\r\n", motorIndex + 1, (uint16_t)motors[motorIndex].maxAcceleration);
+        sprintf(txBuf, "ac %d %u\r\n", motorIndex + 1, (uint16_t)motors[motorIndex].maxAcceleration);
         break;
       case MSG_SM:
         sprintf(txBuf, "sm %d\r\n", motorIndex + 1);
@@ -1967,3 +2065,52 @@ int32_t setupBlur(int motorIndex, int exposure, int blur, int32_t p0, int32_t p1
 
   return (int32_t)sp;
 }
+
+void IRAM_ATTR delayMilliseconds(uint32_t us)
+{
+    uint32_t m = millis();
+    if(us){
+        uint32_t e = (m + us);
+        if(m > e){ //overflow
+            while(millis() > e){
+                NOP();
+            }
+        }
+        while(millis() < e){
+            NOP();
+        }
+    }
+}
+
+#if defined(FOCUS_PIN) && defined(SHUTTER_PIN)
+void takeCameraImage(int delayFocus, int delayShutter) {
+  setCameraFocus(false);
+  setCameraShutter(false);
+  setCameraFocus(true);
+  delayMilliseconds(delayFocus);
+  setCameraShutter(true);
+  delayMilliseconds(delayShutter);
+  setCameraFocus(false);
+  setCameraShutter(false);
+}
+#endif
+
+#if defined(FOCUS_PIN)
+void setCameraFocus(bool value) {
+  if (value) {
+    PIN_ON(0, FOCUS_PIN);
+  } else {
+    PIN_OFF(0, FOCUS_PIN);    
+  }
+}
+#endif
+
+#if defined(SHUTTER_PIN)
+void setCameraShutter(bool value) {
+  if (value) {
+    PIN_ON(0, SHUTTER_PIN);
+  } else {
+    PIN_OFF(0, SHUTTER_PIN);    
+  }
+}
+#endif
