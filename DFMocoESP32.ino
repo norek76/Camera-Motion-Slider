@@ -166,7 +166,8 @@
 #define VELOCITY_INC(maxrate) (max(1.0f, maxrate / 70.0f))
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
-#define MAX_VELOCITY 15000
+#define MAX_VELOCITY 12000
+#define DEFAUL_VELOCITY 5000
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
@@ -812,7 +813,7 @@ void setup()
     motors[i].nextMotorMoveSteps = 0;
     motors[i].nextMotorMoveSpeed = 0;
     
-    setPulsesPerSecond(i, MAX_VELOCITY, true);
+    setPulsesPerSecond(i, DEFAUL_VELOCITY, true);
   }
 
 
