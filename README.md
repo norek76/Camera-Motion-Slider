@@ -18,7 +18,27 @@ Forked from Dragonframe DFMoCo v.1.3.1
 ## Serial over USB / Bluetooth
 If you want to use Bluetooth Classic, you have to set Pin35 to HIGH(Vcc), after that you can connect any Serial Bluetooth Application to the Board. The name of the bluetooth device is _DFMoCo_BT_.
 
+## Camera Mode
+You can check the different status codes at the code (~line 320)
+```
+cm --> Current camera mode status
+cr --> Reset camera mode
+```
+
+## Timelapse
+Shoot a standalone timelapse, after the setup you can disconnect the phone.
+```
+tl [imageCount] [intervalSeconds] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds] [[motorNumber] [startPosition] [endPosition]]*
+```
+Example:
+100 images, interval 5 seconds, exposure 150ms, restTimeAfterMovement 50ms, Motor1: 0 --> 1000, Motor2: 0 --> 500
+```
+tl 100 5 150 50 1 0 1000 2 0 500
+```
 ## Version History
+- Version 1.5.1 Add standalone timelapse mode
+- Version 1.5.0 Add Camera Focus / Shutter
+- Version 1.4.1 Support acceleration
 - Version 1.4.0 ESP32-WROOM-32 support with Serial Bluetooth Classic
 - Version 1.3.1 Report if go-motion speed cannot be reached.
 - Version 1.3.0 Arduino 101 support. Remove non-Arduino support (chipKit, Maple).
