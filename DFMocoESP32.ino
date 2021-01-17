@@ -320,6 +320,7 @@ char *txBufPtr;
 #define CMD_CM         100 // camera mode
 #define CMD_CR         101 // reset camera mode
 #define CMD_TL         102 // timelapse
+#define CMD_PA         103 // panorama
 
 #define MSG_HI 01
 #define MSG_MM 02
@@ -339,6 +340,7 @@ char *txBufPtr;
 
 #define CAM_MODE_NONE      0
 #define CAM_MODE_TIMELAPSE 1
+#define CAM_MODE_PANORAMA 2
 
 // Timelapse Status
 #define TIMELAPSE_SETUP                    0
