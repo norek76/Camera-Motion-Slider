@@ -35,7 +35,7 @@ Example:
 ```
 tl 100 5 150 50 1 0 1000 2 0 500
 ```
-## Panirama
+## Panorama
 Shoot a standalone timelapse, after the setup you can disconnect the phone.
 ```
 pa [motorNumber] [imagesRow] [stepsRow] [motorNumber] [imagesColumn] [stepsColumn] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds]

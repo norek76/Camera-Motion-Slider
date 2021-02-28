@@ -350,14 +350,17 @@ char *txBufPtr;
 #define TIMELAPSE_SETUP                    0
 #define TIMELAPSE_RUNNING                  1
 #define TIMELAPSE_DONE                     2
+// Timelapse EXECUTION
+#define TIMELAPSE_INIT_MOVEMENT            0
+#define TIMELAPSE_START_EXECUTION          1
+#define TIMELAPSE_EXECUTING                2
 // Timelapse Errors
 #define TIMELAPSE_ERROR_ARG1_GT_1          10
 #define TIMELAPSE_ERROR_ARG2_GT_0          11
 #define TIMELAPSE_ERROR_ARG3_GT_0          12
 #define TIMELAPSE_ERROR_ARG4_GE_0          13
-#define TIMELAPSE_ERROR_NOT_START_POSITION 14
-#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME    15
-#define TIMELAPSE_ERROR_POSITION           16
+#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME    14
+#define TIMELAPSE_ERROR_POSITION           15
 // Panorama Status
 #define PANORAMA_SETUP                     0
 #define PANORAMA_RUNNING                   1
@@ -376,11 +379,11 @@ char *txBufPtr;
 #define PANORAMA_ERROR_EXP_LT_50           13
 #define PANORAMA_ERROR_RST_LT_1            14
 
-void stopMotor(int motorIndex, bool hardStop = false);
-void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, bool setRamp = false);
+void stopMotor(int motorIndex, boolean hardStop = false);
+void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, boolean setRamp = false);
 
 struct TimelapseMotor {
-  bool enable;
+  boolean enable;
   uint32_t steps;
   uint32_t velocity;
   uint32_t acceleration;
@@ -398,6 +401,7 @@ struct Timelapse
   uint32_t restMoveTime;
   uint32_t currentImageCounter;
   byte status;
+  byte executionStatus;
 };
 
 Timelapse timelapseData;
@@ -568,7 +572,7 @@ Motor motors[MOTOR_COUNT];
       
 #if defined(BOARD_ESP32)
 unsigned long lastBluetoothLedMillis = millis();
-bool lastBluetoothLedState = true;
+boolean lastBluetoothLedState = true;
 hw_timer_t * timerMotion = NULL;
 portMUX_TYPE timerMotionMux = portMUX_INITIALIZER_UNLOCKED;
 boolean serialBluetoothEnabled = false;
@@ -1158,7 +1162,7 @@ void setMaxAccelerationPerSecond(int motorIndex, uint16_t accelerationPerSecond)
 /*
  * Set up the axis for pulses per second (approximate)
  */
-void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, bool setRamp)
+void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, boolean setRamp)
 {
   if (pulsesPerSecond > MAX_VELOCITY)
     pulsesPerSecond = MAX_VELOCITY;
@@ -1194,7 +1198,7 @@ void hardStop()
   }
 }
 
-void stopMotor(int motorIndex, bool hardStop)
+void stopMotor(int motorIndex, boolean hardStop)
 {
   int32_t delta = (motors[motorIndex].destination - motors[motorIndex].position);
   if (!delta)
@@ -1873,6 +1877,8 @@ void sendMessage(byte msg, byte motorIndex)
           dualSerial.print(" ");
           dualSerial.print(timelapseData.status);
           dualSerial.print(" ");
+          dualSerial.print(timelapseData.executionStatus);
+          dualSerial.print(" ");
           dualSerial.print(timelapseData.currentImageCounter);
           dualSerial.print(" ");
           dualSerial.print(timelapseData.imagesCount);
@@ -1880,6 +1886,8 @@ void sendMessage(byte msg, byte motorIndex)
         case CAM_MODE_PANORAMA:
           dualSerial.print(" ");
           dualSerial.print(panoramaData.status);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.executionStatus);
           dualSerial.print(" ");
           dualSerial.print(panoramaData.currentRowCounter);
           dualSerial.print(" ");
@@ -1889,7 +1897,6 @@ void sendMessage(byte msg, byte motorIndex)
       dualSerial.print("\r\n");
       break;
     case MSG_CR:
-      resetCameraMode();
       dualSerial.print("cr\r\n");
       break;    
   }
@@ -2249,7 +2256,7 @@ void takeCameraImage(int delayFocus, int delayShutter) {
   setCameraShutter(false);
 }
 
-void setCameraFocus(bool value) {
+void setCameraFocus(boolean value) {
   if (value) {
     PIN_ON(0, FOCUS_PIN);
   } else {
@@ -2257,7 +2264,7 @@ void setCameraFocus(bool value) {
   }
 }
 
-void setCameraShutter(bool value) {
+void setCameraShutter(boolean value) {
   if (value) {
     PIN_ON(0, SHUTTER_PIN);
   } else {
@@ -2267,10 +2274,10 @@ void setCameraShutter(bool value) {
 
 void resetCameraMode() {
   cameraMode = CAM_MODE_NONE;
-  resetCameraModeTimers();
+  resetCameraModeSettings();
 }
 
-void resetCameraModeTimers() {
+void resetCameraModeSettings() {
   if (timerCameraMode != NULL) {
     timerEnd(timerCameraMode);
     timerCameraMode = NULL;
@@ -2279,25 +2286,31 @@ void resetCameraModeTimers() {
     timerEnd(timerCameraModeMotion);
     timerCameraModeMotion = NULL;
   }
+  
+  setCameraShutter(false);
+  setCameraFocus(false);  
 }
 
 void processCameraMode() {
   switch(cameraMode) {
+    case CAM_MODE_TIMELAPSE:
+      if (timelapseData.status == TIMELAPSE_RUNNING)
+        processTimelapse();
+      break;
     case CAM_MODE_PANORAMA:
-        if (panoramaData.status == PANORAMA_RUNNING) {
-          processPanorama();
-        }
+      if (panoramaData.status == PANORAMA_RUNNING)
+        processPanorama();
       break;
   }
 }
 
-void executeTimelaseMotion(void) {
+void IRAM_ATTR executeTimelaseMotion(void) {
   setCameraShutter(false);
   setCameraFocus(false);
 
   if (timelapseData.currentImageCounter >= timelapseData.imagesCount) {
     timelapseData.status = TIMELAPSE_DONE;
-    resetCameraModeTimers();
+    resetCameraModeSettings();
     return;
   }
 
@@ -2311,24 +2324,20 @@ void executeTimelaseMotion(void) {
   }
 }
 
-void executeTimelapseImage() {
-  if (timelapseData.status != TIMELAPSE_RUNNING) {
-    return;
-  }
-
+void IRAM_ATTR executeTimelapseImage() {
   for (int i = 0; i < MOTOR_COUNT; i++) {
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable && motor.lastPosition != motors[i].position) {
       timelapseData.status = TIMELAPSE_ERROR_POSITION;
-      resetCameraModeTimers();
+      resetCameraModeSettings();
       return;
     }
   }
 
-  setCameraShutter(true);
-  setCameraFocus(true);
-  
   timelapseData.currentImageCounter++;
+
+  setCameraShutter(true);
+  setCameraFocus(true);  
 
   timerCameraModeMotion = timerBegin(2, 80, true);                
   timerAttachInterrupt(timerCameraModeMotion, &executeTimelaseMotion, true);
@@ -2336,7 +2345,10 @@ void executeTimelapseImage() {
   timerAlarmEnable(timerCameraModeMotion);
 }
 
-void setupTimelapse(UserCmd userCmd) {
+void setupTimelapse(UserCmd userCmd) {  
+  cameraMode = CAM_MODE_TIMELAPSE;
+  timelapseData.status = TIMELAPSE_SETUP;
+
   timelapseData.currentImageCounter = 0;
   timelapseData.imagesCount = userCmd.args[0];
   if (timelapseData.imagesCount <= 1) {
@@ -2358,9 +2370,6 @@ void setupTimelapse(UserCmd userCmd) {
     timelapseData.status = TIMELAPSE_ERROR_ARG4_GE_0;
     return;
   }
-  
-  cameraMode = CAM_MODE_TIMELAPSE;
-  timelapseData.status = TIMELAPSE_SETUP;
 
   for (int i = 0; i < MOTOR_COUNT; i++) {
     timelapseData.motors[i].enable = false;
@@ -2383,13 +2392,7 @@ void setupTimelapse(UserCmd userCmd) {
     
     Motor *motor = &motors[motorNumber];
 
-    if ( motor->position != startPosition ) {
-      timelapseData.status = TIMELAPSE_ERROR_NOT_START_POSITION;
-      return;
-    }
-
     float moveTime = 0.0f;
-    motor->destination = motor->position + steps;
     calculatePointToPoint(motorNumber, motor->position + steps);
     for (int k = 0; k < P2P_MOVE_COUNT; k++)
     {
@@ -2405,14 +2408,47 @@ void setupTimelapse(UserCmd userCmd) {
     }
   }
 
-  timerCameraMode = timerBegin(1, 80, true);                
-  timerAttachInterrupt(timerCameraMode, &executeTimelapseImage, true);
-  timerAlarmWrite(timerCameraMode, 1000000 * timelapseData.intervalSeconds, true);
 
-  timelapseData.status = TIMELAPSE_RUNNING;
   sendMessage(MSG_GO, 0);
-  
-  timerAlarmEnable(timerCameraMode);
+  timelapseData.status = TIMELAPSE_RUNNING;
+
+  for (int i = 0; i < MOTOR_COUNT; i++) {
+    TimelapseMotor motor = timelapseData.motors[i];
+    if (motor.enable) {
+      processGoPosition(i, motor.startPosition);
+    }
+  }
+
+  timelapseData.executionStatus = TIMELAPSE_INIT_MOVEMENT;  
+}
+
+
+void processTimelapse() {
+  boolean movementReady = true;
+
+  switch(timelapseData.executionStatus) {
+    case TIMELAPSE_INIT_MOVEMENT:
+      for (int i = 0; i < MOTOR_COUNT; i++) {
+        TimelapseMotor motor = timelapseData.motors[i];
+        if (motor.enable && movementReady) {
+          movementReady = motors[i].positionReached;
+        }
+      }
+
+      if (movementReady)
+        timelapseData.executionStatus = TIMELAPSE_START_EXECUTION;
+
+      break;
+    
+    case TIMELAPSE_START_EXECUTION:
+      timerCameraMode = timerBegin(1, 80, true);                
+      timerAttachInterrupt(timerCameraMode, &executeTimelapseImage, true);
+      timerAlarmWrite(timerCameraMode, 1000000 * timelapseData.intervalSeconds, true);
+        
+      timelapseData.executionStatus = TIMELAPSE_EXECUTING;
+      timerAlarmEnable(timerCameraMode);
+      break;
+  }
 }
 
 void setupPanorama(UserCmd userCmd) {
