@@ -35,7 +35,19 @@ Example:
 ```
 tl 100 5 150 50 1 0 1000 2 0 500
 ```
+## Panirama
+Shoot a standalone timelapse, after the setup you can disconnect the phone.
+```
+pa [motorNumber] [imagesRow] [stepsRow] [motorNumber] [imagesColumn] [stepsColumn] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds]
+```
+Example:
+30° Row, 30° Column --> 360°/30° = 12 Images, 200Row, 400 Column, Motor1: 0, Motor2: 0
+```
+pa 1 12 200 2 12 400 1000 5000
+```
+
 ## Version History
+- Version 1.5.2 Add standalone panorama mode
 - Version 1.5.1 Add standalone timelapse mode
 - Version 1.5.0 Add Camera Focus / Shutter
 - Version 1.4.1 Support acceleration

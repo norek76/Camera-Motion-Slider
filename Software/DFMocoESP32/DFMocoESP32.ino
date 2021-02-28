@@ -1,9 +1,9 @@
 #define DFMOCO_VERSION 1
-#define DFMOCO_VERSION_STRING "1.4.1"
+#define DFMOCO_VERSION_STRING "1.5.2"
 
 #define ESP32
 /*
-  DFMoco version 1.4.1
+  DFMoco version 1.5.2
   
   Multi-axis motion control.
   For use with the Arc motion control system in Dragonframe 4.
@@ -13,6 +13,8 @@
   Control up to eight axes with a Mega or Mega 2560.
 
   Version History
+  Version 1.5.2 Add standalone panorama mode
+  Version 1.5.1 Add standalone timelapse mode
   Version 1.5.0 Add standalone timelapse mode
   Version 1.4.1 Support acceleration
   Version 1.4.0 ESP32-WROOM-32 support with Serial Bluetooth Classic
@@ -168,7 +170,7 @@
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
 #define MAX_VELOCITY 12000
-#define DEFAUL_VELOCITY 5000
+#define DEFAUL_VELOCITY 600
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
@@ -322,6 +324,8 @@ char *txBufPtr;
 #define CMD_TL         102 // timelapse
 #define CMD_PA         103 // panorama
 
+// pa 1 10 160 2 3 200 5000 1000
+
 #define MSG_HI 01
 #define MSG_MM 02
 #define MSG_MP 03
@@ -340,7 +344,7 @@ char *txBufPtr;
 
 #define CAM_MODE_NONE      0
 #define CAM_MODE_TIMELAPSE 1
-#define CAM_MODE_PANORAMA 2
+#define CAM_MODE_PANORAMA  2
 
 // Timelapse Status
 #define TIMELAPSE_SETUP                    0
@@ -354,6 +358,23 @@ char *txBufPtr;
 #define TIMELAPSE_ERROR_NOT_START_POSITION 14
 #define TIMELAPSE_ERROR_MOVE_SHOOT_TIME    15
 #define TIMELAPSE_ERROR_POSITION           16
+// Panorama Status
+#define PANORAMA_SETUP                     0
+#define PANORAMA_RUNNING                   1
+#define PANORAMA_DONE                      2
+// Panorama Execution Status
+#define PANORAMA_REST                      0
+#define PANORAMA_REST_RUNNING              1
+#define PANORAMA_IMAGE                     2
+#define PANORAMA_READY_FOR_MOVE            3
+#define PANORAMA_MOVE                      4
+#define PANORAMA_MOVE_END                  5
+// Panorama Errors
+#define PANORAMA_ERROR_MTR_OUT             10
+#define PANORAMA_ERROR_IMG_LE_1            11
+#define PANORAMA_ERROR_STP_EQ_0            12
+#define PANORAMA_ERROR_EXP_LT_50           13
+#define PANORAMA_ERROR_RST_LT_1            14
 
 void stopMotor(int motorIndex, bool hardStop = false);
 void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, bool setRamp = false);
@@ -380,6 +401,25 @@ struct Timelapse
 };
 
 Timelapse timelapseData;
+
+struct Panorma
+{  
+  uint32_t motorRow;
+  uint32_t imagesRow;
+  int32_t stepsRow;
+  uint32_t motorColumn;
+  uint32_t imagesColumn;
+  int32_t stepsColumn;
+  uint32_t exposureTimeMillis;
+  uint32_t restMoveTime;
+  uint32_t restStartMillis;
+  uint32_t currentRowCounter;
+  uint32_t currentColumnCounter;
+  byte status;
+  byte executionStatus;
+};
+
+Panorma panoramaData;
 
 struct UserCmd
 {
@@ -508,6 +548,7 @@ struct Motor
   int       currentMove;
   float     currentMoveTime;
   
+  volatile  boolean   positionReached;
   volatile  boolean   dir;
 
   int32_t   position;
@@ -854,6 +895,7 @@ void setup()
     
     motors[i].dirPin = motors[i].stepPin + 1;
     motors[i].dir = true; // forward
+    motors[i].positionReached = true;
     motors[i].position = 0L;
     motors[i].destination = 0L;
 
@@ -979,6 +1021,9 @@ void loop()
       updateMotorVelocities();
     
     processSerialCommand();
+    if (cameraMode != CAM_MODE_NONE) {
+      processCameraMode();
+    }
     
     // check if we have serial output
     #if defined(BOARD_UNO) || defined(BOARD_MEGA)
@@ -1007,6 +1052,9 @@ void loop()
           sendMessage(MSG_MP, i);
           ramValues[i] = motors[i].position;
           ramNotValues[i] = ~motors[i].position;
+        }
+        if (motors[i].position == motors[i].destination) {
+          motors[i].positionReached = true;
         }
       }
 
@@ -1205,11 +1253,13 @@ void processGoPosition(int motorIndex, int32_t pos)
 {
   if (motors[motorIndex].position != pos)
   {
+    motors[motorIndex].positionReached = false;
     setupMotorMove(motorIndex, pos);
     sendMessage(MSG_MM, motorIndex);
   }
   else
   {
+    motors[motorIndex].positionReached = true;
     sendMessage(MSG_MP, motorIndex);
   }
 }
@@ -1381,7 +1431,11 @@ byte processUserMessage(char data)
       userCmd.command = CMD_TL;
       msgState = MSG_STATE_DATA;
     }
-
+    else if (lastUserData == 'p' && data == 'a') // timelapse
+    {
+      userCmd.command = CMD_PA;
+      msgState = MSG_STATE_DATA;
+    }
     else
     {
       // error msg? unknown command?
@@ -1692,8 +1746,13 @@ void processSerialCommand()
           break;
         case CMD_TL:
           parseError = (userCmd.argCount < 7 || (userCmd.argCount - 4) % 3 != 0);
-          if (!parseError)
+          if (!parseError && cameraMode == CAM_MODE_NONE)
             setupTimelapse(userCmd);
+          break;
+        case CMD_PA:
+          parseError = (userCmd.argCount != 8);
+          if (!parseError && cameraMode == CAM_MODE_NONE)
+            setupPanorama(userCmd);
           break;
           
         default:
@@ -1807,7 +1866,7 @@ void sendMessage(byte msg, byte motorIndex)
       break;
     case MSG_CM:
       dualSerial.print("cm ");
-      dualSerial.print(motorIndex);
+      dualSerial.print(cameraMode);
       switch (cameraMode)
       {
         case CAM_MODE_TIMELAPSE:
@@ -1817,6 +1876,14 @@ void sendMessage(byte msg, byte motorIndex)
           dualSerial.print(timelapseData.currentImageCounter);
           dualSerial.print(" ");
           dualSerial.print(timelapseData.imagesCount);
+          break;
+        case CAM_MODE_PANORAMA:
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.status);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.currentRowCounter);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.currentColumnCounter);
           break;
       }      
       dualSerial.print("\r\n");
@@ -2214,13 +2281,12 @@ void resetCameraModeTimers() {
   }
 }
 
-void triggerCameraMode(void) 
-{
-  switch (cameraMode) 
-  {
-    case CAM_MODE_TIMELAPSE:
-      if (timelapseData.status == TIMELAPSE_RUNNING)
-        executeTimelapseImage();
+void processCameraMode() {
+  switch(cameraMode) {
+    case CAM_MODE_PANORAMA:
+        if (panoramaData.status == PANORAMA_RUNNING) {
+          processPanorama();
+        }
       break;
   }
 }
@@ -2246,6 +2312,10 @@ void executeTimelaseMotion(void) {
 }
 
 void executeTimelapseImage() {
+  if (timelapseData.status != TIMELAPSE_RUNNING) {
+    return;
+  }
+
   for (int i = 0; i < MOTOR_COUNT; i++) {
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable && motor.lastPosition != motors[i].position) {
@@ -2336,11 +2406,126 @@ void setupTimelapse(UserCmd userCmd) {
   }
 
   timerCameraMode = timerBegin(1, 80, true);                
-  timerAttachInterrupt(timerCameraMode, &triggerCameraMode, true);
+  timerAttachInterrupt(timerCameraMode, &executeTimelapseImage, true);
   timerAlarmWrite(timerCameraMode, 1000000 * timelapseData.intervalSeconds, true);
 
   timelapseData.status = TIMELAPSE_RUNNING;
   sendMessage(MSG_GO, 0);
   
   timerAlarmEnable(timerCameraMode);
+}
+
+void setupPanorama(UserCmd userCmd) {
+  cameraMode = CAM_MODE_PANORAMA;
+  panoramaData.status = PANORAMA_SETUP;
+
+  panoramaData.currentRowCounter = 1;
+  panoramaData.currentColumnCounter = 1;
+  
+  panoramaData.motorRow = userCmd.args[0];
+  if (panoramaData.motorRow < 1 || panoramaData.motorRow > MOTOR_COUNT) {
+    panoramaData.status = PANORAMA_ERROR_MTR_OUT;
+    return;
+  }
+  panoramaData.motorRow--;
+
+  panoramaData.imagesRow = userCmd.args[1];
+  if (panoramaData.imagesRow <= 1) {
+    panoramaData.status = PANORAMA_ERROR_IMG_LE_1;
+    return;
+  }
+  panoramaData.stepsRow = userCmd.args[2];
+  if (panoramaData.imagesRow == 0) {
+    panoramaData.status = PANORAMA_ERROR_STP_EQ_0;
+    return;
+  }
+
+  panoramaData.motorColumn = userCmd.args[3];
+  if (panoramaData.motorColumn < 1 || panoramaData.motorColumn > MOTOR_COUNT) {
+    panoramaData.status = PANORAMA_ERROR_MTR_OUT;
+    return;
+  }
+  panoramaData.motorColumn--;
+
+  panoramaData.imagesColumn = userCmd.args[4];
+  if (panoramaData.imagesColumn <= 1) {
+    panoramaData.status = PANORAMA_ERROR_IMG_LE_1;
+    return;
+  }
+  panoramaData.stepsColumn = userCmd.args[5];
+  if (panoramaData.imagesColumn == 0) {
+    panoramaData.status = PANORAMA_ERROR_STP_EQ_0;
+    return;
+  }
+  
+  panoramaData.exposureTimeMillis = userCmd.args[6];
+  if (panoramaData.exposureTimeMillis < 50) {
+    panoramaData.status = PANORAMA_ERROR_EXP_LT_50;
+    return;
+  }
+  
+  panoramaData.restMoveTime = userCmd.args[7];
+  if (panoramaData.restMoveTime < 1) {
+    panoramaData.status = PANORAMA_ERROR_RST_LT_1;
+    return;
+  }
+  
+  panoramaData.status = PANORAMA_RUNNING;
+  panoramaData.executionStatus = PANORAMA_REST;
+  sendMessage(MSG_GO, 0);
+}
+
+void processPanorama() {
+  int32_t newPositionRow;
+  int32_t newPositionColumn;
+
+  switch(panoramaData.executionStatus) {
+    case PANORAMA_REST:
+      panoramaData.restStartMillis = millis();
+      panoramaData.executionStatus = PANORAMA_REST_RUNNING;
+      break;
+    case PANORAMA_REST_RUNNING:
+      if ((millis() - panoramaData.restStartMillis) > (panoramaData.restMoveTime))
+        panoramaData.executionStatus = PANORAMA_IMAGE;
+      break;
+    case PANORAMA_IMAGE:
+      takeCameraImage(0, panoramaData.exposureTimeMillis);
+      panoramaData.executionStatus = PANORAMA_READY_FOR_MOVE;
+      break;
+    case PANORAMA_READY_FOR_MOVE:
+      newPositionRow = motors[panoramaData.motorRow].position;
+      newPositionColumn = motors[panoramaData.motorColumn].position;
+  
+      panoramaData.executionStatus = PANORAMA_MOVE;
+
+      panoramaData.currentRowCounter++;
+      if (panoramaData.currentRowCounter > panoramaData.imagesRow) {
+        newPositionRow -= panoramaData.stepsRow * (panoramaData.imagesRow - 1);
+        panoramaData.currentRowCounter = 1;
+        panoramaData.currentColumnCounter++;
+
+        if (panoramaData.currentColumnCounter > panoramaData.imagesColumn) {
+          newPositionColumn -= panoramaData.stepsColumn * (panoramaData.imagesColumn - 1); 
+          panoramaData.currentRowCounter = 1;
+          panoramaData.currentColumnCounter = 1;
+          panoramaData.executionStatus = PANORAMA_MOVE_END;
+        } else {
+          newPositionColumn += panoramaData.stepsColumn;
+        }
+      } else {
+        newPositionRow += panoramaData.stepsRow;
+      }
+
+      processGoPosition(panoramaData.motorRow, newPositionRow);
+      processGoPosition(panoramaData.motorColumn, newPositionColumn);    
+      break;
+    case PANORAMA_MOVE:      
+      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached)
+        panoramaData.executionStatus = PANORAMA_REST;
+      break;
+    case PANORAMA_MOVE_END:      
+      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached)
+        panoramaData.status = PANORAMA_DONE;
+      break;
+  }
 }
