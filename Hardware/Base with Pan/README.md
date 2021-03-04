@@ -32,7 +32,7 @@ Part List Base Pan:
 * Excentric Spacers (3x)
 * 16x8x5 Radial Flanged Bearing (688ZZ Flanged) (2x)
 * 16x8x5 Axial Bearing (Silber/Gold) (2x)
-* Camera Base Plate (check the step file)
+* Camera Base Plate (check the step file & drawing)
 * MENGS DM-60
 * M8 Screw
 * Pulley 14 tooth (11mm)
