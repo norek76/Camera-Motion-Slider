@@ -1,58 +1,59 @@
-# DFMocoESP32
-Forked from Dragonframe DFMoCo v.1.3.1
+# Tilt Module
 
-## Migration for ESP32-WROOM-32 Board (ESP32-DevKitC V4)
-- channel 1
-  - PIN  16   step
-  - PIN  17   direction
-- channel 2
-  - PIN  18   step
-  - PIN  19   direction
-- channel 3
-  - PIN  22   step
-  - PIN  23   direction
-- channel 4
-  - PIN  32   step
-  - PIN  33   direction
-  
-## Serial over USB / Bluetooth
-If you want to use Bluetooth Classic, you have to set Pin35 to HIGH(Vcc), after that you can connect any Serial Bluetooth Application to the Board. The name of the bluetooth device is _DFMoCo_BT_.
+For the tilt module I was trying multiple approaches with the same concept as for the base ("Pulleys with a strip"). The problem was, that the components became to huge.
 
-## Camera Mode
-You can check the different status codes at the code (~line 320)
+In the end I found a really simple way with a direct connection between the Motor and the Menge DM-60 Base.
+
 ```
-cm --> Current camera mode status
-cr --> Reset camera mode
+I can't promise that this list is complete
 ```
 
-## Timelapse
-Shoot a standalone timelapse, after the setup you can disconnect the phone.
-```
-tl [imageCount] [intervalSeconds] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds] [[motorNumber] [startPosition] [endPosition]]*
-```
-Example:
-100 images, interval 5 seconds, exposure 150ms, restTimeAfterMovement 50ms, Motor1: 0 --> 1000, Motor2: 0 --> 500
-```
-tl 100 5 150 50 1 0 1000 2 0 500
-```
-## Version History
-- Version 1.5.1 Add standalone timelapse mode
-- Version 1.5.0 Add Camera Focus / Shutter
-- Version 1.4.1 Support acceleration
-- Version 1.4.0 ESP32-WROOM-32 support with Serial Bluetooth Classic
-- Version 1.3.1 Report if go-motion speed cannot be reached.
-- Version 1.3.0 Arduino 101 support. Remove non-Arduino support (chipKit, Maple).
-- Version 1.2.7 Direction setup time.
-- Version 1.2.6 Add PINOUT_VERSION option to use older pinout.
-- Version 1.2.5 Fix jogging with low pulse rate.
-- Version 1.2.4 Fix pin assignments
-- Version 1.2.3 New Position command
-- Version 1.2.2 Jog and Inch commands
-- Version 1.2.1 Moved step/direction pins for motions 5-8. Detects board type automatically.
-- Version 1.2.0 Basic go-motion capabilities
-- Version 1.1.2 Smooth transitions when changing direction
-- Version 1.1.1 Save/restore motor position
-- Version 1.1.0 Major rework 
-- Version 1.0.2 Moved pulses into interrupt handler
-- Version 1.0.1 Added delay for pulse widths  
-- Version 1.0.0 Initial public release.
+Part List Base:
+* 1m C*Beam
+* Motor Mount Plate (2x) --> The new one with 4 motor screws
+* 16x8x5 Radial Bearing (688ZZ) (2x)
+* 16x8x5 Axial Bearing (Silber/Gold) (2x)
+* ACME 8mm Lead Screw (1040mm)
+* Nema23 1.8degree (max 2.0A)
+* Motor Coupling
+* Nut Block for 8mm Metric Acme Lead Screw (2x)
+* Spacers (3mm) (4x)
+* Spacers (40mm) (4x)
+* Washers & Screws
+  * 12x8
+  * Screws
+
+Part List Base Pan:
+* C-Beam Gantry Plate - XLarge (2x)
+* Solid V Wheel Kit (6x)
+* Spacers 6mm (3x)
+* Excentric Spacers (3x)
+* 16x8x5 Radial Flanged Bearing (688ZZ Flanged) (2x)
+* 16x8x5 Axial Bearing (Silber/Gold) (2x)
+* Camera Base Plate (check the step file)
+* MENGS DM-60
+* M8 Screw
+* Pulley 14 tooth (11mm)
+* Pulley 44 tooth (11mm)
+* Belt
+* Nema23 Motor Mount
+* Nema23 0.9° (max 2.0A)
+* Washers & Screws
+  * 12x8 (10x)
+  * M5 16mm Chunkhole
+  * M8 Screw (55mm)
+  * Large washer with ~ 35x12mm
+  * Screws
+
+## Motor Connection
+I'm using M12 Sensor Connector. I got a few of them for a good price, but you can use mostly any connector that is available. The good thing about this M12 Sensor Plugs is, that there is also a 1.5m extensions cable available.
+
+## Pan Mode Stack
+To attach the Pan Mode you have to increase the size of the center holes of the XL C Beam Plate. We have to increase to 16mm to insert the flanged bearings there. I've used a "cheap" stepped bit from Amazon.
+
+The stack will look like that:
+
+
+## Base with Pan
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan.jpg?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan2.jpg?raw=true)
