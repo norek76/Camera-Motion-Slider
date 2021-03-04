@@ -1891,9 +1891,18 @@ void sendMessage(byte msg, byte motorIndex)
           dualSerial.print(" ");
           dualSerial.print(panoramaData.currentRowCounter);
           dualSerial.print(" ");
+          dualSerial.print(panoramaData.imagesRow);
+          dualSerial.print(" ");
           dualSerial.print(panoramaData.currentColumnCounter);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.imagesColumn);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.exposureTimeMillis);
+          dualSerial.print(" ");
+          dualSerial.print(panoramaData.restMoveTime);
           break;
-      }      
+      }
+
       dualSerial.print("\r\n");
       break;
     case MSG_CR:
@@ -2508,7 +2517,7 @@ void setupPanorama(UserCmd userCmd) {
   
   panoramaData.status = PANORAMA_RUNNING;
   panoramaData.executionStatus = PANORAMA_REST;
-  sendMessage(MSG_GO, 0);
+  sendMessage(MSG_CM, cameraMode);
 }
 
 void processPanorama() {
@@ -2521,8 +2530,10 @@ void processPanorama() {
       panoramaData.executionStatus = PANORAMA_REST_RUNNING;
       break;
     case PANORAMA_REST_RUNNING:
-      if ((millis() - panoramaData.restStartMillis) > (panoramaData.restMoveTime))
+      if ((millis() - panoramaData.restStartMillis) > (panoramaData.restMoveTime)) {
         panoramaData.executionStatus = PANORAMA_IMAGE;
+        sendMessage(MSG_CM, cameraMode);
+      }
       break;
     case PANORAMA_IMAGE:
       takeCameraImage(0, panoramaData.exposureTimeMillis);
@@ -2552,16 +2563,22 @@ void processPanorama() {
         newPositionRow += panoramaData.stepsRow;
       }
 
+      sendMessage(MSG_CM, cameraMode);
+
       processGoPosition(panoramaData.motorRow, newPositionRow);
       processGoPosition(panoramaData.motorColumn, newPositionColumn);    
       break;
     case PANORAMA_MOVE:      
-      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached)
+      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached) {
         panoramaData.executionStatus = PANORAMA_REST;
+        sendMessage(MSG_CM, cameraMode);
+      }
       break;
     case PANORAMA_MOVE_END:      
-      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached)
+      if (motors[panoramaData.motorRow].positionReached && motors[panoramaData.motorColumn].positionReached) {
         panoramaData.status = PANORAMA_DONE;
+        sendMessage(MSG_CM, cameraMode);
+      }
       break;
   }
 }
