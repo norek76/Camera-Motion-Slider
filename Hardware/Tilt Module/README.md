@@ -5,6 +5,9 @@ For the tilt module I was trying multiple approaches with the same concept as fo
 In the end I found a really simple way. It's a direct connection between the Motor and the Menge DM-60 Base. I've designed my own motor mount plate.
 
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt1.png?raw=true)
+
+I'm using here an additional Mengs FNR-140 to center the camera in the rotation axis.
+
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt2.jpg?raw=true)
 
 ```

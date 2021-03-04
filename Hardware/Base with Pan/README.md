@@ -3,7 +3,6 @@
 The base for the slider was build from parts available under the "OpenBuild" Brands. I was ordering my stuff from a seller in Portugal, that is shipping to Germany. Some parts like the Motor Mount Plate is a bit different in their store. The following list is build from the parts available at this seller.
 Some other parts like motors, pulleys, belts ... were ordered by ebay.
 
-
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan.jpg?raw=true)
 
 ```
@@ -56,4 +55,6 @@ To attach the Pan Mode you have to increase the size of the center holes of the 
 The stack will look like that:
 
 ## Base with Pan
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/SliderCat.png?raw=true)
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan2.jpg?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseBottom.jpg?raw=true)
