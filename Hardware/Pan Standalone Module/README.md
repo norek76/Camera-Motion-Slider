@@ -38,4 +38,5 @@ The stack will look like that:
 
 
 ## Pan Module Images
+Automatic Panorama Setting:
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan3.jpg?raw=true)
