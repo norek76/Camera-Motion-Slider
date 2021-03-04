@@ -38,8 +38,6 @@ The stack will look like that:
 
 
 ## Tilt Module Images
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt3.jpg?raw=true)
-
 - Red is the 16x8x5 Axial Bearing
 - Green is the 688ZZ Flanged
 - Gray is a 12x8 Washer
@@ -47,3 +45,4 @@ The stack will look like that:
 - I've used a flanged screw from the right to the left. Starting in the Mengs DN-60 that is fixed on the camera plate
 
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt4.png?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt3.jpg?raw=true)

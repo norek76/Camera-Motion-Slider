@@ -31,3 +31,7 @@ Possible commands:
 The controller for sure still supports the Dragonframe software.
 
 To controll the Slider / Camera Module easily also outside of the home, I've written a small Android application to controll the different modes
+
+[Hardware - Base With Pan](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/README.md)
+
+[Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/README.md)
