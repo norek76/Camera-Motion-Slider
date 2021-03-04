@@ -16,9 +16,10 @@ You can connect the three modules in the following configurations:
  - Pan Standalone Module + Tilt Module (f.e. 360° Pano)
 
 ## Controller & Software
-Last but not least there must be a controller. I started first to develope my "own" motion control library, after few weeks I found out, that there is a really powerfull open source library called "DFMoCo". It's the protocoll that is used by the software Dragonframe.
-So I've started to check the source code of this library, that was build for Arduino Board with just USB Serial support. I've migrated the library to support ESP32 boards together with Bluetooth 4.0 that can be used also with a Serial Bluetooth Application from Android/iOS. The ESP32 can controll up to 4 stepper motors with this library. The library is command based and up to now I was not investing time in a smartphone application for the controller. Help is welcome for that ;)
-In addition to that I've added the possibility to focus / shutter image of the camera with a headphone jack.
+Last but not least there must be a controller. I started first to develope my "own" motion control library, after few weeks I stopped. And search for existing libs out there and there is a really powerfull open source library called "DFMoCo". It's the protocoll that is used by the software Dragonframe.
+
+So I've started to check the source code of this library, that was build for Arduino Board with just USB Serial support. I've migrated the library to support ESP32 boards together with Bluetooth 4.0 that can be used also with a Serial Bluetooth Application from Android/iOS. The ESP32 can controll up to 4 stepper motors with this library. The library is command based.
+In addition to the functionalities of DFMoCo I've added the possibility to focus / shutter an image of the camera with a headphone jack. Most camera manufactors support this way.
 
 Possible commands:
 - Move Motor 1-4 to position x
@@ -26,6 +27,7 @@ Possible commands:
 - Focus / Shutter Camera Controll
 - Timelapse with start / end position, timer, image shutter
 - Panorama (full squere possible)
-- Video Mode (in development)
 
-The controller supports the Dragonframe software.
+The controller for sure still supports the Dragonframe software.
+
+To controll the Slider / Camera Module easily also outside of the home, I've written a small Android application to controll the different modes

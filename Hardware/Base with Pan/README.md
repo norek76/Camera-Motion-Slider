@@ -3,6 +3,10 @@
 The base for the slider was build from parts available under the "OpenBuild" Brands. I was ordering my stuff from a seller in Portugal, that is shipping to Germany. Some parts like the Motor Mount Plate is a bit different in their store. The following list is build from the parts available at this seller.
 Some other parts like motors, pulleys, belts ... were ordered by ebay.
 
+```
+I can't promise that this list is complete
+```
+
 Part List Base:
 * 1m C*Beam
 * Motor Mount Plate (2x) --> The new one with 4 motor screws
@@ -15,8 +19,8 @@ Part List Base:
 * Spacers (3mm) (4x)
 * Spacers (40mm) (4x)
 * Washers & Screws
-  * 12x8 (10x)
-  * Screws ???
+  * 12x8
+  * Screws
 
 Part List Base Pan:
 * C-Beam Gantry Plate - XLarge (2x)
@@ -38,11 +42,13 @@ Part List Base Pan:
   * M5 16mm Chunkhole
   * M8 Screw (55mm)
   * Large washer with ~ 35x12mm
-  * Screws ???
+  * Screws
 
 ## Pan Mode Stack
 To attach the Pan Mode you have to increase the size of the center holes of the XL C Beam Plate. We have to increase to 16mm to insert the flanged bearings there. I've used a "cheap" stepped bit from Amazon.
 
 The stack will look like that:
 
+
 ## Base with Pan
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan.jpg?raw=true)
