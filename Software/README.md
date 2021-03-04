@@ -1,6 +1,10 @@
 # DFMocoESP32
 Forked from Dragonframe DFMoCo v.1.3.1
 
+## Open Points
+- Panorama Delay 100 after image shot
+- Black Move & Jog during custom mode
+
 ## Migration for ESP32-WROOM-32 Board (ESP32-DevKitC V4)
 - channel 1
   - PIN  16   step
@@ -22,6 +26,9 @@ If you want to use Bluetooth Classic, you have to set Pin35 to HIGH(Vcc), after 
 You can check the different status codes at the code (~line 320)
 ```
 cm --> Current camera mode status
+- Timelapse: cm 1 [status] [executionStatus] [currentImageCounter] [imagesCount] 
+- Panorama: cm 2 [status] [executionStatus] [currentRowCounter] [imagesRow] [currentColumnCounter] [imagesColumn] [exposureTimeMillis] [restMoveTime]
+
 cr --> Reset camera mode
 ```
 
