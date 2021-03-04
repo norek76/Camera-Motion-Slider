@@ -1,58 +1,41 @@
-# DFMocoESP32
-Forked from Dragonframe DFMoCo v.1.3.1
+# Pan Standalone Module
+Mostly the same like the [Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/README.md).
 
-## Migration for ESP32-WROOM-32 Board (ESP32-DevKitC V4)
-- channel 1
-  - PIN  16   step
-  - PIN  17   direction
-- channel 2
-  - PIN  18   step
-  - PIN  19   direction
-- channel 3
-  - PIN  22   step
-  - PIN  23   direction
-- channel 4
-  - PIN  32   step
-  - PIN  33   direction
-  
-## Serial over USB / Bluetooth
-If you want to use Bluetooth Classic, you have to set Pin35 to HIGH(Vcc), after that you can connect any Serial Bluetooth Application to the Board. The name of the bluetooth device is _DFMoCo_BT_.
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan2.jpg?raw=true)
 
-## Camera Mode
-You can check the different status codes at the code (~line 320)
 ```
-cm --> Current camera mode status
-cr --> Reset camera mode
+I can't promise that this list is complete
 ```
 
-## Timelapse
-Shoot a standalone timelapse, after the setup you can disconnect the phone.
-```
-tl [imageCount] [intervalSeconds] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds] [[motorNumber] [startPosition] [endPosition]]*
-```
-Example:
-100 images, interval 5 seconds, exposure 150ms, restTimeAfterMovement 50ms, Motor1: 0 --> 1000, Motor2: 0 --> 500
-```
-tl 100 5 150 50 1 0 1000 2 0 500
-```
-## Version History
-- Version 1.5.1 Add standalone timelapse mode
-- Version 1.5.0 Add Camera Focus / Shutter
-- Version 1.4.1 Support acceleration
-- Version 1.4.0 ESP32-WROOM-32 support with Serial Bluetooth Classic
-- Version 1.3.1 Report if go-motion speed cannot be reached.
-- Version 1.3.0 Arduino 101 support. Remove non-Arduino support (chipKit, Maple).
-- Version 1.2.7 Direction setup time.
-- Version 1.2.6 Add PINOUT_VERSION option to use older pinout.
-- Version 1.2.5 Fix jogging with low pulse rate.
-- Version 1.2.4 Fix pin assignments
-- Version 1.2.3 New Position command
-- Version 1.2.2 Jog and Inch commands
-- Version 1.2.1 Moved step/direction pins for motions 5-8. Detects board type automatically.
-- Version 1.2.0 Basic go-motion capabilities
-- Version 1.1.2 Smooth transitions when changing direction
-- Version 1.1.1 Save/restore motor position
-- Version 1.1.0 Major rework 
-- Version 1.0.2 Moved pulses into interrupt handler
-- Version 1.0.1 Added delay for pulse widths  
-- Version 1.0.0 Initial public release.
+Part List Pan:
+* Motor Pan Plate (check the [step file](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Modulee/parts/MotorPanModule.step?raw=true) & [drawing](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/parts/MotorPanModule.pdf?raw=true))
+* Camera Base Plate (check the [step file](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/parts/CameraBasePlate.step?raw=true) & [drawing](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/parts/CameraBasePlate.pdf?raw=true))
+* Nema23 0.9degree (max 2.0A)
+* Motor Coupling Fixed Version! 
+* Spacers (40mm) (4x)
+* Center Screw M8 (1x)
+* Mengs DM-60 (1x)
+* Mengs PU-70 (1x)
+* iShoot QS-120 (1x)
+* 16x8x5 Radial Flanged Bearing (688ZZ Flanged) (2x)
+* 16x8x5 Axial Bearing (Silber/Gold) (2x)
++ M8 Nut (DIN 439) Thin Version (1x)
+* Washers & Screws
+  * 12x8 Washer
+  * Screws (M5)
+
+## Assembly
+Cut the M5 thread in the Camera Base Plate & Motor Pan Plate
+Connect all part like on the images below.
+
+The stack will look like that:
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan1.png?raw=true)
+- Red is the 16x8x5 Axial Bearing
+- Green is the 688ZZ Flanged
+- Gray is a 12x8 Washer
+- Ignore the flexible motor coupling, it must be a fixed one here!
+- I've used a flanged screw from the right to the left. Starting in the Mengs DN-60 that is fixed on the camera plate
+
+
+## Pan Module Images
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan3.jpg?raw=true)
