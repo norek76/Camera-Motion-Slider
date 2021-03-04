@@ -41,3 +41,7 @@ To control the Slider / Camera Module easily also outside of the home, I've writ
 [Hardware - Pan Standalone Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/README.md)
 
 [Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
+
+[Software - ESP32](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Software/README.md)
+
+[Software - Android](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Software/AndroidApp/README.md)
