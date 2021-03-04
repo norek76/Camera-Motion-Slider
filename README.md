@@ -39,3 +39,5 @@ To control the Slider / Camera Module easily also outside of the home, I've writ
 [Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/README.md)
 
 [Hardware - Pan Standalone Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/README.md)
+
+[Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
