@@ -42,6 +42,6 @@ To control the Slider / Camera Module easily also outside of the home, I've writ
 
 [Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
 
-[Software - ESP32](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Software/README.md)
+[Software - ESP32](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/README.md)
 
-[Software - Android](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Software/AndroidApp/README.md)
+[Software - Android](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/AndroidApp/README.md)
