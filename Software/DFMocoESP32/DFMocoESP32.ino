@@ -1681,7 +1681,7 @@ void processSerialCommand()
 
         case CMD_GO:
           parseError = motorMoving || (userCmd.argCount > 0) || !goMoReady;
-          if (!parseError && cameraMode = CAM_MODE_NONE)
+          if (!parseError && cameraMode == CAM_MODE_NONE)
           {
             for (m = 0; m < MOTOR_COUNT; m++)
             {
@@ -2060,7 +2060,7 @@ boolean jogMotor(int motorIndex, int32_t target, int32_t * destination)
 void inchMotor(int motorIndex, int32_t target)
 {
   if (cameraMode != CAM_MODE_NONE) {
-    return false;
+    return;
   }
 
   Motor *motor = &motors[motorIndex];
