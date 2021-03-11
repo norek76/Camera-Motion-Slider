@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".ConnectMenu">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/motor4_settings_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_ib"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintStart_toStartOf="@+id/motor4_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_settings" />
+
+        <ImageButton
+            android:id="@+id/motor3_settings_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_ib"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintStart_toStartOf="@+id/motor3_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_settings" />
+
+        <TextView
+            android:id="@+id/motor4_pos_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor4_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_pos_tv" />
+
+        <ImageButton
+            android:id="@+id/motor1_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/motor2_ib"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:srcCompat="@drawable/ic_motor_inactive" />
+
+        <ImageButton
+            android:id="@+id/motor1_settings_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_settings" />
+
+        <ImageButton
+            android:id="@+id/motor1_reset_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
+            app:srcCompat="@drawable/ic_motor_reset" />
+
+        <ImageButton
+            android:id="@+id/motor3_reset_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_settings_ib"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/motor3_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
+            app:srcCompat="@drawable/ic_motor_reset" />
+
+        <ImageButton
+            android:id="@+id/motor4_reset_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_settings_ib"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/motor4_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
+            app:srcCompat="@drawable/ic_motor_reset" />
+
+        <ImageButton
+            android:id="@+id/motor2_reset_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_settings_ib"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/motor2_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
+            app:srcCompat="@drawable/ic_motor_reset" />
+
+        <ImageButton
+            android:id="@+id/motor2_settings_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_ib"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/motor2_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_settings" />
+
+        <ImageButton
+            android:id="@+id/motor2_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/motor3_ib"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/motor1_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_inactive" />
+
+        <ImageButton
+            android:id="@+id/motor3_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/motor4_ib"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/motor2_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_inactive" />
+
+        <ImageButton
+            android:id="@+id/motor4_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/motor3_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_ib"
+            app:srcCompat="@drawable/ic_motor_inactive" />
+
+        <TextView
+            android:id="@+id/motor1_pos_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_reset_ib"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/motor1_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_pos_tv" />
+
+        <TextView
+            android:id="@+id/motor2_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor2_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor3_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor3_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor4_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor4_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor2_pos_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor2_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_pos_tv" />
+
+        <TextView
+            android:id="@+id/motor3_pos_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor3_ib"
+            app:layout_constraintTop_toTopOf="@+id/motor1_pos_tv" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor 1"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motorAllStop_bt" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor 2"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor2_ib"
+            app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor 3"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor3_ib"
+            app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor 4"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor4_ib"
+            app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+        <Button
+            android:id="@+id/motorAllStop_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Stop all "
+            app:layout_constraintEnd_toStartOf="@+id/disconnect_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/disconnect_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Disconnect"
+            app:layout_constraintEnd_toEndOf="@+id/textView9"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/motorAllStop_bt"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/jogNeg_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jog - -"
+            app:layout_constraintEnd_toStartOf="@+id/inchNeg_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inchNeg_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jog -"
+            app:layout_constraintEnd_toStartOf="@+id/inchPos_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/jogNeg_bt"
+            app:layout_constraintTop_toTopOf="@+id/jogNeg_bt" />
+
+        <Button
+            android:id="@+id/inchPos_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jog +"
+            app:layout_constraintEnd_toStartOf="@+id/jogPos_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/inchNeg_bt"
+            app:layout_constraintTop_toTopOf="@+id/jogNeg_bt" />
+
+        <Button
+            android:id="@+id/jogPos_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jog + +"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/inchPos_bt"
+            app:layout_constraintTop_toTopOf="@+id/jogNeg_bt" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/pano_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pano"
+            app:layout_constraintEnd_toStartOf="@+id/timelapse_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/timelapse_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timelapse"
+            app:layout_constraintEnd_toEndOf="@+id/modeStatus_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pano_bt"
+            app:layout_constraintTop_toTopOf="@+id/pano_bt" />
+
+        <Button
+            android:id="@+id/modeStatus_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            app:layout_constraintEnd_toEndOf="@+id/modeReset_bt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/timelapse_bt"
+            app:layout_constraintTop_toTopOf="@+id/pano_bt" />
+
+        <Button
+            android:id="@+id/modeReset_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/modeStatus_bt"
+            app:layout_constraintTop_toTopOf="@+id/pano_bt" />
+
+        <TextView
+            android:id="@+id/modeStatus_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pano_bt" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/mode_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    </FrameLayout>
+
+</LinearLayout>
