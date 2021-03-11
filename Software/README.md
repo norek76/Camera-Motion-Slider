@@ -3,7 +3,6 @@ Forked from Dragonframe DFMoCo v.1.3.1
 
 ## Open Points
 - Panorama Delay 100 after image shot
-- Block Move & Jog during custom mode
 
 ## Migration for ESP32-WROOM-32 Board (ESP32-DevKitC V4)
 - channel 1

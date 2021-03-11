@@ -170,7 +170,7 @@
 #define VELOCITY_CONVERSION_FACTOR 0.30517578125f /* 20 / 65.536f */
 
 #define MAX_VELOCITY 12000
-#define DEFAUL_VELOCITY 600
+#define DEFAUL_VELOCITY 1500
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
 #define MIN_ACCELERATION 0.1f * MAX_VELOCITY
@@ -1549,7 +1549,7 @@ void processSerialCommand()
 
         case CMD_MM:
           parseError = (userCmd.argCount != 2 || !isValidMotor(motor));
-          if (!parseError)
+          if (!parseError && cameraMode == CAM_MODE_NONE)
           {
             processGoPosition(motor, (int32_t)userCmd.args[1]);
           }
@@ -1606,6 +1606,12 @@ void processSerialCommand()
           {
             setPulsesPerSecond(motor, (uint16_t)userCmd.args[1], true);
             sendMessage(MSG_PR, motor);
+          } else {
+            parseError = (userCmd.argCount != 1 || !isValidMotor(motor));
+            if (!parseError)
+            {
+              sendMessage(MSG_PR, motor);
+            }
           }
           break;
 
@@ -1615,6 +1621,12 @@ void processSerialCommand()
           {
             setPulsesPerSecond(motor, (uint16_t)userCmd.args[1]);
             sendMessage(MSG_VE, motor);
+          } else {
+            parseError = (userCmd.argCount != 1 || !isValidMotor(motor));
+            if (!parseError)
+            {
+              sendMessage(MSG_VE, motor);
+            }
           }
           break;
 
@@ -1669,7 +1681,7 @@ void processSerialCommand()
 
         case CMD_GO:
           parseError = motorMoving || (userCmd.argCount > 0) || !goMoReady;
-          if (!parseError)
+          if (!parseError && cameraMode = CAM_MODE_NONE)
           {
             for (m = 0; m < MOTOR_COUNT; m++)
             {
@@ -1982,6 +1994,10 @@ void nextMessage()
 
 boolean jogMotor(int motorIndex, int32_t target, int32_t * destination)
 {
+  if (cameraMode != CAM_MODE_NONE) {
+    return false;
+  }
+  
   Motor *motor = &motors[motorIndex];
   // ideally send motor to distance where decel happens after 2 seconds
   float vi = (motor->dir ? 1 : -1) * VELOCITY_CONVERSION_FACTOR * motor->nextMotorMoveSpeed;
@@ -2043,6 +2059,10 @@ boolean jogMotor(int motorIndex, int32_t target, int32_t * destination)
 
 void inchMotor(int motorIndex, int32_t target)
 {
+  if (cameraMode != CAM_MODE_NONE) {
+    return false;
+  }
+
   Motor *motor = &motors[motorIndex];
   // ideally send motor to distance where decel happens after 2 seconds
   
