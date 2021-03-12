@@ -176,7 +176,6 @@ class MainMenu : AppCompatActivity() {
             if (mBound) {
                 mService.sendCommand("cr")
             }
-            mode_fl.removeAllViews()
 
             true
         }
@@ -341,9 +340,10 @@ class MainMenu : AppCompatActivity() {
                                         val status = if (msgParts[2] == "0") "Setup"
                                         else if (msgParts[2] == "1") "Running"
                                         else if (msgParts[2] == "2") "Done"
-                                        else "Error"
+                                        else if (msgParts[2] == "14") "Error Move Time"
+                                        else if (msgParts[2] == "15") "Error Position"
+                                        else "Error ${msgParts[2]}"
                                         val statusExecution = if (msgParts[3] == "0") "Init Move"
-                                        else if (msgParts[3] == "1") "Start Executing"
                                         else "Executing"
                                         val imageCounter = msgParts[4]
                                         val images = msgParts[5]
