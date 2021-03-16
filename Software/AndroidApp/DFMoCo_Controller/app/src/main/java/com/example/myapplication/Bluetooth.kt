@@ -33,6 +33,7 @@ class BluetoothService: Service() {
     }
 
     fun sendCommand(input: String) {
+        Log.i("DATA SEND: ", input)
         if (bluetoothSocket != null) {
             try {
                 bluetoothSocket!!.outputStream.write("$input\r\n".toByteArray())
@@ -109,10 +110,14 @@ class BluetoothService: Service() {
         sendCommand("mp 2")
         sendCommand("mp 3")
         sendCommand("mp 4")
-        sendCommand("pr 1")
-        sendCommand("pr 2")
-        sendCommand("pr 3")
-        sendCommand("pr 4")
+        sendCommand("ve 1")
+        sendCommand("ve 2")
+        sendCommand("ve 3")
+        sendCommand("ve 4")
+        sendCommand("ac 1")
+        sendCommand("ac 2")
+        sendCommand("ac 3")
+        sendCommand("ac 4")
         sendCommand("cm")
     }
 

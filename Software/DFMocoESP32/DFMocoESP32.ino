@@ -175,7 +175,7 @@
 #define DEFAUL_VELOCITY 1500
 #define MIN_VELOCITY 100
 #define MAX_ACCELERATION 2 * MAX_VELOCITY
-#define MIN_ACCELERATION 0.1f * MAX_VELOCITY
+#define MIN_ACCELERATION 2 * MIN_VELOCITY
 
 // setup step and direction pins
 #if defined(BOARD_101)
@@ -383,7 +383,7 @@ char *txBufPtr;
 #define PANORAMA_ERROR_EXP_LT_50           13
 #define PANORAMA_ERROR_RST_LT_1            14
 
-void stopMotor(int motorIndex, boolean hardStop = false);
+void stopMotor(int motorIndex, boolean fastStop = false, boolean hardStop = false);
 void setPulsesPerSecond(int motorIndex, uint16_t pulsesPerSecond, boolean setRamp = false);
 
 struct TimelapseMotor {
@@ -1189,7 +1189,6 @@ void setupMotorMove(int motorIndex, int32_t destination)
     calculatePointToPoint(motorIndex, destination);
     bitSet(motorMoving, motorIndex);
   }
-
 }
 
 
@@ -1198,11 +1197,11 @@ void hardStop()
   // set the destination to the current location, so they won't move any more
   for (int i = 0; i < MOTOR_COUNT; i++)
   {
-    stopMotor(i, true);
+    stopMotor(i, false, true);
   }
 }
 
-void stopMotor(int motorIndex, boolean hardStop)
+void stopMotor(int motorIndex, boolean fastStop, boolean hardStop)
 {
   int32_t delta = (motors[motorIndex].destination - motors[motorIndex].position);
   if (!delta)
@@ -1222,7 +1221,10 @@ void stopMotor(int motorIndex, boolean hardStop)
   float maxA = motor->maxAcceleration;
   if (hardStop) {
     maxA = MAX_ACCELERATION * 3;
+  } else if (fastStop && maxA < motors[motorIndex].maxVelocity) {
+    maxA = motors[motorIndex].maxVelocity;
   }
+
   float maxV = motor->maxVelocity;
 
   if (v > maxV)
@@ -1640,6 +1642,12 @@ void processSerialCommand()
           {
             setMaxAccelerationPerSecond(motor, (uint16_t)userCmd.args[1]);
             sendMessage(MSG_AC, motor);
+          } else {
+            parseError = (userCmd.argCount != 1 || !isValidMotor(motor));
+            if (!parseError)
+            {
+              sendMessage(MSG_AC, motor);
+            }
           }
           break;
 

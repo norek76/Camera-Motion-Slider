@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Johannes\\Documents\\Arduino\\tools\\**",
+                "C:\\Users\\Johannes\\Documents\\Arduino\\hardware\\espressif\\esp32\\**",
                 "C:\\Users\\Johannes\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
                 "C:\\Users\\Johannes\\Documents\\Arduino\\libraries\\**",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\**",

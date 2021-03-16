@@ -67,46 +67,6 @@
             app:srcCompat="@drawable/ic_motor_settings" />
 
         <ImageButton
-            android:id="@+id/motor1_reset_ib"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/motor1_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
-            app:srcCompat="@drawable/ic_motor_reset" />
-
-        <ImageButton
-            android:id="@+id/motor3_reset_ib"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/motor3_settings_ib"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/motor3_settings_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
-            app:srcCompat="@drawable/ic_motor_reset" />
-
-        <ImageButton
-            android:id="@+id/motor4_reset_ib"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/motor4_settings_ib"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/motor4_settings_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
-            app:srcCompat="@drawable/ic_motor_reset" />
-
-        <ImageButton
-            android:id="@+id/motor2_reset_ib"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/motor2_settings_ib"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/motor2_settings_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib"
-            app:srcCompat="@drawable/ic_motor_reset" />
-
-        <ImageButton
             android:id="@+id/motor2_settings_ib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -153,8 +113,7 @@
             android:text="0"
             app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
             app:layout_constraintStart_toStartOf="@+id/motor1_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_reset_ib"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/motor1_settings_ib" />
 
         <TextView
             android:id="@+id/motor1_speed_tv"
@@ -165,7 +124,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/motor1_ib"
             app:layout_constraintStart_toStartOf="@+id/motor1_ib"
-            app:layout_constraintTop_toBottomOf="@+id/motor1_pos_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/motor1_pos_tv"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/motor2_speed_tv"
@@ -253,7 +213,7 @@
             android:id="@+id/motorAllStop_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Stop all "
             app:layout_constraintEnd_toStartOf="@+id/disconnect_bt"
             app:layout_constraintHorizontal_bias="0.5"
@@ -264,12 +224,48 @@
             android:id="@+id/disconnect_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Disconnect"
             app:layout_constraintEnd_toEndOf="@+id/textView9"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/motorAllStop_bt"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/motor1_acc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor1_settings_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor1_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor2_acc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor2_settings_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor2_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor3_acc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor3_settings_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor3_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_speed_tv" />
+
+        <TextView
+            android:id="@+id/motor4_acc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="@+id/motor4_settings_ib"
+            app:layout_constraintStart_toStartOf="@+id/motor4_settings_ib"
+            app:layout_constraintTop_toBottomOf="@+id/motor1_speed_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

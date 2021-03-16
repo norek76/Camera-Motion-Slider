@@ -12,14 +12,13 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginLeft
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myapplication.BluetoothService.Companion.EXTRA_BLUETOOTH_DATA
 import com.example.myapplication.BluetoothService.Companion.EXTRA_BLUETOOTH_MESSAGE
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import java.io.IOException
-import java.util.*
 
 
 class MainMenu : AppCompatActivity() {
@@ -33,9 +32,10 @@ class MainMenu : AppCompatActivity() {
         lateinit var mService: BluetoothService
         var mBound: Boolean = false
         var activeMotor = 0;
-        var jogModeActive = false;
+        var jogModeActive = 0;
         var motorPos = arrayListOf<String>()
         var motorSpeed = arrayListOf<String>()
+        var motorAcc = arrayListOf<String>()
     }
 
     public fun getMotorPos(motorNumber: Int): String {
@@ -56,6 +56,10 @@ class MainMenu : AppCompatActivity() {
         motorSpeed.add("0")
         motorSpeed.add("0")
         motorSpeed.add("0")
+        motorAcc.add("0")
+        motorAcc.add("0")
+        motorAcc.add("0")
+        motorAcc.add("0")
 
         motorAllStop_bt.setOnClickListener {
             if (mBound) {
@@ -101,7 +105,7 @@ class MainMenu : AppCompatActivity() {
             motor4_ib.setImageResource(R.drawable.ic_motor_active)
         }
 
-        motor1_reset_ib.setOnLongClickListener {
+        motor1_pos_tv.setOnLongClickListener {
             if (mBound) {
                 mService.sendCommand("zm 1")
             }
@@ -109,7 +113,7 @@ class MainMenu : AppCompatActivity() {
             true
         }
 
-        motor2_reset_ib.setOnLongClickListener {
+        motor2_pos_tv.setOnLongClickListener {
             if (mBound) {
                 mService.sendCommand("zm 2")
             }
@@ -117,7 +121,7 @@ class MainMenu : AppCompatActivity() {
             true
         }
 
-        motor3_reset_ib.setOnLongClickListener {
+        motor3_pos_tv.setOnLongClickListener {
             if (mBound) {
                 mService.sendCommand("zm 3")
             }
@@ -125,7 +129,7 @@ class MainMenu : AppCompatActivity() {
             true
         }
 
-        motor4_reset_ib.setOnLongClickListener {
+        motor4_pos_tv.setOnLongClickListener {
             if (mBound) {
                 mService.sendCommand("zm 4")
             }
@@ -179,24 +183,48 @@ class MainMenu : AppCompatActivity() {
 
             true
         }
+
         motor1_settings_ib.setOnClickListener {
-            createSettingsAlert(1, motorSpeed[0]).show()
+            createSettingsAlert(1, motorSpeed[0], motorAcc[0]).show()
+        }
+
+        motor2_settings_ib.setOnClickListener {
+            createSettingsAlert(2, motorSpeed[1], motorAcc[1]).show()
+        }
+
+        motor3_settings_ib.setOnClickListener {
+            createSettingsAlert(3, motorSpeed[2], motorAcc[2]).show()
+        }
+
+        motor4_settings_ib.setOnClickListener {
+            createSettingsAlert(4, motorSpeed[3], motorAcc[3]).show()
         }
     }
 
-    fun createSettingsAlert(motorNumber: Int, speed: String): AlertDialog.Builder {
+    fun createSettingsAlert(motorNumber: Int, speed: String, acc: String): AlertDialog.Builder {
         var alert = AlertDialog.Builder(this);
 
-        var edittext = EditText(this)
-        alert.setMessage("Update the speed")
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+
+        var editSpeed = EditText(this)
+        var editAcc = EditText(this)
+        alert.setMessage("Update the 1. speed and 2. acc")
         alert.setTitle("Settings")
 
-        alert.setView(edittext)
-        edittext.setText(speed)
+        layout.addView(editSpeed)
+        layout.addView(editAcc)
+
+        alert.setView(layout)
+
+        editSpeed.setText(speed)
+        editAcc.setText(acc)
 
         alert.setPositiveButton("Update", DialogInterface.OnClickListener { dialog, whichButton -> //What ever you want to do with the value
-            val newSpeed = edittext.text.toString().trim()
-            sendCommand("pr $motorNumber $newSpeed")
+            val newSpeed = editSpeed.text.toString().trim()
+            sendCommand("ve $motorNumber $newSpeed")
+            val newAcc = editAcc.text.toString().trim()
+            sendCommand("ac $motorNumber $newAcc")
         })
 
         return alert
@@ -205,22 +233,37 @@ class MainMenu : AppCompatActivity() {
     fun jogModeEvent(v: View, m: MotionEvent): Boolean {
         when (m.getAction()) {
             MotionEvent.ACTION_DOWN -> {
-                jogModeActive = true;
-                if (mHandler != null || jogMode == null) return true
-                mHandler = Handler()
-                jogMode!!.run()
+                if (jogModeActive === 0) {
+                    jogModeActive = 2;
+                    if (mHandler != null || jogMode == null) {
+                        mHandler!!.removeCallbacks(jogMode!!)
+                        mHandler = null
+                    }
+                    mHandler = Handler()
+                    jogMode!!.run()
+                }
             }
             MotionEvent.ACTION_UP -> {
-                jogModeActive = false;
-                sendCommand("sm $activeMotor")
+                if (jogModeActive === 2) {
+                    jogModeActive = 1
+                    Handler().postDelayed({
+                        jogModeActive = 0
+                        mService.sendCommand("sm $activeMotor")
+                    }, 200)
+                }
                 if (mHandler == null || jogMode == null) return true
                 mHandler!!.removeCallbacks(jogMode!!)
                 mHandler = null
                 v.performClick()
             }
             MotionEvent.ACTION_CANCEL -> {
-                jogModeActive = false;
-                sendCommand("sm $activeMotor")
+                if (jogModeActive === 2) {
+                    jogModeActive = 1
+                    Handler().postDelayed({
+                        jogModeActive = 0
+                        mService.sendCommand("sm $activeMotor")
+                    }, 200)
+                }
                 if (mHandler == null || jogMode == null) return true
                 mHandler!!.removeCallbacks(jogMode!!)
                 mHandler = null
@@ -234,7 +277,7 @@ class MainMenu : AppCompatActivity() {
         var position: String= ""
 
         override fun run() {
-            if (mBound && activeMotor > 0 && jogModeActive) {
+            if (mBound && activeMotor > 0 && jogModeActive === 2) {
                 mService.sendCommand("$cmd $activeMotor $position")
             }
             if (mHandler != null) {
@@ -328,6 +371,20 @@ class MainMenu : AppCompatActivity() {
                             }
 
                             motorSpeed[motorNumber - 1] = msgParts[2].trim();
+                        }
+                    }
+                    "ac" -> {
+                        if (msgParts.size == 3) {
+                            val motorNumber = Integer.parseInt(msgParts[1])
+                            val acc = "${msgParts[2].trim()} s/sec2"
+                            when (motorNumber) {
+                                1 -> motor1_acc_tv.text = acc
+                                2 -> motor2_acc_tv.text = acc
+                                3 -> motor3_acc_tv.text = acc
+                                4 -> motor4_acc_tv.text = acc
+                            }
+
+                            motorAcc[motorNumber - 1] = msgParts[2].trim();
                         }
                     }
                     "cm" -> {
