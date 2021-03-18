@@ -23,6 +23,14 @@ Last but not least there must be a controller. I started first to develope my "o
 So I've started to check the source code of this library, that was build for Arduino Board with just USB Serial support. I've migrated the library to support ESP32 boards together with Bluetooth 4.0 that can be used also with a Serial Bluetooth Application from Android/iOS. The ESP32 can controll up to 4 stepper motors with this library. The library is command based.
 In addition to the functionalities of DFMoCo I've added the possibility to focus / shutter an image of the camera with a headphone jack. Most camera manufactors support this way.
 
+To be able to controll the slider also outside of my home I found a really good powerbank from the company XTPower. Product Name: [XT-20000QC3](https://www.xtpower.de/XT-20000Q3-Powerbank-mobiler-externer-USB-Akku-mit-20100mAh)
+With this PowerBank I'm was able to reach the following operation times:
+- 1 motor:  7.5h
+- 2 motors: 5h
+- 3 motors: 2.5h
+
+You can easily connect two of them to increase the time. There is also a newer version of the PowerBank [XT-20000QC3-AO-PA](https://www.xtpower.de/XT-20000Q3-AO-PA-Powerbank-ohne-Abschaltung) without the automatic turnoff, when the power consumption is below 4-5W. If you build your controller wihtout a fan f.e. it would be better to choose this model, to keep the microcontroller running.
+ 
 Possible commands:
 - Move Motor 1-4 to position x
 - Set Speed / Acc Ramp
