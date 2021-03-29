@@ -1773,11 +1773,11 @@ void processSerialCommand()
           sendMessage(MSG_CR, motor);
           break;
         case CMD_TL:
-          parseError = (userCmd.argCount < 7 || (userCmd.argCount - 4) % 3 != 0);
+          parseError = (userCmd.argCount < 4 || (userCmd.argCount - 4) % 3 != 0);
           if (!parseError && cameraMode == CAM_MODE_NONE)
             setupTimelapse(userCmd);
           break;
-        case CMD_PA:
+        case CMD_PA: 
           parseError = (userCmd.argCount != 8);
           if (!parseError && cameraMode == CAM_MODE_NONE)
             setupPanorama(userCmd);
@@ -2352,9 +2352,6 @@ void processCameraMode() {
 }
 
 void IRAM_ATTR executeTimelaseMotion(void) {
-  setCameraShutter(false);
-  setCameraFocus(false);
-
   timelapseData.executionStatus = TIMELAPSE_MOVE;
 
   if (timelapseData.currentImageCounter >= timelapseData.imagesCount) {
@@ -2393,6 +2390,11 @@ void IRAM_ATTR executeTimelapseImage() {
   timerAttachInterrupt(timerCameraModeMotion, &executeTimelaseMotion, true);
   timerAlarmWrite(timerCameraModeMotion, timelapseData.exposureTimeMillis * 1000, false);
   timerAlarmEnable(timerCameraModeMotion);
+
+  delayMilliseconds(100);
+
+  setCameraShutter(false);
+  setCameraFocus(false);
 }
 
 void setupTimelapse(UserCmd userCmd) {  
@@ -2573,6 +2575,8 @@ void setupPanorama(UserCmd userCmd) {
     panoramaData.status = PANORAMA_ERROR_RST_LT_1;
     return;
   }
+
+  panoramaData.currentRowCounter = panoramaData.imagesRow;
   
   panoramaData.status = PANORAMA_RUNNING;
   panoramaData.executionStatus = PANORAMA_REST;
@@ -2606,7 +2610,9 @@ void processPanorama() {
 
       panoramaData.currentRowCounter++;
       if (panoramaData.currentRowCounter > panoramaData.imagesRow) {
-        newPositionRow -= panoramaData.stepsRow * (panoramaData.imagesRow - 1);
+        if (panoramaData.currentColumnCounter != 1) {
+          newPositionRow -= panoramaData.stepsRow * (panoramaData.imagesRow - 1);
+        }
         panoramaData.currentRowCounter = 1;
         panoramaData.currentColumnCounter++;
 

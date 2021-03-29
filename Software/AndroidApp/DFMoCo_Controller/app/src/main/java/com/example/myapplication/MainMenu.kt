@@ -138,22 +138,22 @@ class MainMenu : AppCompatActivity() {
         }
 
         jogPos_bt.setOnTouchListener { v, m ->
-            jogMode = JogMode("jm", "150000");
+            jogMode = JogMode("jm", "200000");
             jogModeEvent(v, m)
         }
 
         jogNeg_bt.setOnTouchListener { v, m ->
-            jogMode = JogMode("jm", "-150000");
+            jogMode = JogMode("jm", "-200000");
             jogModeEvent(v, m)
         }
 
         inchPos_bt.setOnTouchListener { v, m ->
-            jogMode = JogMode("im", "150000");
+            jogMode = JogMode("im", "200000");
             jogModeEvent(v, m)
         }
 
         inchNeg_bt.setOnTouchListener { v, m ->
-            jogMode = JogMode("im", "-150000");
+            jogMode = JogMode("im", "-200000");
             jogModeEvent(v, m)
         }
 
@@ -340,10 +340,10 @@ class MainMenu : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val msg = intent.getStringExtra(EXTRA_BLUETOOTH_MESSAGE)
             if (msg != null && msg != "") {
-                Log.i("data", msg)
+                // Log.i("data", msg)
                 val msgParts = msg.split(" ");
-                Log.i("data", msgParts[0])
-                Log.i("data", (msgParts[0] == "cr\r").toString())
+                // Log.i("data", msgParts[0])
+                // Log.i("data", (msgParts[0] == "cr\r").toString())
                 when (msgParts[0]) {
                     "mp" -> {
                         if (msgParts.size == 3) {
