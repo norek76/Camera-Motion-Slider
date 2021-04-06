@@ -43,4 +43,6 @@ The stack will look like that:
 
 ## Pan Module Image
 You can also use the pan module directly on a tripod, as the base for an panorma image.
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Module/images/Pan3.jpg?raw=true)
+
+
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/images/Pan3.jpg?raw=true)
