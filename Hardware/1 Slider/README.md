@@ -28,6 +28,8 @@ Part List Base:
 * Spacers 6mm (3x)
 * Excentric Spacers (3x)
 * Rollei T7S Mark II (Or any other heavy ballhead)
+* Arca Swiss Plates (2x)
+* Big Tripod Plates (2x)
 * Washers & Screws
   * 12x8
   * Screws

@@ -33,7 +33,7 @@ Cut the M5 thread in the Camera Base Plate & Motor Pan Plate
 Connect all part like on the images below.
 
 The stack will look like that:
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan1.png?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/images/Pan1.png?raw=true)
 - Red is the 16x8x5 Axial Bearing
 - Green is the 688ZZ Flanged
 - Gray is a 12x8 Washer
@@ -43,4 +43,4 @@ The stack will look like that:
 
 ## Pan Module Image
 You can also use the pan module directly on a tripod, as the base for an panorma image.
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/images/Pan3.jpg?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Module/images/Pan3.jpg?raw=true)
