@@ -3,7 +3,7 @@ The tilt module is similar to the pan module, just some plates are different.
 
 I'm also using here the same Mengs FNR-140 to center the camera in the rotation axis.
 
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt2.jpg?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/3%20Tilt%20Module/images/Tilt2.jpg?raw=true)
 
 ```
 I can't promise that this list is complete
