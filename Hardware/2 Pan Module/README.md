@@ -2,9 +2,11 @@
 For the pan module I was trying multiple approaches (F.e. "Pulleys with a strip"). The problem was, that the components became to huge.
 In the end I found a really simple way. It's a direct connection between the Motor and a Mengs DM-60 Base. I've designed my own motor mount plate.
 
-
 I'm using here an additional Mengs FNR-140 to center the nodal point of the camera lens in the rotation axis.
 I've added some lead counter weights at the other side, to reduce the torque on the motor.
+
+I've chosen here an Nema23 with 0.9° per Full Step --> With microstepping 1/16 this will be an increment of ~0.06°/Step
+
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/images/Pan2.jpg?raw=true)
 
 ```
@@ -39,7 +41,7 @@ The stack will look like that:
 - Green is the 688ZZ Flanged
 - Gray is a 12x8 Washer
 - Ignore the flexible motor coupling, it must be a fixed one here!
-- I've used a flanged screw from the right to the left. Starting in the Mengs DN-60 that is fixed on the camera plate
+- I've used a flanged screw from the top to the bottom. Starting from the Mengs DN-60 that is fixed on top of the camera plate.
 
 
 ## Pan Module Image
