@@ -3,7 +3,7 @@
 Hi,
 since long time I was looking for a stable slider, that can handle the load of a system camera like the A7 together with heavy lenses. Second requirement was to keep the price low.
 
-![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/images/BaseWithPan.jpg?raw=true)
+![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/1%20Slider/images/Slider.jpg?raw=true)
 
 ## Hardware Components
 So here we are after 4 months of drawing, sketching and development here is the slider with pan and tilt module. It's a modular system with the following components:
@@ -43,11 +43,11 @@ The controller for sure still supports the Dragonframe software.
 
 To control the Slider / Camera Module easily also outside of the home, I've written a small Android application.
 
-[Hardware - Base With Pan](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Base%20with%20Pan/README.md)
+[Hardware - Slider](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/1%20Slider/README.md)
 
-[Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/README.md)
+[Hardware - Pan Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/README.md)
 
-[Hardware - Pan Standalone Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Pan%20Standalone%20Module/README.md)
+[Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/3%20Tilt%20Module/README.md)
 
 [Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
 
