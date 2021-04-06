@@ -8,14 +8,15 @@ since long time I was looking for a stable slider, that can handle the load of a
 ## Hardware Components
 So here we are after 4 months of drawing, sketching and development here is the slider with pan and tilt module. It's a modular system with the following components:
 
- - Base with Pan
+ - Slider
+ - Pan Module
  - Tilt Module
- - Pan Standalone Module
 
 You can connect the three modules in the following configurations:
- - Base with Pan (f.e. Timelapse)
- - Base with Pan + Tilt Module (f.e. Timelapse)
- - Pan Standalone Module + Tilt Module (f.e. 360° Pano)
+ - Slider
+ - Slider with Pan Module (f.e. Timelapse)
+ - Slider with Pan + Tilt Module (f.e. Timelapse)
+ - Pan + Tilt Module (f.e. 360° Pano)
 
 ## Controller & Software
 Last but not least there must be a controller. I started first to develope my "own" motion control library, after few weeks I stopped. And search for existing libs out there and there is a really powerfull open source library called "DFMoCo". It's the protocoll that is used by the software Dragonframe.
