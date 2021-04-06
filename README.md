@@ -5,6 +5,18 @@ since long time I was looking for a stable slider, that can handle the load of a
 
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/1%20Slider/images/Slider.jpg?raw=true)
 
+[Hardware - Slider](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/1%20Slider/README.md)
+
+[Hardware - Pan Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/README.md)
+
+[Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/3%20Tilt%20Module/README.md)
+
+[Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
+
+[Software - ESP32](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/README.md)
+
+[Software - Android](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/AndroidApp/README.md)
+
 ## Hardware Components
 So here we are after 4 months of drawing, sketching and development here is the slider with pan and tilt module. It's a modular system with the following components:
 
@@ -42,15 +54,3 @@ Possible commands:
 The controller for sure still supports the Dragonframe software.
 
 To control the Slider / Camera Module easily also outside of the home, I've written a small Android application.
-
-[Hardware - Slider](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/1%20Slider/README.md)
-
-[Hardware - Pan Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/README.md)
-
-[Hardware - Tilt Module](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/3%20Tilt%20Module/README.md)
-
-[Hardware - Controller](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Controller/README.md)
-
-[Software - ESP32](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/README.md)
-
-[Software - Android](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Software/AndroidApp/README.md)
