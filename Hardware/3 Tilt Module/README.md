@@ -1,8 +1,8 @@
 # Tilt Module
 
-For the tilt module I was trying multiple approaches with the same concept as for the base ("Pulleys with a strip"). The problem was, that the components became to huge.
+For the tilt module I was trying multiple approaches (F.e. "Pulleys with a strip"). The problem was, that the components became to huge.
 
-In the end I found a really simple way. It's a direct connection between the Motor and the Menge DM-60 Base. I've designed my own motor mount plate.
+In the end I found a really simple way. It's a direct connection between the Motor and a Mengs DM-60 Base. I've designed my own motor mount plate.
 
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/Tilt%20Module/images/Tilt1.png?raw=true)
 
