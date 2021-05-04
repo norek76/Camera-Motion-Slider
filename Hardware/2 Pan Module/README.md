@@ -1,11 +1,10 @@
 # Pan Module
-For the pan module I was trying multiple approaches (F.e. "Pulleys with a strip"). The problem was, that the components became to huge.
-In the end I found a really simple way. It's a direct connection between the Motor and a Mengs DM-60 Base. I've designed my own motor mount plate.
+For the pan module I was trying multiple approaches (F.e. "Pulleys with a strip or Nema23 alone"). The problem was, that the components became to huge.
+In the end I found a really simple way. It's a direct connection between the Motor (Nema17 with a planetary gearbox) and a Mengs DM-60 Base. I've designed my own motor mount plate.
 
 I'm using here an additional Mengs FNR-140 to center the nodal point of the camera lens in the rotation axis.
-I've added some lead counter weights at the other side, to reduce the torque on the motor.
 
-I've chosen here an Nema23 with 0.9° per Full Step --> With microstepping 1/16 this will be an increment of ~0.06°/Step
+I've chosen here an Nema17 with 1.8° per Full Step together with a 27:1 Gearbox
 
 ![alt text](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/images/Pan2.jpg?raw=true)
 
@@ -15,8 +14,9 @@ I can't promise that this list is complete
 
 Part List Pan:
 * Motor Pan Plate (check the [step file](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/MotorPanModule.step?raw=true) & [drawing](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/MotorPanModule.pdf?raw=true))
+* Motor Adapter Plate (check the [step file](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/MotorAdapterPlate.step?raw=true) & [drawing](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/MotorAdapterPlate.pdf?raw=true))
 * Camera Base Plate (check the [step file](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/CameraBasePlate.step?raw=true) & [drawing](https://github.com/JoJ123/Camera-Motion-Slider/blob/master/Hardware/2%20Pan%20Module/parts/CameraBasePlate.pdf?raw=true))
-* Nema23 0.9degree (max 2.0A)
+* Nema17 1.8degree (max 2.0A) 27:1 Gearbox (check the max length!)
 * Motor Coupling Fixed Version! 
 * Spacers (40mm) (4x)
 * Center Screw M8 (1x)
