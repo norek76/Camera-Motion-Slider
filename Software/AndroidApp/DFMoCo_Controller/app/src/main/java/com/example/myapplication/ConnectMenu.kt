@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -46,7 +47,12 @@ class ConnectMenu : AppCompatActivity() {
             var intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(intent, REQUEST_CODE_ENABLE_BT);
         } else {
-            pairedDeviceList()
+            val address = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.getString("cnt_address", null)
+            if (address !== null) {
+                connectDevice(address)
+            } else {
+                pairedDeviceList()
+            }
         }
     }
 
@@ -73,11 +79,19 @@ class ConnectMenu : AppCompatActivity() {
             val device = list[position]
             val address = device.address
 
-            val intent = Intent(this, MainMenu::class.java)
-            intent.putExtra(EXTRA_ADDRESS, address)
+            val prefEditor = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.edit()
+            prefEditor?.putString("cnt_address", address)
+            prefEditor?.commit()
 
-            startActivity(intent)
+            connectDevice(address)
         }
+    }
+
+    fun connectDevice(address: String) {
+        val intent = Intent(this, MainMenu::class.java)
+        intent.putExtra(EXTRA_ADDRESS, address)
+
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

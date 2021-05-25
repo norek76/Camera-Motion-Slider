@@ -444,6 +444,10 @@ class MainMenu : AppCompatActivity() {
     }
 
     private fun disconnectBluetoothDevice() {
+        val prefEditor = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.edit()
+        prefEditor?.remove("cnt_address")
+        prefEditor?.commit()
+
         if (mBound) {
             mService.disconnect()
         }
@@ -454,11 +458,7 @@ class MainMenu : AppCompatActivity() {
 
     private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>() {
         private var connectSuccess: Boolean = true
-        private val context: Context
-
-        init {
-            this.context = c
-        }
+        private val context: Context = c
 
         override fun onPreExecute() {
             super.onPreExecute()
