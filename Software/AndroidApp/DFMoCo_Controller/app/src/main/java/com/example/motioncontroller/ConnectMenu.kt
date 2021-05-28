@@ -93,7 +93,7 @@ class ConnectMenu : AppCompatActivity() {
 
     private fun connectMotionControlService() {
         MotionControllerService.startService(this)
-        Intent(this, MotionControllerService::class.java).also {
+        Intent(this, MotionControllerService::class.java).also { intent ->
             bindService(intent, connection(::validateConnection), Context.BIND_ABOVE_CLIENT)
         }
     }
