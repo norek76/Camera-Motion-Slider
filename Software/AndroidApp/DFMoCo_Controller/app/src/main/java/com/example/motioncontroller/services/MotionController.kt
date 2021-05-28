@@ -30,9 +30,6 @@ enum class MotionControllerCustomMode {
     FOCUS_STACKING,
 }
 
-const val ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE"
-const val ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE"
-
 @Suppress("UNCHECKED_CAST")
 class MotionControllerService : BluetoothService() {
     private val binder = MotionControllerBinder()
@@ -84,13 +81,6 @@ class MotionControllerService : BluetoothService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("MotionControllerService", "Start")
 
-//        if (intent != null) {
-//            val action = intent.action
-//            when (action) {
-//                ACTION_START_FOREGROUND_SERVICE -> startForegroundService()
-//                ACTION_STOP_FOREGROUND_SERVICE -> stopForegroundService()
-//            }
-//        }
         startForegroundService()
 
         return START_NOT_STICKY
@@ -118,7 +108,7 @@ class MotionControllerService : BluetoothService() {
                 NotificationManager.IMPORTANCE_DEFAULT)
             serviceChannel.setSound(null, null)
             val manager = getSystemService(NotificationManager::class.java)
-            val a = manager!!.createNotificationChannel(serviceChannel)
+            manager!!.createNotificationChannel(serviceChannel)
         }
     }
 
