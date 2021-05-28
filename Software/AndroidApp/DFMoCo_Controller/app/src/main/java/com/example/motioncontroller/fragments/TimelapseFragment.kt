@@ -1,8 +1,7 @@
-package com.example.myapplication
+package com.example.motioncontroller.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +9,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.fragment.app.Fragment
+import com.example.motioncontroller.MainPage
+import com.example.motioncontroller.R
 
 /**
  * A simple [Fragment] subclass.
- * Use the [Timelapse.newInstance] factory method to
+ * Use the [TimelapseFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Timelapse : Fragment() {
+class TimelapseFragment : Fragment() {
     lateinit var images_et: EditText
     lateinit var interval_et: EditText
     lateinit var exposureTime_et: EditText
@@ -128,35 +129,35 @@ class Timelapse : Fragment() {
         m4End_et.setText(activity?.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.getString("tl_m4End_et", "5000") ?: "5000")
 
         m1Start_et.setOnLongClickListener {
-            m1Start_et.setText((activity as MainMenu)?.getMotorPos(1));
+            m1Start_et.setText((activity as MainPage)?.getMotorPosition(1));
             true
         }
         m1End_et.setOnLongClickListener {
-            m1End_et.setText((activity as MainMenu)?.getMotorPos(1));
+            m1End_et.setText((activity as MainPage)?.getMotorPosition(1));
             true
         }
         m2Start_et.setOnLongClickListener {
-            m2Start_et.setText((activity as MainMenu)?.getMotorPos(2));
+            m2Start_et.setText((activity as MainPage)?.getMotorPosition(2));
             true
         }
         m2End_et.setOnLongClickListener {
-            m2End_et.setText((activity as MainMenu)?.getMotorPos(2));
+            m2End_et.setText((activity as MainPage)?.getMotorPosition(2));
             true
         }
         m3Start_et.setOnLongClickListener {
-            m3Start_et.setText((activity as MainMenu)?.getMotorPos(3));
+            m3Start_et.setText((activity as MainPage)?.getMotorPosition(3));
             true
         }
         m3End_et.setOnLongClickListener {
-            m3End_et.setText((activity as MainMenu)?.getMotorPos(3));
+            m3End_et.setText((activity as MainPage)?.getMotorPosition(3));
             true
         }
         m4Start_et.setOnLongClickListener {
-            m4Start_et.setText((activity as MainMenu)?.getMotorPos(4));
+            m4Start_et.setText((activity as MainPage)?.getMotorPosition(4));
             true
         }
         m4End_et.setOnLongClickListener {
-            m4End_et.setText((activity as MainMenu)?.getMotorPos(4));
+            m4End_et.setText((activity as MainPage)?.getMotorPosition(4));
             true
         }
 
@@ -195,7 +196,7 @@ class Timelapse : Fragment() {
                     command = command + " 4 $start $end"
                 }
 
-                (activity as MainMenu)?.sendCommand(command)
+                (activity as MainPage)?.sendCommand(command)
             }
         }
     }

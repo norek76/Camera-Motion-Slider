@@ -1,5 +1,13 @@
 <resources>
-    <string name="app_name">Bluetooth Serial</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Motion Controller</string>
+    <string name="device_selection">Choose your Motion Controller</string>
+    <string name="connecting">Connecting...</string>
+    <string name="connected">Connected!</string>
+    <string name="disconnected">Disconnected!</string>
+    <string name="version">Version:</string>
+    <string name="motor_count">Motor Count:</string>
+
+    <string name="jog_mode">Jog Mode</string>
+    <string name="timelapse_mode">Timelapse Mode</string>
+    <string name="panorama_mode">Panorama Mode</string>
 </resources>

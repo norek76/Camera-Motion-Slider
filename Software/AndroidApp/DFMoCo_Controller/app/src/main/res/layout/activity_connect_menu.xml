@@ -8,28 +8,49 @@
     android:gravity="center_horizontal"
     tools:context=".ConnectMenu">
 
+    <ImageView
+        android:id="@+id/bluetoothIv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_bluetooth_off" />
+
     <TextView
-        android:id="@+id/bluetoothStatusTv"
+        android:id="@+id/tv_infoConnection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:padding="5dp"
+        android:text="@string/device_selection"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <ImageView
-        android:id="@+id/bluetoothIv"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_bluetooth_off" />
+
+    <ProgressBar
+        android:id="@+id/pb_connecting"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:indeterminate="true"
+        android:indeterminateOnly="true"
+        android:indeterminateTint="@color/light_grey"
+        android:indeterminateTintMode="src_atop"
+        android:progressTint="#DD0101"
+        android:visibility="gone" />
 
     <ListView
-        android:id="@+id/pairedLv"
+        android:id="@+id/lv_pairedDevices"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
 
 </LinearLayout>

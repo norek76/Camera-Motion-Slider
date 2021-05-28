@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.motioncontroller.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import com.example.motioncontroller.MainPage
+import com.example.motioncontroller.R
 
 class Panorama : Fragment() {
     lateinit var rowImages_et: EditText
@@ -109,7 +111,7 @@ class Panorama : Fragment() {
                 val exposureTime = exposureTime_et.text.toString()
                 val restTime = restTime_et.text.toString()
 
-                (activity as MainMenu)?.sendCommand("pa $rowMotor $rowImages $rowSteps $columnMotor $columnImages $columnSteps $exposureTime $restTime")
+                (activity as MainPage)?.sendCommand("pa $rowMotor $rowImages $rowSteps $columnMotor $columnImages $columnSteps $exposureTime $restTime")
             }
         }
     }

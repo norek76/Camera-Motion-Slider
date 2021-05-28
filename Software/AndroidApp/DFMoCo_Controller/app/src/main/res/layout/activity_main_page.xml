@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".ConnectMenu">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/ib_settings"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/version"
+            app:layout_constraintTop_toBottomOf="@+id/version"
+            app:srcCompat="@drawable/ic_motor_settings" />
+
+        <ImageButton
+            android:id="@+id/ib_timelapse"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@+id/ib_settings"
+            app:layout_constraintTop_toBottomOf="@+id/version3"
+            app:srcCompat="@drawable/ic_timelapse" />
+
+        <ImageButton
+            android:id="@+id/ib_reset"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/ic_reset"
+            app:layout_constraintEnd_toEndOf="@+id/motorCount"
+            app:layout_constraintTop_toTopOf="@+id/ib_settings" />
+
+        <ImageButton
+            android:id="@+id/ib_jog"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:layout_constraintEnd_toStartOf="@+id/ib_reset"
+            app:layout_constraintStart_toEndOf="@+id/ib_settings"
+            app:layout_constraintTop_toTopOf="@+id/ib_settings"
+            app:srcCompat="@drawable/ic_joystick" />
+
+        <ImageButton
+            android:id="@+id/ib_focus"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:layout_constraintEnd_toEndOf="@+id/ib_reset"
+            app:layout_constraintStart_toStartOf="@+id/ib_reset"
+            app:layout_constraintTop_toTopOf="@+id/ib_timelapse"
+            app:srcCompat="@drawable/ic_focus" />
+
+        <ImageButton
+            android:id="@+id/ib_panorama"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:layout_constraintEnd_toEndOf="@+id/ib_jog"
+            app:layout_constraintStart_toStartOf="@+id/ib_jog"
+            app:layout_constraintTop_toTopOf="@+id/ib_timelapse"
+            app:srcCompat="@drawable/ic_panorama" />
+
+        <TextView
+            android:id="@+id/mainpage_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version: 1.4.5"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/mainpage_title"
+            app:layout_constraintTop_toBottomOf="@+id/mainpage_title" />
+
+        <TextView
+            android:id="@+id/version3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_settings"
+            app:layout_constraintStart_toStartOf="@+id/ib_settings"
+            app:layout_constraintTop_toBottomOf="@+id/ib_settings" />
+
+        <TextView
+            android:id="@+id/version5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timelapse"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_timelapse"
+            app:layout_constraintStart_toStartOf="@+id/ib_timelapse"
+            app:layout_constraintTop_toBottomOf="@+id/ib_timelapse" />
+
+        <TextView
+            android:id="@+id/version6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Focus Stacking"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_focus"
+            app:layout_constraintStart_toStartOf="@+id/ib_focus"
+            app:layout_constraintTop_toBottomOf="@+id/ib_focus" />
+
+        <TextView
+            android:id="@+id/version7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Panorama"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_panorama"
+            app:layout_constraintStart_toStartOf="@+id/ib_panorama"
+            app:layout_constraintTop_toBottomOf="@+id/ib_panorama" />
+
+        <TextView
+            android:id="@+id/version4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jog"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_jog"
+            app:layout_constraintStart_toStartOf="@+id/ib_jog"
+            app:layout_constraintTop_toBottomOf="@+id/ib_jog" />
+
+        <TextView
+            android:id="@+id/version8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset Mode"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/ib_reset"
+            app:layout_constraintStart_toStartOf="@+id/ib_reset"
+            app:layout_constraintTop_toBottomOf="@+id/ib_jog" />
+
+        <TextView
+            android:id="@+id/motorCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Motor Count: 2"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/mainpage_title"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/version"
+            app:layout_constraintTop_toBottomOf="@+id/mainpage_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
