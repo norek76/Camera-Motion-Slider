@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAlignment="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView15"
@@ -526,42 +526,54 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
+            android:progressTint="@color/light_grey"
+            android:thumbTint="@color/orange"
             app:layout_constraintBottom_toBottomOf="@+id/textView33"
             app:layout_constraintEnd_toEndOf="@+id/textView17"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView33"
             app:layout_constraintTop_toTopOf="@+id/textView33"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
             android:id="@+id/sb_timelapse_m2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
+            android:progressTint="@color/light_grey"
+            android:thumbTint="@color/purple_200"
             app:layout_constraintBottom_toBottomOf="@+id/textView36"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView36" />
+            app:layout_constraintTop_toTopOf="@+id/textView36"
+            app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
             android:id="@+id/sb_timelapse_m3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
+            android:progressTint="@color/light_grey"
+            android:thumbTint="@color/purple_700"
             app:layout_constraintBottom_toBottomOf="@+id/textView38"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView38" />
+            app:layout_constraintTop_toTopOf="@+id/textView38"
+            app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
             android:id="@+id/sb_timelapse_m4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
+            android:progressTint="@color/light_grey"
+            android:thumbTint="@color/teal_200"
             app:layout_constraintBottom_toBottomOf="@+id/textView40"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView40" />
+            app:layout_constraintTop_toTopOf="@+id/textView40"
+            app:tickMarkTint="@color/light_grey" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -596,6 +608,7 @@
             android:layout_marginTop="16dp"
             android:text="M 1"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/orange"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -606,6 +619,7 @@
             android:layout_marginTop="8dp"
             android:text="M 2"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/purple_200"
             app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
             app:layout_constraintTop_toBottomOf="@+id/sb_motor_1" />
 
@@ -616,6 +630,7 @@
             android:layout_marginTop="8dp"
             android:text="M 3"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/purple_700"
             app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
             app:layout_constraintTop_toBottomOf="@+id/sb_motor_2" />
 
@@ -627,6 +642,7 @@
             android:includeFontPadding="true"
             android:text="M 4"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/teal_200"
             app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
             app:layout_constraintTop_toBottomOf="@+id/sb_motor_3" />
 
@@ -724,7 +740,7 @@
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
-            android:thumbTint="@color/orange"
+            android:thumbTint="@color/purple_200"
             app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
@@ -737,7 +753,7 @@
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
-            android:thumbTint="@color/orange"
+            android:thumbTint="@color/purple_700"
             app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
@@ -750,7 +766,7 @@
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
-            android:thumbTint="@color/orange"
+            android:thumbTint="@color/teal_200"
             app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
