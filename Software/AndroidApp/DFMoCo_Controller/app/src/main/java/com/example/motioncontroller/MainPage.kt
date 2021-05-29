@@ -7,16 +7,11 @@ import android.os.IBinder
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_ACC_UPDATE
 import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE
-import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_DISCONNECT
-import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_POSITION_UPDATE
-import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_SPEED_UPDATE
+import com.example.motioncontroller.MotionControllerService.Companion.MOTION_CONTROLLER_DISCONNECT_ACTION
 import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_UPDATE
 import com.example.motioncontroller.datasets.TimelapseData
 import com.example.motioncontroller.datasets.TimelapseDataMotor
@@ -44,25 +39,6 @@ class MainPage : AppCompatActivity() {
         }
         ib_timelapse.setOnClickListener {
             goToModeActivity(CUSTOM_MODE_TYPE.TIMELAPSE)
-            if (mBound) {
-                val timelapseData = object : TimelapseData {
-                    override val images: Int = 100
-                    override val interval: Int = 5000
-                    override val exposureTime: Int = 1000
-                    override val restTime: Int = 500
-                    override val motorData: Array<TimelapseDataMotor> = arrayOf(
-                        object : TimelapseDataMotor {
-                            override val motorNumber: Int = 1
-                            override val positions: IntArray = intArrayOf(100, 200)
-                        },
-                        object : TimelapseDataMotor {
-                            override val motorNumber: Int = 2
-                            override val positions: IntArray = intArrayOf(100, 200)
-                        }
-                    )
-                }
-                mService.startTimelapse(timelapseData)
-            }
         }
         ib_panorama.setOnClickListener {
             goToModeActivity(CUSTOM_MODE_TYPE.PANORAMA)
@@ -100,14 +76,8 @@ class MainPage : AppCompatActivity() {
             .registerReceiver(messageControllerUpdate, IntentFilter(EXTRA_MOTION_CONTROLLER_UPDATE))
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(messageCustomerModeUpdate, IntentFilter(EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE))
-//        LocalBroadcastManager.getInstance(this)
-//            .registerReceiver(messagePositionUpdate, IntentFilter(EXTRA_MOTION_CONTROLLER_POSITION_UPDATE))
-//        LocalBroadcastManager.getInstance(this)
-//            .registerReceiver(messageSpeedUpdate, IntentFilter(EXTRA_MOTION_CONTROLLER_SPEED_UPDATE))
-//        LocalBroadcastManager.getInstance(this)
-//            .registerReceiver(messageAccUpdate, IntentFilter(EXTRA_MOTION_CONTROLLER_ACC_UPDATE))
         LocalBroadcastManager.getInstance(this)
-            .registerReceiver(messageDisconnect, IntentFilter(EXTRA_MOTION_CONTROLLER_DISCONNECT))
+            .registerReceiver(messageDisconnect, IntentFilter(MOTION_CONTROLLER_DISCONNECT_ACTION))
 
         validateConnection()
     }
@@ -115,9 +85,6 @@ class MainPage : AppCompatActivity() {
     override fun onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageControllerUpdate)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageCustomerModeUpdate)
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messagePositionUpdate)
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageSpeedUpdate)
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageAccUpdate)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageDisconnect)
         super.onPause()
     }

@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.example.motioncontroller.MainPage
 import com.example.motioncontroller.R
+import kotlinx.android.synthetic.main.fragment_panorama.*
 
 class Panorama : Fragment() {
     lateinit var rowImages_et: EditText
