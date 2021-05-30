@@ -10,6 +10,8 @@
 
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="stop_all">Stop All</string>
+    <string name="reset">Reset</string>
 
     <string name="jog_mode">Jog Mode</string>
     <string name="timelapse_mode">Timelapse Mode</string>

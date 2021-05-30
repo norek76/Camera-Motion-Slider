@@ -13,8 +13,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE
 import com.example.motioncontroller.MotionControllerService.Companion.MOTION_CONTROLLER_DISCONNECT_ACTION
 import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_UPDATE
-import com.example.motioncontroller.datasets.TimelapseData
-import com.example.motioncontroller.datasets.TimelapseDataMotor
 import kotlinx.android.synthetic.main.activity_main_page.*
 
 @Suppress("UNCHECKED_CAST")
@@ -29,7 +27,7 @@ class MainPage : AppCompatActivity() {
         setContentView(R.layout.activity_main_page)
 
         ib_jog.setOnClickListener {
-            goToModeActivity(CUSTOM_MODE_TYPE.JOG)
+            goToModeActivity(CustomModeType.JOG)
         }
         ib_reset.setOnLongClickListener {
             if (mBound) {
@@ -38,10 +36,10 @@ class MainPage : AppCompatActivity() {
             true
         }
         ib_timelapse.setOnClickListener {
-            goToModeActivity(CUSTOM_MODE_TYPE.TIMELAPSE)
+            goToModeActivity(CustomModeType.TIMELAPSE)
         }
         ib_panorama.setOnClickListener {
-            goToModeActivity(CUSTOM_MODE_TYPE.PANORAMA)
+            goToModeActivity(CustomModeType.PANORAMA)
         }
     }
 
@@ -147,7 +145,7 @@ class MainPage : AppCompatActivity() {
         returnConnectMenu()
     }
 
-    private fun goToModeActivity(customMode: CUSTOM_MODE_TYPE) {
+    private fun goToModeActivity(customMode: CustomModeType) {
         val intent = Intent(this, CustomMode::class.java)
         intent.putExtra(CUSTOM_MODE_EXTRA, customMode)
 

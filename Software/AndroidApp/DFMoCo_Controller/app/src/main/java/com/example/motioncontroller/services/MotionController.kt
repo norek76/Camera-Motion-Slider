@@ -133,7 +133,7 @@ class MotionControllerService : BluetoothService() {
         }
     }
 
-    private fun createNotification(extraCustomMode: CUSTOM_MODE_TYPE?): Notification {
+    private fun createNotification(extraCustomMode: CustomModeType?): Notification {
         val notificationIntent = Intent(this, notificationActivity)
         if (extraCustomMode != null) {
             notificationIntent.putExtra(CUSTOM_MODE_EXTRA, extraCustomMode)
@@ -149,7 +149,7 @@ class MotionControllerService : BluetoothService() {
             .build()
     }
 
-    fun updateNotification(updateNotificationText: String?, updateNotificationActivity : Class<AppCompatActivity>?, extraCustomMode: CUSTOM_MODE_TYPE?) {
+    fun updateNotification(updateNotificationText: String?, updateNotificationActivity : Class<AppCompatActivity>?, extraCustomMode: CustomModeType?) {
         if (updateNotificationText != null) {
             notificationText = updateNotificationText
         }
@@ -285,6 +285,10 @@ class MotionControllerService : BluetoothService() {
                 mHandler!!.postDelayed({ jogModeMovement(motorNumber, direction) }, 300)
             }
         }
+    }
+
+    fun goToPosition(motorNumber: Int, position: Int) {
+        sendCommand("mm $motorNumber $position")
     }
 
     fun stopAllMotor() {

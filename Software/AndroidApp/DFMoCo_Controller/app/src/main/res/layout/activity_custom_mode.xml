@@ -42,8 +42,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/orange"
-            app:layout_constraintStart_toStartOf="@+id/textView46"
-            app:layout_constraintTop_toBottomOf="@+id/textView46" />
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start" />
 
         <TextView
             android:id="@+id/tv_timelapse_start_m2"
@@ -53,6 +53,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/purple_200"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start_m1"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m1" />
 
@@ -64,7 +65,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/teal_200"
-            app:layout_constraintStart_toStartOf="@+id/textView46"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m3" />
 
         <TextView
@@ -75,11 +77,12 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/purple_700"
-            app:layout_constraintStart_toStartOf="@+id/textView46"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m2" />
 
         <TextView
-            android:id="@+id/textView46"
+            android:id="@+id/tv_timelapse_start"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -90,7 +93,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
         <TextView
-            android:id="@+id/textView45"
+            android:id="@+id/tv_timelapse_end"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -108,8 +111,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/orange"
-            app:layout_constraintEnd_toEndOf="@+id/textView45"
-            app:layout_constraintTop_toBottomOf="@+id/textView45" />
+            app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
+            app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end" />
 
         <TextView
             android:id="@+id/tv_timelapse_end_m2"
@@ -119,7 +122,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/purple_200"
-            app:layout_constraintEnd_toEndOf="@+id/textView45"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m1" />
 
         <TextView
@@ -130,7 +134,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="@+id/textView45"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m2" />
 
         <TextView
@@ -141,11 +146,12 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/teal_200"
-            app:layout_constraintEnd_toEndOf="@+id/textView45"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m3" />
 
         <TextView
-            android:id="@+id/textView33"
+            android:id="@+id/tv_timelapse_m1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -156,39 +162,43 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m4" />
 
         <TextView
-            android:id="@+id/textView36"
+            android:id="@+id/tv_timelapse_m2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="M2"
             android:textAlignment="center"
             android:textColor="@color/purple_200"
-            app:layout_constraintStart_toStartOf="@+id/textView33"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m1" />
 
         <TextView
-            android:id="@+id/textView38"
+            android:id="@+id/tv_timelapse_m3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="M3"
             android:textAlignment="center"
             android:textColor="@color/purple_700"
-            app:layout_constraintStart_toStartOf="@+id/textView33"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m2" />
 
         <TextView
-            android:id="@+id/textView40"
+            android:id="@+id/tv_timelapse_m4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="M4"
             android:textAlignment="center"
             android:textColor="@color/teal_200"
-            app:layout_constraintStart_toStartOf="@+id/textView33"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m3" />
 
         <TextView
             android:id="@+id/tv_timelapse_position_m1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="Position: 1234 / 800mm"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -200,10 +210,12 @@
             android:id="@+id/tv_timelapse_position_m2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="Position: 1234 / 274.1°"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="10sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m2" />
 
@@ -211,10 +223,12 @@
             android:id="@+id/tv_timelapse_position_m3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="Position: 1234"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="10sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m3" />
 
@@ -222,10 +236,12 @@
             android:id="@+id/tv_timelapse_position_m4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="Position: 505"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="10sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
             app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m4" />
 
@@ -367,9 +383,9 @@
             android:scaleType="fitXY"
             android:scaleX="1"
             android:scaleY="1"
-            app:layout_constraintBottom_toBottomOf="@+id/textView46"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_start"
             app:layout_constraintEnd_toEndOf="@+id/textView17"
-            app:layout_constraintTop_toTopOf="@+id/textView46"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_start"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_goto" />
 
@@ -382,9 +398,9 @@
             android:scaleType="fitXY"
             android:scaleX="1"
             android:scaleY="1"
-            app:layout_constraintBottom_toBottomOf="@+id/textView46"
-            app:layout_constraintStart_toEndOf="@+id/textView46"
-            app:layout_constraintTop_toTopOf="@+id/textView46"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_start"
+            app:layout_constraintStart_toEndOf="@+id/tv_timelapse_start"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_start"
             app:srcCompat="@drawable/ic_goto" />
 
         <ImageView
@@ -473,11 +489,20 @@
             app:layout_constraintTop_toBottomOf="@+id/divider4" />
 
         <Button
-            android:id="@+id/bt_timelapse_stop"
+            android:id="@+id/bt_timelapse_stop_motor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stop_all"
+            app:layout_constraintEnd_toStartOf="@+id/bt_timelapse_reset"
+            app:layout_constraintStart_toEndOf="@+id/bt_timelapse_start"
+            app:layout_constraintTop_toTopOf="@+id/bt_timelapse_start" />
+
+        <Button
+            android:id="@+id/bt_timelapse_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
-            android:text="@string/stop"
+            android:text="@string/reset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bt_timelapse_start" />
 
@@ -528,11 +553,11 @@
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/orange"
-            app:layout_constraintBottom_toBottomOf="@+id/textView33"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_m1"
             app:layout_constraintEnd_toEndOf="@+id/textView17"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView33"
-            app:layout_constraintTop_toTopOf="@+id/textView33"
+            app:layout_constraintStart_toEndOf="@+id/tv_timelapse_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_m1"
             app:layout_constraintVertical_bias="0.0"
             app:tickMarkTint="@color/light_grey" />
 
@@ -543,10 +568,11 @@
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/purple_200"
-            app:layout_constraintBottom_toBottomOf="@+id/textView36"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_m2"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
-            app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView36"
+            app:layout_constraintStart_toEndOf="@+id/tv_timelapse_m2"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_m2"
             app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
@@ -556,10 +582,11 @@
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/purple_700"
-            app:layout_constraintBottom_toBottomOf="@+id/textView38"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_m3"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
-            app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView38"
+            app:layout_constraintStart_toEndOf="@+id/tv_timelapse_m2"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_m3"
             app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
@@ -569,10 +596,11 @@
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/teal_200"
-            app:layout_constraintBottom_toBottomOf="@+id/textView40"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_m4"
             app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
-            app:layout_constraintStart_toEndOf="@+id/textView36"
-            app:layout_constraintTop_toTopOf="@+id/textView40"
+            app:layout_constraintStart_toEndOf="@+id/tv_timelapse_m2"
+            app:layout_constraintTop_toTopOf="@+id/tv_timelapse_m4"
             app:tickMarkTint="@color/light_grey" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -601,7 +629,7 @@
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/tv_motor_1"
+            android:id="@+id/tv_jog_m1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -613,29 +641,31 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_motor_2"
+            android:id="@+id/tv_jog_m2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="M 2"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/purple_200"
-            app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/sb_motor_1" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/sb_jog_m1" />
 
         <TextView
-            android:id="@+id/tv_motor_3"
+            android:id="@+id/tv_jog_m3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="M 3"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/purple_700"
-            app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/sb_motor_2" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/sb_jog_m2" />
 
         <TextView
-            android:id="@+id/tv_motor_4"
+            android:id="@+id/tv_jog_m4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -643,84 +673,91 @@
             android:text="M 4"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/teal_200"
-            app:layout_constraintStart_toStartOf="@+id/tv_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/sb_motor_3" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/sb_jog_m3" />
 
         <TextView
-            android:id="@+id/tv_position_1"
+            android:id="@+id/tv_jog_name_m1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m1" />
+
+        <TextView
+            android:id="@+id/tv_jog_name_m2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m2" />
+
+        <TextView
+            android:id="@+id/tv_jog_name_m3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m3" />
+
+        <TextView
+            android:id="@+id/tv_jog_name_m4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m4" />
+
+        <TextView
+            android:id="@+id/tv_jog_position_m1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="Position: 1234steps; 800mm"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_1"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m1"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1" />
 
         <TextView
-            android:id="@+id/tv_motor_1_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_1" />
-
-        <TextView
-            android:id="@+id/tv_motor_2_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_2" />
-
-        <TextView
-            android:id="@+id/tv_motor_3_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_3" />
-
-        <TextView
-            android:id="@+id/tv_motor_4_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_4" />
-
-        <TextView
-            android:id="@+id/tv_position_2"
+            android:id="@+id/tv_jog_position_m2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Position: 1234steps; 800mm"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_2"
-            app:layout_constraintEnd_toEndOf="@+id/tv_position_1" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m2"
+            app:layout_constraintEnd_toEndOf="@+id/tv_jog_position_m1" />
 
         <TextView
-            android:id="@+id/tv_position_3"
+            android:id="@+id/tv_jog_position_m3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Position: 1234steps; 800mm"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_3"
-            app:layout_constraintEnd_toEndOf="@+id/tv_position_1" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m3"
+            app:layout_constraintEnd_toEndOf="@+id/tv_jog_position_m1" />
 
         <TextView
-            android:id="@+id/tv_position_4"
+            android:id="@+id/tv_jog_position_m4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Position: 1234 / 800mm"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_4"
-            app:layout_constraintEnd_toEndOf="@+id/tv_position_1" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m4"
+            app:layout_constraintEnd_toEndOf="@+id/tv_jog_position_m1" />
 
         <SeekBar
-            android:id="@+id/sb_motor_1"
+            android:id="@+id/sb_jog_m1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
@@ -731,50 +768,53 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_motor_1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_jog_m1"
             app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
-            android:id="@+id/sb_motor_2"
+            android:id="@+id/sb_jog_m2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/purple_200"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/tv_motor_2"
+            app:layout_constraintStart_toStartOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_jog_m2"
             app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
-            android:id="@+id/sb_motor_3"
+            android:id="@+id/sb_jog_m3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/tv_motor_3"
+            app:layout_constraintStart_toStartOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_jog_m3"
             app:tickMarkTint="@color/light_grey" />
 
         <SeekBar
-            android:id="@+id/sb_motor_4"
+            android:id="@+id/sb_jog_m4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:progress="50"
             android:progressTint="@color/light_grey"
             android:thumbTint="@color/teal_200"
-            app:layout_constraintEnd_toEndOf="@+id/sb_motor_1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/sb_jog_m1"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/sb_motor_1"
-            app:layout_constraintTop_toBottomOf="@+id/tv_motor_4"
+            app:layout_constraintStart_toStartOf="@+id/sb_jog_m1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_jog_m4"
             app:tickMarkTint="@color/light_grey" />
 
         <ImageButton
-            android:id="@+id/ib_zero_1"
+            android:id="@+id/ib_jog_zero_m1"
             android:layout_width="30dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -783,12 +823,12 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_zero_motor_foreground"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_1"
-            app:layout_constraintStart_toEndOf="@+id/tv_motor_1"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_1" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m1"
+            app:layout_constraintStart_toEndOf="@+id/tv_jog_m1"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m1" />
 
         <ImageButton
-            android:id="@+id/ib_zero_2"
+            android:id="@+id/ib_jog_zero_m2"
             android:layout_width="30dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -797,12 +837,13 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_zero_motor_foreground"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_2"
-            app:layout_constraintStart_toEndOf="@+id/tv_motor_2"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_2" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m2"
+            app:layout_constraintStart_toEndOf="@+id/tv_jog_m2"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m2" />
 
         <ImageButton
-            android:id="@+id/ib_zero_3"
+            android:id="@+id/ib_jog_zero_m3"
             android:layout_width="30dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -811,12 +852,13 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_zero_motor_foreground"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_3"
-            app:layout_constraintStart_toEndOf="@+id/tv_motor_3"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_3" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m3"
+            app:layout_constraintStart_toEndOf="@+id/tv_jog_m3"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m3" />
 
         <ImageButton
-            android:id="@+id/ib_zero_4"
+            android:id="@+id/ib_jog_zero_m4"
             android:layout_width="30dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -825,19 +867,20 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_zero_motor_foreground"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_motor_4"
-            app:layout_constraintStart_toEndOf="@+id/tv_motor_4"
-            app:layout_constraintTop_toTopOf="@+id/tv_motor_4" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_jog_m4"
+            app:layout_constraintStart_toEndOf="@+id/tv_jog_m4"
+            app:layout_constraintTop_toTopOf="@+id/tv_jog_m4" />
 
         <Button
-            android:id="@+id/bt_motorAllStop"
+            android:id="@+id/bt_jog_motorAllStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Stop all "
+            android:text="@string/stop_all"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sb_motor_4" />
+            app:layout_constraintTop_toBottomOf="@+id/sb_jog_m4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
