@@ -86,6 +86,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
 
         if (mBound) {
             val motorCount = mService.motorCount
+            tv_jog_name_m1.text = mService.getMotorName(1)
 
             if (motorCount >= 2) {
                 tv_jog_m2.visibility = View.VISIBLE
