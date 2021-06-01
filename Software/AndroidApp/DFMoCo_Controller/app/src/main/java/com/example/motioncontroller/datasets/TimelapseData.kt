@@ -26,3 +26,13 @@ interface TimelapseData {
         }
     }
 }
+
+class TimelapseStatusData {
+    var status: Int = -1
+    var execution: Int = -1
+    var images: Int = -1
+    var interval: Int = -1
+    var exposure: Int = -1
+    var rest: Int = -1
+    var currentImageCount: Int = -1
+}

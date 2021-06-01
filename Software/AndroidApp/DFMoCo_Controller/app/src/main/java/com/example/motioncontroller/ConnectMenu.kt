@@ -19,9 +19,11 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_connect_menu.*
 import java.io.IOException
+import kotlin.time.ExperimentalTime
 
 private const val REQUEST_CODE_ENABLE_BT:Int = 1
 
+@ExperimentalTime
 class ConnectMenu : AppCompatActivity() {
     lateinit var bAdapter: BluetoothAdapter
     private lateinit var pairedDevices: Set<BluetoothDevice>
@@ -68,7 +70,7 @@ class ConnectMenu : AppCompatActivity() {
         } else {
             val sharedPref =
                 getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)
-            btAddress = sharedPref.getString("cnt_address", null)
+            btAddress = sharedPref.getString(getString(R.string.pref_bluetooth_address), null)
             if (btAddress !== null) {
                 connectMotionControlService()
             } else {
@@ -158,7 +160,7 @@ class ConnectMenu : AppCompatActivity() {
 
         if (!connectSuccess) {
             val prefEditor = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.edit()
-            prefEditor?.remove("cnt_address")
+            prefEditor?.remove(getString(R.string.pref_bluetooth_address))
             prefEditor?.commit()
 
             stopMotionControlService()
@@ -197,7 +199,7 @@ class ConnectMenu : AppCompatActivity() {
             val address = device.address
 
             val prefEditor = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.edit()
-            prefEditor?.putString("cnt_address", address)
+            prefEditor?.putString(getString(R.string.pref_bluetooth_address), address)
             prefEditor?.apply()
 
             btAddress = address

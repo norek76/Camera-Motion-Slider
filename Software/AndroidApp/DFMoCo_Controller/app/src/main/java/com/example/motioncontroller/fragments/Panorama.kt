@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import com.example.motioncontroller.MainPage
 import com.example.motioncontroller.R
 import kotlinx.android.synthetic.main.fragment_panorama.*
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 class Panorama : Fragment() {
     lateinit var rowImages_et: EditText
     lateinit var rowSteps_et: EditText

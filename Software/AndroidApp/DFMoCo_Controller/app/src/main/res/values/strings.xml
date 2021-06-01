@@ -15,6 +15,14 @@
 
     <string name="jog_mode">Jog Mode</string>
     <string name="timelapse_mode">Timelapse Mode</string>
+
+    <!-- Custom Mode -->
+    <string name="motor_name_1">M1</string>
+    <string name="motor_name_2">M2</string>
+    <string name="motor_name_3">M3</string>
+    <string name="motor_name_4">M4</string>
+
+    <!-- Timelapse Mode -->
     <string name="images">Images</string>
     <string name="duration">Duration</string>
     <string name="video_length">Video Time</string>
@@ -22,6 +30,34 @@
     <string name="exposureTime">Exposure</string>
     <string name="restTime">Rest</string>
     <string name="end">End</string>
+    <string name="timelapse_status_setup">Setup</string>
+    <string name="timelapse_status_running">Running</string>
+    <string name="timelapse_status_execution_init">Init Move</string>
+    <string name="timelapse_status_execution_start_execution">Start Execution</string>
+    <string name="timelapse_status_execution_rest">Rest</string>
+    <string name="timelapse_status_execution_image">Take Image</string>
+    <string name="timelapse_status_execution_move">Move</string>
+    <string name="timelapse_status_done">Done</string>
+    <string name="timelapse_status_error_10">Error: Images must be greater than 1.</string>
+    <string name="timelapse_status_error_11">Error: Interval must be greater than 0.</string>
+    <string name="timelapse_status_error_12">Error: Exposure must be greater than 0.</string>
+    <string name="timelapse_status_error_13">Error: Rest must be greater than 0.</string>
+    <string name="timelapse_status_error_14">Error: Interval to small for the selected movement.</string>
+    <string name="timelapse_status_error_15">Error: Position not reached in interval time</string>
 
     <string name="panorama_mode">Panorama Mode</string>
+
+    <string name="pref_bluetooth_address">pref-bluetooth-address</string>
+    <string name="pref_timelapse_images">pref-timelapse-images</string>
+    <string name="pref_timelapse_interval">pref-timelapse-interval</string>
+    <string name="pref_timelapse_exposure">pref-timelapse-exposure</string>
+    <string name="pref_timelapse_rest">pref-timelapse-rest</string>
+    <string name="pref_timelapse_start_m1">pref-timelapse-start-m1</string>
+    <string name="pref_timelapse_start_m2">pref-timelapse-start-m2</string>
+    <string name="pref_timelapse_start_m3">pref-timelapse-start-m3</string>
+    <string name="pref_timelapse_start_m4">pref-timelapse-start-m4</string>
+    <string name="pref_timelapse_end_m1">pref-timelapse-end-m1</string>
+    <string name="pref_timelapse_end_m2">pref-timelapse-end-m2</string>
+    <string name="pref_timelapse_end_m3">pref-timelapse-end-m3</string>
+    <string name="pref_timelapse_end_m4">pref-timelapse-end-m4</string>
 </resources>

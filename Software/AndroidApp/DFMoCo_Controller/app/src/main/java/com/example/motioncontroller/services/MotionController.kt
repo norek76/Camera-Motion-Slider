@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.motioncontroller.datasets.*
 import kotlinx.android.synthetic.main.activity_main_page.*
+import kotlin.time.ExperimentalTime
 
 private const val CHANNEL_ID = "Motion_Controller_Service"
 private const val NOTIFICATION_ID = 1
@@ -26,6 +27,7 @@ enum class MotionControllerCustomMode {
     TIMELAPSE,
     PANORAMA,
     FOCUS_STACKING,
+    RESETTING,
 }
 
 val motorTypes = arrayListOf<MotorType>(
@@ -35,8 +37,8 @@ val motorTypes = arrayListOf<MotorType>(
         override val current: Double = 2.0
         override val microstepping: MotorTypeMicrostepping = MotorTypeMicrostepping.HALF
         override val operation: MotorTypeOperation = MotorTypeOperation.LINEAR
-        override val operationSteps: Double = 50.0
-        override val defaultSpeed: Int = 6000
+        override val operationSteps: Double = 100.0
+        override val defaultSpeed: Int = 4500
     },
     object : MotorType {
         override val id: String = "nema_17_fourth_rotation"
@@ -45,10 +47,11 @@ val motorTypes = arrayListOf<MotorType>(
         override val microstepping: MotorTypeMicrostepping = MotorTypeMicrostepping.QUARTER
         override val operation: MotorTypeOperation = MotorTypeOperation.ROTATION
         override val operationSteps: Double = 59.4
-        override val defaultSpeed: Int = 1000
+        override val defaultSpeed: Int = 1500
     }
 )
 
+@ExperimentalTime
 @Suppress("UNCHECKED_CAST")
 class MotionControllerService : BluetoothService() {
     private val binder = MotionControllerBinder()
@@ -58,6 +61,7 @@ class MotionControllerService : BluetoothService() {
     private var jogModeState = 0
     private var jogModeMotor = 0
     private var jogModePower = 0
+    private var jogModeStartSpeed = 0
     private var jogModeSpeed = 0
 
     private var notificationText = App.getContext().resources.getString(R.string.connecting)
@@ -66,15 +70,16 @@ class MotionControllerService : BluetoothService() {
         .setContentTitle(App.getContext().resources.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_bluetooth_on)
 
+    var init = false
     var motorCount = 0
     var version = ""
     var customMode = MotionControllerCustomMode.NO_CUSTOM_MODE
+    var timelapseStatusData: TimelapseStatusData = TimelapseStatusData()
 
     companion object {
         const val EXTRA_MOTION_CONTROLLER_UPDATE = "motion-controller-update"
         const val EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE = "motion-controller-custom-mode-update"
         const val EXTRA_MOTION_CONTROLLER_SPEED_UPDATE: String = "motion-controller-speed-update"
-        const val EXTRA_MOTION_CONTROLLER_ACC_UPDATE: String = "motion-controller-acc-update"
 
         const val MOTION_CONTROLLER_POSITION_UPDATE_ACTION: String = "motion-controller-position-update-action"
         const val MOTION_CONTROLLER_POSITION_UPDATE_EXTRA: String = "motion-controller-position-update-extra"
@@ -179,8 +184,10 @@ class MotionControllerService : BluetoothService() {
         return motors[motorNumber - 1].speed
     }
 
-    fun getMotorAcc(motorNumber: Int): Int {
-        return motors[motorNumber - 1].acc
+    fun resetMotorSpeeds() {
+        for (i in 1 .. motorCount) {
+            setMotorSpeed(i, motors[i-1].motorType.defaultSpeed)
+        }
     }
 
     @Suppress("DEPRECATION")
@@ -189,7 +196,7 @@ class MotionControllerService : BluetoothService() {
             stopJogMove(jogModeMotor)
             return
         }
-        if (motorNumber < 0 || motorNumber > motorCount) {
+        if (customMode != MotionControllerCustomMode.NO_CUSTOM_MODE || motorNumber < 0 || motorNumber > motorCount) {
             return
         }
 
@@ -201,11 +208,12 @@ class MotionControllerService : BluetoothService() {
                     return
                 }
 
-
                 jogModeMotor = motorNumber
                 jogModePower = power
 
-                jogModeSpeed = jogModeSpeedForPower(power, getMotorSpeed(motorNumber))
+                jogModeStartSpeed = motors[motorNumber - 1].motorType.defaultSpeed
+                jogModeSpeed = jogModeSpeedForPower(power, jogModeStartSpeed)
+
                 setMotorSpeed(jogModeMotor, jogModeSpeed)
 
                 if (mHandler != null) {
@@ -229,8 +237,8 @@ class MotionControllerService : BluetoothService() {
 
                 if (power != jogModePower) {
                     jogModePower = power
-                    val newSpeed = jogModeSpeedForPower(power, getMotorSpeed(motorNumber))
-                    if (newSpeed != jogModeSpeed) {
+                    val newSpeed = jogModeSpeedForPower(power, jogModeStartSpeed)
+                    if (newSpeed > jogModeSpeed) {
                         jogModeSpeed = newSpeed
                         setMotorSpeed(jogModeMotor, jogModeSpeed)
                     }
@@ -243,36 +251,38 @@ class MotionControllerService : BluetoothService() {
         Math.abs(power).let {
             when {
                 it < 8 -> {
-                    return (speed * 0.05).toInt()
+                    return (speed * 0.1).toInt()
                 }
-                it < 15 -> {
+                it < 16 -> {
                     return (speed * 0.3).toInt()
                 }
-                it < 25 -> {
-                    return (speed * 0.5).toInt()
+                it < 24 -> {
+                    return (speed * 0.6).toInt()
                 }
-                it < 35 -> {
+                it < 33 -> {
                     return (speed * 1.0).toInt()
                 }
-                it < 45 -> {
-                    return (speed * 1.25).toInt()
+                it < 42 -> {
+                    return (speed * 1.2).toInt()
                 }
                 else -> {
-                    return (speed * 1.5).toInt()
+                    return (speed * 1.3).toInt()
                 }
             }
         }
     }
 
     private fun stopJogMove(motorNumber: Int) {
-        Log.i("STOP", "MOTOR")
         jogModeState = 1
         sendCommand("sm $motorNumber")
 
         Handler().postDelayed({
             jogModeMotor = 0
             jogModeState = 0
-        }, 250)
+            jogModePower = 0
+            jogModeSpeed = 0
+            jogModeStartSpeed = 0
+        }, 500)
     }
 
     private fun jogModeMovement(motorNumber: Int, direction: Boolean) {
@@ -293,14 +303,25 @@ class MotionControllerService : BluetoothService() {
 
     fun stopAllMotor() {
         sendCommand("sa")
-
-        jogModeState = 1
         jogModeMotor = 0
         jogModeState = 0
     }
 
     fun requestInitData() {
-        requestVersion()
+        if (!init) {
+            requestVersion()
+        } else {
+            sendIntentToActivity(EXTRA_MOTION_CONTROLLER_UPDATE, null, null)
+            for (motorNumber in 1 .. motorCount) {
+                sendIntentToActivity(
+                    MOTION_CONTROLLER_POSITION_UPDATE_ACTION,
+                    MOTION_CONTROLLER_POSITION_UPDATE_EXTRA,
+                    motorNumber.toString()
+                )
+            }
+            sendIntentToActivity(EXTRA_MOTION_CONTROLLER_SPEED_UPDATE, null, null)
+            sendIntentToActivity(EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE, null, null)
+        }
     }
 
     fun requestVersion() {
@@ -347,21 +368,19 @@ class MotionControllerService : BluetoothService() {
     }
 
     fun getMotorName(motorNumber: Int): String {
-        if (motors[motorNumber - 1].motorType != null) {
-            return motors[motorNumber - 1].motorType!!.name
-        }
-
-        return ""
+        return motors[motorNumber - 1].motorType.name
     }
 
     fun getMotorRealPosition(motorNumber: Int, steps: Int): String? {
-        if (motors[motorNumber - 1].motorType != null) {
-            when (motors[motorNumber - 1].motorType!!.operation) {
+        val motorType = motors[motorNumber - 1].motorType
+
+        if (motorType.operation != null && motorType.operationSteps != null) {
+            when (motorType.operation) {
                 MotorTypeOperation.ROTATION -> {
-                    return "${"%.1f".format((steps / motors[motorNumber - 1].motorType!!.operationSteps) % 360)}°"
+                    return "${"%.1f".format((steps / motorType.operationSteps!!) % 360)}°"
                 }
                 MotorTypeOperation.LINEAR -> {
-                    return "${"%.1f".format(steps / motors[motorNumber - 1].motorType!!.operationSteps)}mm"
+                    return "${"%.1f".format(steps / motorType.operationSteps!!)}mm"
                 }
             }
         }
@@ -370,16 +389,15 @@ class MotionControllerService : BluetoothService() {
     }
 
     fun getMotorType(motorNumber: Int): MotorType? {
-        when (motorNumber) {
+        return when (motorNumber) {
             1 -> {
-                return motorTypes.find { it -> it.id == "nema_23_half_slider" }
+                motorTypes.find { it -> it.id == "nema_23_half_slider" }
             }
             2 -> {
-                return motorTypes.find { it -> it.id == "nema_17_fourth_rotation" }
+                motorTypes.find { it -> it.id == "nema_17_fourth_rotation" }
             }
+            else -> null
         }
-
-        return null
     }
 
     private fun initMotors() {
@@ -387,13 +405,16 @@ class MotionControllerService : BluetoothService() {
         for (motorNumber in motorNumbers) {
             val motor = getMotorType(motorNumber)
             if (motor != null) {
-                setMotorSpeed(motorNumber, motor.defaultSpeed)
                 motors[motorNumber - 1].motorType = motor
             }
+
+            setMotorSpeed(motorNumber, motors[motorNumber - 1].motorType.defaultSpeed)
+
             requestPostion(motorNumber)
             requestSpeed(motorNumber)
-            requestAcc(motorNumber)
         }
+
+        init = true
     }
 
     override fun messageReceived(msg: String?) {
@@ -417,7 +438,11 @@ class MotionControllerService : BluetoothService() {
                         val motorNumber = Integer.parseInt(msgParts[1])
                         val position = Integer.parseInt(msgParts[2].trim())
                         motors[motorNumber - 1].position = position
-                        sendIntentToActivity(MOTION_CONTROLLER_POSITION_UPDATE_ACTION, MOTION_CONTROLLER_POSITION_UPDATE_EXTRA, motorNumber.toString())
+                        sendIntentToActivity(
+                            MOTION_CONTROLLER_POSITION_UPDATE_ACTION,
+                            MOTION_CONTROLLER_POSITION_UPDATE_EXTRA,
+                            motorNumber.toString()
+                        )
                     }
                 }
                 "pr" -> {
@@ -428,21 +453,24 @@ class MotionControllerService : BluetoothService() {
                         sendIntentToActivity(EXTRA_MOTION_CONTROLLER_SPEED_UPDATE, null, null)
                     }
                 }
-                "ac" -> {
-                    if (msgParts.size == 3) {
-                        val motorNumber = Integer.parseInt(msgParts[1])
-                        val acc = Integer.parseInt(msgParts[2].trim())
-                        motors[motorNumber - 1].acc = acc
-                        sendIntentToActivity(EXTRA_MOTION_CONTROLLER_ACC_UPDATE, null, null)
-                    }
-                }
                 "cm" -> {
                     if (msgParts.size >= 2) {
                         when (Integer.parseInt(msgParts[1].removeSuffix("\r"))) {
-                            0 -> customMode = MotionControllerCustomMode.NO_CUSTOM_MODE
+                            0 -> {
+                                customMode = MotionControllerCustomMode.NO_CUSTOM_MODE
+                                timelapseStatusData = TimelapseStatusData()
+                            }
                             1 -> {
-                                if (msgParts.size == 6) {
+                                if (msgParts.size == 9) {
                                     customMode = MotionControllerCustomMode.TIMELAPSE
+                                    timelapseStatusData.status = msgParts[2].toIntOrNull() ?: -1
+                                    timelapseStatusData.execution = msgParts[3].toIntOrNull() ?: -1
+                                    timelapseStatusData.currentImageCount =
+                                        msgParts[4].toIntOrNull() ?: -1
+                                    timelapseStatusData.images = msgParts[5].toIntOrNull() ?: -1
+                                    timelapseStatusData.interval = msgParts[6].toIntOrNull() ?: -1
+                                    timelapseStatusData.exposure = msgParts[7].toIntOrNull() ?: -1
+                                    timelapseStatusData.rest = msgParts[8].toIntOrNull() ?: -1
                                 }
                             }
                             2 -> {
@@ -455,10 +483,13 @@ class MotionControllerService : BluetoothService() {
                                     customMode = MotionControllerCustomMode.FOCUS_STACKING
                                 }
                             }
+                            10 -> {
+                                customMode = MotionControllerCustomMode.RESETTING
+                            }
                         }
-
-                        sendIntentToActivity(EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE, null, null)
                     }
+
+                    sendIntentToActivity(EXTRA_MOTION_CONTROLLER_CUSTOM_MODE_UPDATE, null, null)
                 }
             }
         }

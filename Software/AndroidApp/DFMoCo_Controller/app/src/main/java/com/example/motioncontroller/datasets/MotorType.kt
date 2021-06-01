@@ -16,7 +16,7 @@ interface MotorType {
     val name: String
     val current: Double
     val microstepping: MotorTypeMicrostepping
-    val operation: MotorTypeOperation
-    val operationSteps: Double // Linear = x Steps / mm; Rotation = x Steps / °
+    val operation: MotorTypeOperation?
+    val operationSteps: Double? // Linear = x Steps / mm; Rotation = x Steps / °
     val defaultSpeed: Int
 }

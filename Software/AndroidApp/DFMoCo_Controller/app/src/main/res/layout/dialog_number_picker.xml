@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_numberpicker_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_numberpicker_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SubTitle"
+        app:layout_constraintEnd_toEndOf="@+id/tv_numberpicker_title"
+        app:layout_constraintStart_toStartOf="@+id/tv_numberpicker_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_numberpicker_title" />
+
+    <NumberPicker
+        android:id="@+id/np_numberpicker_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/np_numberpicker_1"
+        app:layout_constraintEnd_toStartOf="@+id/np_numberpicker_3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/np_numberpicker_5"
+        app:layout_constraintTop_toTopOf="@+id/np_numberpicker_1"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <NumberPicker
+        android:id="@+id/np_numberpicker_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/np_numberpicker_1"
+        app:layout_constraintStart_toStartOf="@+id/tv_numberpicker_title"
+        app:layout_constraintTop_toTopOf="@+id/np_numberpicker_1" />
+
+    <NumberPicker
+        android:id="@+id/np_numberpicker_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/np_numberpicker_1"
+        app:layout_constraintEnd_toStartOf="@+id/np_numberpicker_2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/np_numberpicker_4"
+        app:layout_constraintTop_toTopOf="@+id/np_numberpicker_1" />
+
+    <NumberPicker
+        android:id="@+id/np_numberpicker_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/np_numberpicker_1"
+        app:layout_constraintEnd_toStartOf="@+id/np_numberpicker_1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/np_numberpicker_3"
+        app:layout_constraintTop_toTopOf="@+id/np_numberpicker_1" />
+
+    <NumberPicker
+        android:id="@+id/np_numberpicker_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/tv_numberpicker_info"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/np_numberpicker_2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_numberpicker_subtitle" />
+
+    <TextView
+        android:id="@+id/tv_numberpicker_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ms"
+        app:layout_constraintBottom_toBottomOf="@+id/np_numberpicker_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/np_numberpicker_1"
+        app:layout_constraintTop_toTopOf="@+id/np_numberpicker_1" />
+
+    <Button
+        android:id="@+id/bt_numberpicker_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Ok"
+        app:layout_constraintEnd_toEndOf="@+id/tv_numberpicker_title"
+        app:layout_constraintTop_toBottomOf="@+id/np_numberpicker_1" />
+
+    <Button
+        android:id="@+id/bt_numberpicker_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        app:layout_constraintStart_toStartOf="@+id/tv_numberpicker_title"
+        app:layout_constraintTop_toTopOf="@+id/bt_numberpicker_ok" />
+</androidx.constraintlayout.widget.ConstraintLayout>

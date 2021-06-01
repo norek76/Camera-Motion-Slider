@@ -14,7 +14,9 @@ import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTI
 import com.example.motioncontroller.MotionControllerService.Companion.MOTION_CONTROLLER_DISCONNECT_ACTION
 import com.example.motioncontroller.MotionControllerService.Companion.EXTRA_MOTION_CONTROLLER_UPDATE
 import kotlinx.android.synthetic.main.activity_main_page.*
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @Suppress("UNCHECKED_CAST")
 class MainPage : AppCompatActivity() {
     lateinit var mService: MotionControllerService
@@ -27,7 +29,9 @@ class MainPage : AppCompatActivity() {
         setContentView(R.layout.activity_main_page)
 
         ib_jog.setOnClickListener {
-            goToModeActivity(CustomModeType.JOG)
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+                goToModeActivity(CustomModeType.JOG)
+            }
         }
         ib_reset.setOnLongClickListener {
             if (mBound) {
@@ -36,10 +40,18 @@ class MainPage : AppCompatActivity() {
             true
         }
         ib_timelapse.setOnClickListener {
-            goToModeActivity(CustomModeType.TIMELAPSE)
+            if (mBound) {
+                if (mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE || mService.customMode == MotionControllerCustomMode.TIMELAPSE) {
+                    goToModeActivity(CustomModeType.TIMELAPSE)
+                }
+            }
         }
         ib_panorama.setOnClickListener {
-            goToModeActivity(CustomModeType.PANORAMA)
+            if (mBound) {
+                if (mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE || mService.customMode == MotionControllerCustomMode.PANORAMA) {
+                    goToModeActivity(CustomModeType.PANORAMA)
+                }
+            }
         }
     }
 
@@ -134,7 +146,7 @@ class MainPage : AppCompatActivity() {
     @SuppressLint("ApplySharedPref")
     private fun disconnectBluetoothDevice() {
         val prefEditor = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)?.edit()
-        prefEditor?.remove("cnt_address")
+        prefEditor?.remove(getString(R.string.pref_bluetooth_address))
         prefEditor?.commit()
 
         if (mBound) {
@@ -165,10 +177,6 @@ class MainPage : AppCompatActivity() {
         return if (mBound) mService.getMotorSpeed(motorNumber) else -1
     }
 
-    private fun getMotorAcc(motorNumber: Int): Int {
-        return if (mBound) mService.getMotorAcc(motorNumber) else -1
-    }
-
     fun sendCommand(cmd: String) {
         if (mBound) {
             mService.sendCommand(cmd)
@@ -187,24 +195,34 @@ class MainPage : AppCompatActivity() {
             if (mBound) {
                 when(mService.customMode) {
                     MotionControllerCustomMode.NO_CUSTOM_MODE -> {
+                        ib_reset.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_timelapse.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_panorama.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_focus.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                     }
                     MotionControllerCustomMode.TIMELAPSE -> {
+                        ib_reset.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_timelapse.setColorFilter(ResourcesCompat.getColor(resources, R.color.orange, null))
                         ib_panorama.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_focus.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                     }
                     MotionControllerCustomMode.PANORAMA -> {
+                        ib_reset.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_timelapse.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_panorama.setColorFilter(ResourcesCompat.getColor(resources, R.color.orange, null))
                         ib_focus.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                     }
                     MotionControllerCustomMode.FOCUS_STACKING -> {
+                        ib_reset.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_timelapse.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_panorama.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                         ib_focus.setColorFilter(ResourcesCompat.getColor(resources, R.color.orange, null))
+                    }
+                    MotionControllerCustomMode.RESETTING -> {
+                        ib_reset.setColorFilter(ResourcesCompat.getColor(resources, R.color.orange, null))
+                        ib_timelapse.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
+                        ib_panorama.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
+                        ib_focus.setColorFilter(ResourcesCompat.getColor(resources, R.color.black, null))
                     }
                 }
             }
