@@ -74,3 +74,7 @@ pa 1 12 200 2 12 400 1000 5000
 - Version 1.0.2 Moved pulses into interrupt handler
 - Version 1.0.1 Added delay for pulse widths  
 - Version 1.0.0 Initial public release.
+
+"board": "espressif:esp32:esp32",
+"configuration": "PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none",
+    
