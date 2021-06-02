@@ -358,10 +358,18 @@ class MotionControllerService : BluetoothService() {
 
     fun startTimelapse(timelapseData: TimelapseData) {
         var command = ""
-        command += "tl ${timelapseData.images} ${timelapseData.interval} ${timelapseData.exposureTime} ${timelapseData.restTime}"
+        val positionCount = timelapseData.motorData[0].positions.count()
+        command += "tl ${timelapseData.interval} ${timelapseData.exposureTime} ${timelapseData.restTime} $positionCount"
+
+        timelapseData.images.forEach { imagesEntry ->
+            command += " $imagesEntry"
+        }
 
         timelapseData.motorData.forEach { motorDataEntry ->
-            command += " ${motorDataEntry.motorNumber} ${motorDataEntry.positions[0]} ${motorDataEntry.positions[1]}"
+            command += " ${motorDataEntry.motorNumber}"
+            for (i in 0 until positionCount) {
+                command += " ${motorDataEntry.positions[i]}"
+            }
         }
 
         sendCommand(command)

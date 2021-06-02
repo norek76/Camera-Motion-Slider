@@ -300,8 +300,8 @@
                     android:id="@+id/textView15"
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/images"
                     android:textAlignment="center"
                     app:layout_constraintStart_toStartOf="parent"
@@ -311,128 +311,393 @@
                     android:id="@+id/textView28"
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/intervalTime"
                     android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView15"
                     app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_images" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_start"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos_1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/start"
+                    android:text="@string/timelapse_p_1"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    app:layout_constraintStart_toStartOf="@+id/textView15"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos1_m1"
                     app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_end"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos_2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/end"
+                    android:text="@string/timelapse_p_2"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_timelapse_end_goto"
-                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_start_m1"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos_3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/timelapse_p_3"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/timelapse_p_4"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_timelapse_pos4_goto"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+                <ImageView
+                    android:id="@+id/iv_timelapse_pos1_goto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/ic_goto" />
+
+                <ImageView
+                    android:id="@+id/iv_timelapse_pos2_goto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/ic_goto" />
+
+                <ImageView
+                    android:id="@+id/iv_timelapse_pos3_goto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/ic_goto" />
+
+                <ImageView
+                    android:id="@+id/iv_timelapse_pos4_goto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:srcCompat="@drawable/ic_goto" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos1_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos_1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos2_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_images" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos4_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/black"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_images" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos3_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_images" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos1_m1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/orange"
-                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos1_images"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos1_images" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_start_m2"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos2_m1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos3_m1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos4_m1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/orange"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos1_m2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/purple_200"
                     android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start_m1"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m1" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos1_m1" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_start_m4"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos2_m2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/teal_200"
+                    android:textColor="#FFBB86FC"
                     android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m3" />
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos1_m2"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m2" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_start_m3"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos3_m2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/purple_700"
+                    android:textColor="#FFBB86FC"
                     android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_start"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m2" />
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m2" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_end_m1"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos4_m2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/timelapse_motor_pos"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/orange"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end" />
-
-                <TextView
-                    android:id="@+id/tv_timelapse_end_m2"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/purple_200"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m1" />
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m1" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_end_m3"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos1_m3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/purple_700"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m2" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos1_m2" />
 
                 <TextView
-                    android:id="@+id/tv_timelapse_end_m4"
-                    android:layout_width="75dp"
+                    android:id="@+id/tv_timelapse_pos2_m3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FF3700B3"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos1_m2"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m3" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos3_m3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FF3700B3"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m3" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos4_m3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/purple_700"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos4_m2"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m2" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos1_m4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/teal_200"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_end"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_end_m3" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos1_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos1_m3" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos2_m4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FF03DAC5"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos3_m1"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos1_m2"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m4" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos3_m4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FF03DAC5"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_timelapse_pos4_m1"
+                    app:layout_constraintHorizontal_bias="0.507"
+                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_pos2_m1"
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos1_m4" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_pos4_m4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/teal_200"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos4_m3"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m3" />
 
                 <TextView
                     android:id="@+id/tv_timelapse_m1"
@@ -443,7 +708,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/orange"
                     app:layout_constraintStart_toStartOf="@+id/textView15"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_start_m4" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos1_m4" />
 
                 <TextView
                     android:id="@+id/tv_timelapse_m2"
@@ -527,6 +792,117 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
                     app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m4" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:text="@string/motor_name_3"
+                    android:textAlignment="center"
+                    android:textColor="@color/purple_700"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m2" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_position_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m3" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_end_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/purple_700"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos_4"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m2" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_position_m5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m2" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_position_m6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/sb_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/sb_timelapse_m4" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_end_m5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/teal_200"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos_4"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m3" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_end_m6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:minWidth="75dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/purple_200"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_timelapse_pos_4"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_pos4_m1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_m5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:text="@string/motor_name_2"
+                    android:textAlignment="center"
+                    android:textColor="@color/purple_200"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m1" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_m6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/timelapse_motor_pos"
+                    android:text="@string/motor_name_4"
+                    android:textAlignment="center"
+                    android:textColor="@color/teal_200"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/tv_timelapse_m1"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_position_m3" />
 
                 <ProgressBar
                     android:id="@+id/pb_timelapse"
@@ -625,7 +1001,7 @@
                     android:id="@+id/textView17"
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/video_length"
                     android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="@+id/textView15"
@@ -715,35 +1091,6 @@
                     app:layout_constraintStart_toStartOf="@+id/textView30"
                     app:layout_constraintTop_toBottomOf="@+id/textView30"
                     app:srcCompat="@drawable/ic_rest" />
-
-                <ImageView
-                    android:id="@+id/iv_timelapse_end_goto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:adjustViewBounds="true"
-                    android:cropToPadding="false"
-                    android:scaleType="fitXY"
-                    android:scaleX="1"
-                    android:scaleY="1"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_start"
-                    app:layout_constraintEnd_toEndOf="@+id/textView17"
-                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_start"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/ic_goto" />
-
-                <ImageView
-                    android:id="@+id/iv_timelapse_start_goto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:adjustViewBounds="true"
-                    android:cropToPadding="false"
-                    android:scaleType="fitXY"
-                    android:scaleX="1"
-                    android:scaleY="1"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_timelapse_start"
-                    app:layout_constraintStart_toEndOf="@+id/tv_timelapse_start"
-                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_start"
-                    app:srcCompat="@drawable/ic_goto" />
 
                 <TextView
                     android:id="@+id/textView29"

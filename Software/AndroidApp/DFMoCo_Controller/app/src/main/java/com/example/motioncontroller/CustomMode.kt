@@ -6,6 +6,7 @@ import NumberPickerType
 import TAG_NUMBER_PICKER_DIALOG
 import android.annotation.SuppressLint
 import android.content.*
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -13,14 +14,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.motioncontroller.datasets.TimelapseData
 import com.example.motioncontroller.datasets.TimelapseDataMotor
 import kotlinx.android.synthetic.main.activity_custom_mode.*
-import java.util.*
 import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
@@ -43,14 +42,14 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
     private var titleMessage = ""
     private lateinit var customMode: CustomModeType
 
-    private var timelapseImages: Int = 0
+    private var timelapseImagesTotal: Int = 0
+    private var timelapseImagesPos2: Int = 0
+    private var timelapseImagesPos3: Int = 0
     private var timelapseInterval: Int = 0
     private var timelapseExposure: Int = 0
     private var timelapseRest: Int = 0
-    private var timelapsePosition: Array<IntArray> = arrayOf(
-        IntArray(4) { 0 },
-        IntArray(4) { 0 }
-    )
+    private var timelapseEnabledPositions: IntArray = intArrayOf(1,0,0,1)
+    private var timelapsePosition: Array<IntArray> = Array(4) { IntArray(4) { 0 } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,19 +121,34 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
 
         val sharedPref = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)
 
-        timelapseImages = sharedPref.getInt(getString(R.string.pref_timelapse_images), 300)
+        timelapseImagesTotal = sharedPref.getInt(getString(R.string.pref_timelapse_images_total), 350)
+        timelapseImagesPos2 = sharedPref.getInt(getString(R.string.pref_timelapse_images_pos2), 100)
+        timelapseImagesPos3 = sharedPref.getInt(getString(R.string.pref_timelapse_images_pos3), 200)
         timelapseInterval = sharedPref.getInt(getString(R.string.pref_timelapse_interval), 8)
         timelapseExposure = sharedPref.getInt(getString(R.string.pref_timelapse_exposure), 4000)
         timelapseRest = sharedPref.getInt(getString(R.string.pref_timelapse_rest), 500)
 
-        timelapsePosition[0][0] = sharedPref.getInt(getString(R.string.pref_timelapse_start_m1), 0)
-        timelapsePosition[0][1] = sharedPref.getInt(getString(R.string.pref_timelapse_start_m2), 0)
-        timelapsePosition[0][2] = sharedPref.getInt(getString(R.string.pref_timelapse_start_m3), 0)
-        timelapsePosition[0][3] = sharedPref.getInt(getString(R.string.pref_timelapse_start_m4), 0)
-        timelapsePosition[1][0] = sharedPref.getInt(getString(R.string.pref_timelapse_end_m1), 0)
-        timelapsePosition[1][1] = sharedPref.getInt(getString(R.string.pref_timelapse_end_m2), 0)
-        timelapsePosition[1][2] = sharedPref.getInt(getString(R.string.pref_timelapse_end_m3), 0)
-        timelapsePosition[1][3] = sharedPref.getInt(getString(R.string.pref_timelapse_end_m4), 0)
+        timelapsePosition[0][0] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m1), 0)
+        timelapsePosition[0][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m2), 0)
+        timelapsePosition[0][2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m3), 0)
+        timelapsePosition[0][3] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m4), 0)
+        timelapsePosition[1][0] = sharedPref.getInt(getString(R.string.pref_timelapse_pos2_m1), 0)
+        timelapsePosition[1][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos2_m2), 0)
+        timelapsePosition[1][2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos2_m3), 0)
+        timelapsePosition[1][3] = sharedPref.getInt(getString(R.string.pref_timelapse_pos2_m4), 0)
+        timelapsePosition[2][0] = sharedPref.getInt(getString(R.string.pref_timelapse_pos3_m1), 0)
+        timelapsePosition[2][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos3_m2), 0)
+        timelapsePosition[2][2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos3_m3), 0)
+        timelapsePosition[2][3] = sharedPref.getInt(getString(R.string.pref_timelapse_pos3_m4), 0)
+        timelapsePosition[3][0] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m1), 0)
+        timelapsePosition[3][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m2), 0)
+        timelapsePosition[3][2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m3), 0)
+        timelapsePosition[3][3] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m4), 0)
+        timelapseEnabledPositions[1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos2_enabled), 0)
+        timelapseEnabledPositions[2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos3_enabled), 0)
+        timelapsePosition[3][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m2), 0)
+        timelapsePosition[3][2] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m3), 0)
+        timelapsePosition[3][3] = sharedPref.getInt(getString(R.string.pref_timelapse_pos4_m4), 0)
 
         updateTimelapseUI()
 
@@ -144,7 +158,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                     _title = "Images",
                     _subtitle = "Choose the amount of images",
                     _numberPickerType = NumberPickerType.IMAGES,
-                    _initValue = timelapseImages,
+                    _initValue = timelapseImagesTotal,
                     _digits = 4,
                     _info = null
                 )
@@ -194,50 +208,143 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             }
         }
 
+        tv_timelapse_pos2_images.setOnClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE && timelapseEnabledPositions[1] == 1) {
+                val newFragment = NumberPickerDialog(
+                    _title = "Image Position 2",
+                    _subtitle = "Choose the images until position 2",
+                    _numberPickerType = NumberPickerType.POS2_IMAGES,
+                    _initValue = timelapseImagesPos2,
+                    _digits = 4,
+                    _info = null
+                )
+                newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
+            }
+        }
+
+        tv_timelapse_pos3_images.setOnClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE && timelapseEnabledPositions[2] == 1) {
+                val newFragment = NumberPickerDialog(
+                    _title = "Image Position 3",
+                    _subtitle = "Choose the images until position 3",
+                    _numberPickerType = NumberPickerType.POS3_IMAGES,
+                    _initValue = timelapseImagesPos3,
+                    _digits = 4,
+                    _info = null
+                )
+                newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
+            }
+        }
+
         sb_timelapse_m1.setOnSeekBarChangeListener(jogModeSeekBar(1))
         sb_timelapse_m2.setOnSeekBarChangeListener(jogModeSeekBar(2))
         sb_timelapse_m3.setOnSeekBarChangeListener(jogModeSeekBar(3))
         sb_timelapse_m4.setOnSeekBarChangeListener(jogModeSeekBar(4))
 
-        tv_timelapse_start.setOnLongClickListener(setTimelapsePositionAll(0))
-        tv_timelapse_end.setOnLongClickListener(setTimelapsePositionAll(1))
-        tv_timelapse_start_m1.setOnLongClickListener {
+        tv_timelapse_pos_1.setOnLongClickListener(setTimelapsePositionAll(0))
+        tv_timelapse_pos_2.setOnLongClickListener(setTimelapsePositionAll(1))
+        tv_timelapse_pos_3.setOnLongClickListener(setTimelapsePositionAll(2))
+        tv_timelapse_pos_4.setOnLongClickListener(setTimelapsePositionAll(3))
+
+        tv_timelapse_pos_2.setOnClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+                timelapseEnabledPositions[1] = when (timelapseEnabledPositions[1]) {
+                    1 -> 0
+                    else -> 1
+                }
+
+                updateTimelapseUI()
+            }
+        }
+        tv_timelapse_pos_3.setOnClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+                timelapseEnabledPositions[2] = when (timelapseEnabledPositions[2]) {
+                    1 -> 0
+                    else -> 1
+                }
+
+                updateTimelapseUI()
+            }
+        }
+        tv_timelapse_pos_3.setOnLongClickListener(setTimelapsePositionAll(2))
+
+        tv_timelapse_pos1_m1.setOnLongClickListener {
             setTimelapsePositionMotor(0, 1)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_start_m2.setOnLongClickListener {
+        tv_timelapse_pos1_m2.setOnLongClickListener {
             setTimelapsePositionMotor(0, 2)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_start_m3.setOnLongClickListener {
+        tv_timelapse_pos1_m3.setOnLongClickListener {
             setTimelapsePositionMotor(0, 3)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_start_m4.setOnLongClickListener {
+        tv_timelapse_pos1_m4.setOnLongClickListener {
             setTimelapsePositionMotor(0, 4)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_end_m1.setOnLongClickListener {
+        tv_timelapse_pos2_m1.setOnLongClickListener {
             setTimelapsePositionMotor(1, 1)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_end_m2.setOnLongClickListener {
+        tv_timelapse_pos2_m2.setOnLongClickListener {
             setTimelapsePositionMotor(1, 2)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_end_m3.setOnLongClickListener {
+        tv_timelapse_pos2_m3.setOnLongClickListener {
             setTimelapsePositionMotor(1, 3)
             updateTimelapseUI()
             true
         }
-        tv_timelapse_end_m4.setOnLongClickListener {
+        tv_timelapse_pos2_m4.setOnLongClickListener {
             setTimelapsePositionMotor(1, 4)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos3_m1.setOnLongClickListener {
+            setTimelapsePositionMotor(2, 1)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos3_m2.setOnLongClickListener {
+            setTimelapsePositionMotor(2, 2)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos3_m3.setOnLongClickListener {
+            setTimelapsePositionMotor(2, 3)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos3_m4.setOnLongClickListener {
+            setTimelapsePositionMotor(2, 4)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos4_m1.setOnLongClickListener {
+            setTimelapsePositionMotor(3, 1)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos4_m2.setOnLongClickListener {
+            setTimelapsePositionMotor(3, 2)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos4_m3.setOnLongClickListener {
+            setTimelapsePositionMotor(3, 3)
+            updateTimelapseUI()
+            true
+        }
+        tv_timelapse_pos4_m4.setOnLongClickListener {
+            setTimelapsePositionMotor(3, 4)
             updateTimelapseUI()
             true
         }
@@ -248,10 +355,6 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             }
             pb_timelapse.progress = 0
             tv_timelapse_info.text = ""
-
-            bt_timelapse_start.isClickable = true
-            iv_timelapse_start_goto.isClickable = true
-            iv_timelapse_end_goto.isClickable = true
 
             true
         }
@@ -268,16 +371,41 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             if (mBound) {
                 mService.resetMotorSpeeds()
 
+                var positions = IntArray(4)
+                var images = IntArray(3) { 0 }
+                var positionCount = 0
+
+                positions[positionCount] = 0
+                positionCount++
+
+                if (timelapseEnabledPositions[1] == 1) {
+                    positions[positionCount] = 1
+                    images[positionCount - 1] = timelapseImagesPos2
+                    positionCount++
+                }
+                if (timelapseEnabledPositions[2] == 1) {
+                    positions[positionCount] = 2
+                    images[positionCount - 1] = timelapseImagesPos3
+                    positionCount++
+                }
+
+                images[positionCount - 1] = timelapseImagesTotal
+
+                positions[positionCount] = 3
+                positionCount++
+
                 val timelapseData = object : TimelapseData {
-                    override val images: Int = timelapseImages
+                    override val images: IntArray = IntArray(positionCount - 1) {
+                        images[it]
+                    }
                     override val interval: Int = timelapseInterval
                     override val exposureTime: Int = timelapseExposure
                     override val restTime: Int = timelapseRest
-                    override val motorData: Array<TimelapseDataMotor> = Array<TimelapseDataMotor>(mService.motorCount) { motorNumberIt ->
+                    override val motorData: Array<TimelapseDataMotor> = Array(mService.motorCount) { motorNumberIt ->
                         object : TimelapseDataMotor {
                             override val motorNumber: Int = motorNumberIt + 1
-                            override val positions: IntArray = IntArray(2) {
-                                timelapsePosition[it][motorNumberIt]
+                            override val positions: IntArray = IntArray(positionCount) { position ->
+                                timelapsePosition[positions[position]][motorNumberIt]
                             }
                         }
                     }
@@ -289,7 +417,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             true
         }
 
-        iv_timelapse_start_goto.setOnLongClickListener {
+        iv_timelapse_pos1_goto.setOnLongClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
                 mService.resetMotorSpeeds()
                 mService.goToPosition(1,timelapsePosition[0][0])
@@ -301,13 +429,37 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             true
         }
 
-        iv_timelapse_end_goto.setOnLongClickListener {
-            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+        iv_timelapse_pos2_goto.setOnLongClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE && timelapseEnabledPositions[1] == 1) {
                 mService.resetMotorSpeeds()
                 mService.goToPosition(1,timelapsePosition[1][0])
                 mService.goToPosition(2,timelapsePosition[1][1])
                 mService.goToPosition(3,timelapsePosition[1][2])
                 mService.goToPosition(4,timelapsePosition[1][3])
+            }
+
+            true
+        }
+
+        iv_timelapse_pos3_goto.setOnLongClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE && timelapseEnabledPositions[2] == 1) {
+                mService.resetMotorSpeeds()
+                mService.goToPosition(1,timelapsePosition[2][0])
+                mService.goToPosition(2,timelapsePosition[2][1])
+                mService.goToPosition(3,timelapsePosition[2][2])
+                mService.goToPosition(4,timelapsePosition[2][3])
+            }
+
+            true
+        }
+
+        iv_timelapse_pos4_goto.setOnLongClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+                mService.resetMotorSpeeds()
+                mService.goToPosition(1,timelapsePosition[3][0])
+                mService.goToPosition(2,timelapsePosition[3][1])
+                mService.goToPosition(3,timelapsePosition[3][2])
+                mService.goToPosition(4,timelapsePosition[3][3])
             }
 
             true
@@ -319,45 +471,103 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             if (motorCount >= 2) {
                 tv_timelapse_m2.visibility = View.VISIBLE
                 tv_timelapse_position_m2.visibility = View.VISIBLE
-                tv_timelapse_start_m2.visibility = View.VISIBLE
-                tv_timelapse_end_m2.visibility = View.VISIBLE
+                tv_timelapse_pos1_m2.visibility = View.VISIBLE
+                tv_timelapse_pos2_m2.visibility = View.VISIBLE
+                tv_timelapse_pos3_m2.visibility = View.VISIBLE
+                tv_timelapse_pos4_m2.visibility = View.VISIBLE
                 sb_timelapse_m2.visibility = View.VISIBLE
             }
             if (motorCount >= 3) {
                 tv_timelapse_m3.visibility = View.VISIBLE
                 tv_timelapse_position_m3.visibility = View.VISIBLE
-                tv_timelapse_start_m3.visibility = View.VISIBLE
-                tv_timelapse_end_m3.visibility = View.VISIBLE
+                tv_timelapse_pos1_m3.visibility = View.VISIBLE
+                tv_timelapse_pos2_m3.visibility = View.VISIBLE
+                tv_timelapse_pos3_m3.visibility = View.VISIBLE
+                tv_timelapse_pos4_m3.visibility = View.VISIBLE
                 sb_timelapse_m3.visibility = View.VISIBLE
             }
             if (motorCount >= 4) {
                 tv_timelapse_m4.visibility = View.VISIBLE
                 tv_timelapse_position_m4.visibility = View.VISIBLE
-                tv_timelapse_start_m4.visibility = View.VISIBLE
-                tv_timelapse_end_m4.visibility = View.VISIBLE
+                tv_timelapse_pos1_m4.visibility = View.VISIBLE
+                tv_timelapse_pos2_m4.visibility = View.VISIBLE
+                tv_timelapse_pos3_m4.visibility = View.VISIBLE
+                tv_timelapse_pos4_m4.visibility = View.VISIBLE
                 sb_timelapse_m4.visibility = View.VISIBLE
             }
         }
     }
 
     private fun updateTimelapseUI() {
-        tv_timelapse_images.text = "$timelapseImages"
+        tv_timelapse_images.text = "$timelapseImagesTotal"
         tv_timelapse_interval.text = "${timelapseInterval}s"
         tv_timelapse_exposure.text = "${timelapseExposure}ms"
         tv_timelapse_rest.text = "${timelapseRest}ms"
 
-        tv_timelapse_duration.text = (timelapseImages * timelapseInterval).seconds.toString()
-        tv_timelapse_duration.text = "${formatDuration((timelapseImages * timelapseInterval).seconds)}"
-        tv_timelapse_video_time.text = "${(timelapseImages/24)}s/${(timelapseImages/30)}s"
+        tv_timelapse_duration.text = (timelapseImagesTotal * timelapseInterval).seconds.toString()
+        tv_timelapse_duration.text = "${formatDuration((timelapseImagesTotal * timelapseInterval).seconds)}"
+        tv_timelapse_video_time.text = "${(timelapseImagesTotal/24)}s/${(timelapseImagesTotal/30)}s"
 
-        tv_timelapse_start_m1.text = mService.getMotorRealPosition(1, timelapsePosition[0][0]) ?: timelapsePosition[0][0].toString()
-        tv_timelapse_start_m2.text = mService.getMotorRealPosition(2, timelapsePosition[0][1]) ?: timelapsePosition[0][1].toString()
-        tv_timelapse_start_m3.text = mService.getMotorRealPosition(3, timelapsePosition[0][2]) ?: timelapsePosition[0][2].toString()
-        tv_timelapse_start_m4.text = mService.getMotorRealPosition(4, timelapsePosition[0][3]) ?: timelapsePosition[0][3].toString()
-        tv_timelapse_end_m1.text = mService.getMotorRealPosition(1, timelapsePosition[1][0]) ?: timelapsePosition[1][0].toString()
-        tv_timelapse_end_m2.text = mService.getMotorRealPosition(2, timelapsePosition[1][1]) ?: timelapsePosition[1][1].toString()
-        tv_timelapse_end_m3.text = mService.getMotorRealPosition(3, timelapsePosition[1][2]) ?: timelapsePosition[1][2].toString()
-        tv_timelapse_end_m4.text = mService.getMotorRealPosition(4, timelapsePosition[1][3]) ?: timelapsePosition[1][3].toString()
+        tv_timelapse_pos1_images.text = "1"
+        tv_timelapse_pos2_images.text = "$timelapseImagesPos2"
+        tv_timelapse_pos3_images.text = "$timelapseImagesPos3"
+        tv_timelapse_pos4_images.text = "$timelapseImagesTotal"
+        tv_timelapse_pos1_m1.text = mService.getMotorRealPosition(1, timelapsePosition[0][0]) ?: timelapsePosition[0][0].toString()
+        tv_timelapse_pos1_m2.text = mService.getMotorRealPosition(2, timelapsePosition[0][1]) ?: timelapsePosition[0][1].toString()
+        tv_timelapse_pos1_m3.text = mService.getMotorRealPosition(3, timelapsePosition[0][2]) ?: timelapsePosition[0][2].toString()
+        tv_timelapse_pos1_m4.text = mService.getMotorRealPosition(4, timelapsePosition[0][3]) ?: timelapsePosition[0][3].toString()
+        tv_timelapse_pos2_m1.text = mService.getMotorRealPosition(1, timelapsePosition[1][0]) ?: timelapsePosition[1][0].toString()
+        tv_timelapse_pos2_m2.text = mService.getMotorRealPosition(2, timelapsePosition[1][1]) ?: timelapsePosition[1][1].toString()
+        tv_timelapse_pos2_m3.text = mService.getMotorRealPosition(3, timelapsePosition[1][2]) ?: timelapsePosition[1][2].toString()
+        tv_timelapse_pos2_m4.text = mService.getMotorRealPosition(4, timelapsePosition[1][3]) ?: timelapsePosition[1][3].toString()
+        tv_timelapse_pos3_m1.text = mService.getMotorRealPosition(1, timelapsePosition[2][0]) ?: timelapsePosition[2][0].toString()
+        tv_timelapse_pos3_m2.text = mService.getMotorRealPosition(2, timelapsePosition[2][1]) ?: timelapsePosition[2][1].toString()
+        tv_timelapse_pos3_m3.text = mService.getMotorRealPosition(3, timelapsePosition[2][2]) ?: timelapsePosition[2][2].toString()
+        tv_timelapse_pos3_m4.text = mService.getMotorRealPosition(4, timelapsePosition[2][3]) ?: timelapsePosition[2][3].toString()
+        tv_timelapse_pos4_m1.text = mService.getMotorRealPosition(1, timelapsePosition[3][0]) ?: timelapsePosition[3][0].toString()
+        tv_timelapse_pos4_m2.text = mService.getMotorRealPosition(2, timelapsePosition[3][1]) ?: timelapsePosition[3][1].toString()
+        tv_timelapse_pos4_m3.text = mService.getMotorRealPosition(3, timelapsePosition[3][2]) ?: timelapsePosition[3][2].toString()
+        tv_timelapse_pos4_m4.text = mService.getMotorRealPosition(4, timelapsePosition[3][3]) ?: timelapsePosition[3][3].toString()
+
+        if (timelapseEnabledPositions[1] == 0) {
+            tv_timelapse_pos_2.apply {
+                paintFlags = paintFlags or STRIKE_THRU_TEXT_FLAG
+            }
+            tv_timelapse_pos2_images.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos2_m1.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos2_m2.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos2_m3.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos2_m4.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+        } else {
+            tv_timelapse_pos_2.apply {
+                paintFlags = paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+            }
+            tv_timelapse_pos2_images.setTextColor(ContextCompat.getColor(this, R.color.black));
+            tv_timelapse_pos2_m1.setTextColor(ContextCompat.getColor(this, R.color.orange));
+            tv_timelapse_pos2_m2.setTextColor(ContextCompat.getColor(this, R.color.purple_200));
+            tv_timelapse_pos2_m3.setTextColor(ContextCompat.getColor(this, R.color.purple_700));
+            tv_timelapse_pos2_m4.setTextColor(ContextCompat.getColor(this, R.color.teal_200));
+        }
+
+        if (timelapseEnabledPositions[2] == 0) {
+            tv_timelapse_pos_3.apply {
+                paintFlags = paintFlags or STRIKE_THRU_TEXT_FLAG
+            }
+            tv_timelapse_pos3_images.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos3_m1.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos3_m2.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos3_m3.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            tv_timelapse_pos3_m4.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+        } else {
+            tv_timelapse_pos_3.apply {
+                paintFlags = paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+            }
+            tv_timelapse_pos3_images.setTextColor(ContextCompat.getColor(this, R.color.black));
+            tv_timelapse_pos3_m1.setTextColor(ContextCompat.getColor(this, R.color.orange));
+            tv_timelapse_pos3_m2.setTextColor(ContextCompat.getColor(this, R.color.purple_200));
+            tv_timelapse_pos3_m3.setTextColor(ContextCompat.getColor(this, R.color.purple_700));
+            tv_timelapse_pos3_m4.setTextColor(ContextCompat.getColor(this, R.color.teal_200));
+        }
     }
 
     fun formatDuration(duration: Duration): String? {
@@ -374,7 +584,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
     override fun onNumberPicked(numberPickerType: NumberPickerType, value: Int) {
         when(numberPickerType) {
             NumberPickerType.IMAGES -> {
-                timelapseImages = value
+                timelapseImagesTotal = value
             }
             NumberPickerType.INTERVAL -> {
                 timelapseInterval = value
@@ -384,6 +594,12 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             }
             NumberPickerType.REST -> {
                 timelapseRest = value
+            }
+            NumberPickerType.POS2_IMAGES -> {
+                timelapseImagesPos2 = value
+            }
+            NumberPickerType.POS3_IMAGES -> {
+                timelapseImagesPos3 = value
             }
         }
 
@@ -464,18 +680,34 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
 
             }
             CustomModeType.TIMELAPSE -> {
-                sharedPref.putInt(getString(R.string.pref_timelapse_images), timelapseImages)
+                sharedPref.putInt(getString(R.string.pref_timelapse_images_total), timelapseImagesTotal)
+                sharedPref.putInt(getString(R.string.pref_timelapse_images_pos2), timelapseImagesPos2)
+                sharedPref.putInt(getString(R.string.pref_timelapse_images_pos3), timelapseImagesPos3)
                 sharedPref.putInt(getString(R.string.pref_timelapse_interval), timelapseInterval)
                 sharedPref.putInt(getString(R.string.pref_timelapse_exposure), timelapseExposure)
                 sharedPref.putInt(getString(R.string.pref_timelapse_rest), timelapseRest)
-                sharedPref.putInt(getString(R.string.pref_timelapse_start_m1), timelapsePosition[0][0])
-                sharedPref.putInt(getString(R.string.pref_timelapse_start_m2), timelapsePosition[0][1])
-                sharedPref.putInt(getString(R.string.pref_timelapse_start_m3), timelapsePosition[0][2])
-                sharedPref.putInt(getString(R.string.pref_timelapse_start_m4), timelapsePosition[0][3])
-                sharedPref.putInt(getString(R.string.pref_timelapse_end_m1), timelapsePosition[1][0])
-                sharedPref.putInt(getString(R.string.pref_timelapse_end_m2), timelapsePosition[1][1])
-                sharedPref.putInt(getString(R.string.pref_timelapse_end_m3), timelapsePosition[1][2])
-                sharedPref.putInt(getString(R.string.pref_timelapse_end_m4), timelapsePosition[1][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m1), timelapsePosition[0][0])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m2), timelapsePosition[0][1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m3), timelapsePosition[0][2])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m4), timelapsePosition[0][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m1), timelapsePosition[0][0])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m2), timelapsePosition[0][1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m3), timelapsePosition[0][2])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m4), timelapsePosition[0][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos2_m1), timelapsePosition[1][0])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos2_m2), timelapsePosition[1][1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos2_m3), timelapsePosition[1][2])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos2_m4), timelapsePosition[1][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos3_m1), timelapsePosition[2][0])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos3_m2), timelapsePosition[2][1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos3_m3), timelapsePosition[2][2])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos3_m4), timelapsePosition[2][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos4_m1), timelapsePosition[3][0])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos4_m2), timelapsePosition[3][1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos4_m3), timelapsePosition[3][2])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos4_m4), timelapsePosition[3][3])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos2_enabled), timelapseEnabledPositions[1])
+                sharedPref.putInt(getString(R.string.pref_timelapse_pos3_enabled), timelapseEnabledPositions[2])
             }
         }
         sharedPref.commit()
@@ -609,8 +841,10 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                                 tv_timelapse_info.text = ""
                                 bt_timelapse_start.isEnabled = true
                                 bt_timelapse_reset.isEnabled = false
-                                iv_timelapse_start_goto.visibility = View.VISIBLE
-                                iv_timelapse_end_goto.visibility = View.VISIBLE
+                                iv_timelapse_pos1_goto.visibility = View.VISIBLE
+                                iv_timelapse_pos2_goto.visibility = View.VISIBLE
+                                iv_timelapse_pos3_goto.visibility = View.VISIBLE
+                                iv_timelapse_pos4_goto.visibility = View.VISIBLE
                                 sb_timelapse_m1.isEnabled = true
                                 sb_timelapse_m2.isEnabled = true
                                 sb_timelapse_m3.isEnabled = true
@@ -629,7 +863,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                             val timelapseStatus = mService.timelapseStatusData
 
                             if (timelapseStatus.images != -1) {
-                                timelapseImages = timelapseStatus.images
+                                timelapseImagesTotal = timelapseStatus.images
                             }
                             if (timelapseStatus.interval != -1) {
                                 timelapseInterval = timelapseStatus.interval
@@ -686,14 +920,20 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                                     tv_timelapse_info.text =
                                         getString(R.string.timelapse_status_error_15)
                                 }
+                                16 -> {
+                                    tv_timelapse_info.text =
+                                        getString(R.string.timelapse_status_error_16)
+                                }
                             }
 
                             updateTimelapseUI()
 
                             bt_timelapse_start.isEnabled = false
                             bt_timelapse_reset.isEnabled = true
-                            iv_timelapse_start_goto.visibility = View.GONE
-                            iv_timelapse_end_goto.visibility = View.GONE
+                            iv_timelapse_pos1_goto.visibility = View.GONE
+                            iv_timelapse_pos2_goto.visibility = View.GONE
+                            iv_timelapse_pos3_goto.visibility = View.GONE
+                            iv_timelapse_pos4_goto.visibility = View.GONE
                             sb_timelapse_m1.isEnabled = false
                             sb_timelapse_m2.isEnabled = false
                             sb_timelapse_m3.isEnabled = false

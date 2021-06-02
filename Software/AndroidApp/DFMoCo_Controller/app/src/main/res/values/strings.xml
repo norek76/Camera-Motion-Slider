@@ -23,6 +23,10 @@
     <string name="motor_name_4">M4</string>
 
     <!-- Timelapse Mode -->
+    <string name="timelapse_p_1">Pos 1</string>
+    <string name="timelapse_p_2">Pos 2</string>
+    <string name="timelapse_p_3">Pos 3</string>
+    <string name="timelapse_p_4">Pos 4</string>
     <string name="images">Images</string>
     <string name="duration">Duration</string>
     <string name="video_length">Video Time</string>
@@ -38,26 +42,39 @@
     <string name="timelapse_status_execution_image">Take Image</string>
     <string name="timelapse_status_execution_move">Move</string>
     <string name="timelapse_status_done">Done</string>
-    <string name="timelapse_status_error_10">Error: Images must be greater than 1.</string>
-    <string name="timelapse_status_error_11">Error: Interval must be greater than 0.</string>
-    <string name="timelapse_status_error_12">Error: Exposure must be greater than 0.</string>
-    <string name="timelapse_status_error_13">Error: Rest must be greater than 0.</string>
-    <string name="timelapse_status_error_14">Error: Interval to small for the selected movement.</string>
-    <string name="timelapse_status_error_15">Error: Position not reached in interval time</string>
+    <string name="timelapse_status_error_10">Error: Interval must be greater than 0.</string>
+    <string name="timelapse_status_error_11">Error: Exposure must be greater than 0.</string>
+    <string name="timelapse_status_error_12">Error: Rest must be greater than 0.</string>
+    <string name="timelapse_status_error_13">Error: Positions must be more than 1.</string>
+    <string name="timelapse_status_error_14">Error: Images must be greater than 1.</string>
+    <string name="timelapse_status_error_15">Error: Interval to small for the selected movement.</string>
+    <string name="timelapse_status_error_16">Error: Position not reached in interval time</string>
 
     <string name="panorama_mode">Panorama Mode</string>
 
     <string name="pref_bluetooth_address">pref-bluetooth-address</string>
-    <string name="pref_timelapse_images">pref-timelapse-images</string>
+    <string name="pref_timelapse_images_total">pref-timelapse-images-total</string>
+    <string name="pref_timelapse_images_pos2">pref-timelapse-images-pos2</string>
+    <string name="pref_timelapse_images_pos3">pref-timelapse-images-pos3</string>
     <string name="pref_timelapse_interval">pref-timelapse-interval</string>
     <string name="pref_timelapse_exposure">pref-timelapse-exposure</string>
     <string name="pref_timelapse_rest">pref-timelapse-rest</string>
-    <string name="pref_timelapse_start_m1">pref-timelapse-start-m1</string>
-    <string name="pref_timelapse_start_m2">pref-timelapse-start-m2</string>
-    <string name="pref_timelapse_start_m3">pref-timelapse-start-m3</string>
-    <string name="pref_timelapse_start_m4">pref-timelapse-start-m4</string>
-    <string name="pref_timelapse_end_m1">pref-timelapse-end-m1</string>
-    <string name="pref_timelapse_end_m2">pref-timelapse-end-m2</string>
-    <string name="pref_timelapse_end_m3">pref-timelapse-end-m3</string>
-    <string name="pref_timelapse_end_m4">pref-timelapse-end-m4</string>
+    <string name="pref_timelapse_pos2_enabled">pref-timelapse-pos2-enabled</string>
+    <string name="pref_timelapse_pos3_enabled">pref-timelapse-pos3-enabled</string>
+    <string name="pref_timelapse_pos1_m1">pref-timelapse-pos1-m1</string>
+    <string name="pref_timelapse_pos1_m2">pref-timelapse-pos1-m2</string>
+    <string name="pref_timelapse_pos1_m3">pref-timelapse-pos1-m3</string>
+    <string name="pref_timelapse_pos1_m4">pref-timelapse-pos1-m4</string>
+    <string name="pref_timelapse_pos2_m1">pref-timelapse-pos2-m1</string>
+    <string name="pref_timelapse_pos2_m2">pref-timelapse-pos2-m2</string>
+    <string name="pref_timelapse_pos2_m3">pref-timelapse-pos2-m3</string>
+    <string name="pref_timelapse_pos2_m4">pref-timelapse-pos2-m4</string>
+    <string name="pref_timelapse_pos3_m1">pref-timelapse-pos3-m1</string>
+    <string name="pref_timelapse_pos3_m2">pref-timelapse-pos3-m2</string>
+    <string name="pref_timelapse_pos3_m3">pref-timelapse-pos3-m3</string>
+    <string name="pref_timelapse_pos3_m4">pref-timelapse-pos3-m4</string>
+    <string name="pref_timelapse_pos4_m1">pref-timelapse-pos4-m1</string>
+    <string name="pref_timelapse_pos4_m2">pref-timelapse-pos4-m2</string>
+    <string name="pref_timelapse_pos4_m3">pref-timelapse-pos4-m3</string>
+    <string name="pref_timelapse_pos4_m4">pref-timelapse-pos4-m4</string>
 </resources>

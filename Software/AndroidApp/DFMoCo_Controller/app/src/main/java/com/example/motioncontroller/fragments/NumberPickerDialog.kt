@@ -21,7 +21,9 @@ enum class NumberPickerType {
     IMAGES,
     INTERVAL,
     EXPOSURE,
-    REST
+    REST,
+    POS2_IMAGES,
+    POS3_IMAGES
 }
 
 public const val TAG_NUMBER_PICKER_DIALOG = "NUMBER_PICKER_DIALOG"

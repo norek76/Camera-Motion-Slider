@@ -6,7 +6,7 @@ interface TimelapseDataMotor {
 }
 
 interface TimelapseData {
-    val images: Int
+    val images: IntArray
     val interval: Int
     val exposureTime: Int
     val restTime: Int

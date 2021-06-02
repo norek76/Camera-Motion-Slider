@@ -8,9 +8,9 @@
 #define USER_CMD_ARGS 40
 struct UserCmd
 {
-    byte command;
-    byte argCount;
-    int32_t args[USER_CMD_ARGS];
+  byte command;
+  byte argCount;
+  int32_t args[USER_CMD_ARGS];
 };
 
 boolean availableSerial();
@@ -203,12 +203,13 @@ char *txBufPtr;
 #define TIMELAPSE_IMAGE 3
 #define TIMELAPSE_MOVE 4
 // Timelapse Errors
-#define TIMELAPSE_ERROR_ARG1_GT_1 10
+#define TIMELAPSE_ERROR_ARG1_GT_0 10
 #define TIMELAPSE_ERROR_ARG2_GT_0 11
-#define TIMELAPSE_ERROR_ARG3_GT_0 12
-#define TIMELAPSE_ERROR_ARG4_GE_0 13
-#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME 14
-#define TIMELAPSE_ERROR_POSITION 15
+#define TIMELAPSE_ERROR_ARG3_GE_0 12
+#define TIMELAPSE_ERROR_ARG4_LT_2 13
+#define TIMELAPSE_ERROR_ARG5_GT_1 14
+#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME 15
+#define TIMELAPSE_ERROR_POSITION 16
 // Panorama Status
 #define PANORAMA_SETUP 0
 #define PANORAMA_RUNNING 1
@@ -230,11 +231,10 @@ char *txBufPtr;
 struct TimelapseMotor
 {
   boolean enable;
-  int32_t steps;
+  int32_t steps[3];
   uint32_t velocity;
   uint32_t acceleration;
-  int32_t startPosition;
-  int32_t endPosition;
+  int32_t positions[4];
   int32_t lastPosition;
 };
 
@@ -242,10 +242,14 @@ struct Timelapse
 {
   TimelapseMotor motors[MOTOR_COUNT];
   uint32_t intervalSeconds;
-  uint32_t imagesCount;
+  uint32_t imagesCount[3];
   uint32_t exposureTimeMillis;
   uint32_t restMoveTime;
-  uint32_t currentImageCounter;
+  uint32_t positionCount;
+  uint32_t currentIteration;
+  uint32_t currentIterationImageCounter;
+  uint32_t totalImageCounter;
+  uint32_t totalImages;
   byte status;
   byte executionStatus;
 };
@@ -408,8 +412,6 @@ public:
 
   boolean serialBluetoothEnabled;
 } dualSerial;
-
-
 
 boolean availableSerial()
 {
@@ -683,14 +685,15 @@ void loop()
 
     if (!sendPositionCounter)
     {
-      sendPositionCounter = 30;
+      sendPositionCounter = 20;
 
       byte i;
       for (i = 0; i < MOTOR_COUNT; i++)
       {
         if (bitRead(motorMoving, i) || bitRead(sendPosition, i))
         {
-          if (cameraMode == CAM_MODE_NONE || bitRead(sendPosition, i)) {
+          if (cameraMode == CAM_MODE_NONE || bitRead(sendPosition, i))
+          {
             sendMessage(MSG_MP, i);
           }
           ramValues[i] = motors[i].position;
@@ -1383,7 +1386,7 @@ void processSerialCommand()
               setupMotorMove(motor, destination);
             }
           }
-          
+
           sendMessage(MSG_JM, motor);
         }
         break;
@@ -1426,7 +1429,7 @@ void processSerialCommand()
         normalStop();
         break;
       case CMD_TL:
-        parseError = (userCmd.argCount < 4 || (userCmd.argCount - 4) % 3 != 0);
+        parseError = (userCmd.argCount < 11);
         if (!parseError && cameraMode == CAM_MODE_NONE)
         {
           setupTimelapse(userCmd);
@@ -1545,9 +1548,9 @@ void sendMessageQueue(byte msg, byte motorIndex)
       dualSerial.print(" ");
       dualSerial.print(timelapseData.executionStatus);
       dualSerial.print(" ");
-      dualSerial.print(timelapseData.currentImageCounter);
+      dualSerial.print(timelapseData.totalImageCounter);
       dualSerial.print(" ");
-      dualSerial.print(timelapseData.imagesCount);
+      dualSerial.print(timelapseData.totalImages);
       dualSerial.print(" ");
       dualSerial.print(timelapseData.intervalSeconds);
       dualSerial.print(" ");
@@ -1969,11 +1972,20 @@ void IRAM_ATTR executeTimelaseMotion(void)
 {
   timelapseData.executionStatus = TIMELAPSE_MOVE;
 
-  if (timelapseData.currentImageCounter >= timelapseData.imagesCount)
+  if (timelapseData.currentIterationImageCounter > timelapseData.imagesCount[timelapseData.currentIteration])
   {
-    timelapseData.status = TIMELAPSE_DONE;
-    resetCameraModeSettings();
-    return;
+    timelapseData.currentIteration++;
+
+    if (timelapseData.currentIteration >= timelapseData.positionCount - 1)
+    {
+      timelapseData.status = TIMELAPSE_DONE;
+      resetCameraModeSettings();
+      return;
+    }
+    else
+    {
+      timelapseData.currentIterationImageCounter = 1;
+    }
   }
 
   for (int i = 0; i < MOTOR_COUNT; i++)
@@ -1981,7 +1993,7 @@ void IRAM_ATTR executeTimelaseMotion(void)
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable)
     {
-      uint32_t newPosition = motor.startPosition + (timelapseData.currentImageCounter * motor.steps);
+      uint32_t newPosition = motor.positions[timelapseData.currentIteration] + (timelapseData.currentIterationImageCounter * motor.steps[timelapseData.currentIteration]);
       timelapseData.motors[i].lastPosition = newPosition;
       processGoPositionNoSend(i, newPosition);
     }
@@ -2002,7 +2014,8 @@ void IRAM_ATTR executeTimelapseImage()
   }
 
   timelapseData.executionStatus = TIMELAPSE_IMAGE;
-  timelapseData.currentImageCounter++;
+  timelapseData.currentIterationImageCounter++;
+  timelapseData.totalImageCounter++;
 
   setCameraShutter(true);
   setCameraFocus(true);
@@ -2023,73 +2036,111 @@ void setupTimelapse(UserCmd userCmd)
   cameraMode = CAM_MODE_TIMELAPSE;
   timelapseData.status = TIMELAPSE_SETUP;
 
-  timelapseData.currentImageCounter = 0;
-  timelapseData.imagesCount = userCmd.args[0];
-  if (timelapseData.imagesCount <= 1)
+  timelapseData.currentIterationImageCounter = 0;
+  timelapseData.totalImageCounter = 0;
+  timelapseData.totalImages = 0;
+  timelapseData.currentIteration = 0;
+  timelapseData.intervalSeconds = userCmd.args[0];
+  if (timelapseData.intervalSeconds <= 0)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG1_GT_1;
+    timelapseData.status = TIMELAPSE_ERROR_ARG1_GT_0;
     return;
   }
-  timelapseData.intervalSeconds = userCmd.args[1];
-  if (timelapseData.intervalSeconds <= 0)
+  timelapseData.exposureTimeMillis = userCmd.args[1];
+  if (timelapseData.exposureTimeMillis <= 0)
   {
     timelapseData.status = TIMELAPSE_ERROR_ARG2_GT_0;
     return;
   }
-  timelapseData.exposureTimeMillis = userCmd.args[2];
-  if (timelapseData.exposureTimeMillis <= 0)
-  {
-    timelapseData.status = TIMELAPSE_ERROR_ARG3_GT_0;
-    return;
-  }
-  timelapseData.restMoveTime = userCmd.args[3];
+  timelapseData.restMoveTime = userCmd.args[2];
   if (timelapseData.restMoveTime < 0)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG4_GE_0;
+    timelapseData.status = TIMELAPSE_ERROR_ARG3_GE_0;
     return;
   }
+  timelapseData.positionCount = userCmd.args[3];
+  if (timelapseData.positionCount < 2)
+  {
+    timelapseData.status = TIMELAPSE_ERROR_ARG4_LT_2;
+    return;
+  }
+
+  timelapseData.totalImages = userCmd.args[3 + timelapseData.positionCount - 1];
+  timelapseData.imagesCount[timelapseData.positionCount - 2] = timelapseData.totalImages;
+
+  for (int i = timelapseData.positionCount - 2; i > 0; i--)
+  {
+    uint32_t imageCount = userCmd.args[3 + i];    
+    if (imageCount <= 1)
+    {
+      timelapseData.status = TIMELAPSE_ERROR_ARG5_GT_1;
+      return;
+    }
+
+    timelapseData.imagesCount[i] = timelapseData.imagesCount[i] - imageCount;
+    timelapseData.imagesCount[i - 1] = imageCount;
+  }
+  
+  timelapseData.imagesCount[0] = timelapseData.imagesCount[0] - 1;
 
   for (int i = 0; i < MOTOR_COUNT; i++)
   {
     timelapseData.motors[i].enable = false;
-    timelapseData.motors[i].steps = 0;
-    timelapseData.motors[i].startPosition = 0;
-    timelapseData.motors[i].endPosition = 0;
-  }
-  for (int j = 4; j < userCmd.argCount && j < (4 + (MOTOR_COUNT * 3)); j += 3)
-  {
-    int32_t motorNumber = userCmd.args[j] - 1;
-    int32_t startPosition = userCmd.args[j + 1];
-    int32_t endPosition = userCmd.args[j + 2];
-    int32_t distance = endPosition - startPosition;
-    int32_t steps = abs(distance) / (timelapseData.imagesCount - 1);
-    if (distance < 0)
+    for (int j = 0; j < timelapseData.positionCount; j++)
     {
-      steps = -1 * steps;
+      timelapseData.motors[i].positions[j] = 0;
+      if (j < (timelapseData.positionCount - 1))
+      {
+        timelapseData.motors[i].steps[j] = 0;
+      }
     }
-    int32_t newEndPosition = startPosition + ((timelapseData.imagesCount - 1) * steps);
+  }
+
+  for (int i = 3 + timelapseData.positionCount; i < userCmd.argCount; i += (1 + timelapseData.positionCount))
+  {
+    int32_t motorNumber = userCmd.args[i] - 1;
     timelapseData.motors[motorNumber].enable = true;
-    timelapseData.motors[motorNumber].steps = steps;
-    timelapseData.motors[motorNumber].lastPosition = startPosition;
-    timelapseData.motors[motorNumber].startPosition = startPosition;
-    timelapseData.motors[motorNumber].endPosition = newEndPosition;
+
+    int32_t positions[timelapseData.positionCount];
+    for (int j = 0; j < timelapseData.positionCount; j++)
+    {
+      positions[j] = userCmd.args[i + 1 + j];
+      if (j > 0)
+      {
+        int32_t distance = positions[j] - positions[j - 1];
+        int32_t steps = abs(distance) / (timelapseData.imagesCount[j - 1]);
+        if (distance < 0)
+        {
+          steps = -1 * steps;
+        }
+        int32_t newEndPosition = positions[j - 1] + ((timelapseData.imagesCount[j - 1]) * steps);
+        positions[j] = newEndPosition;
+        timelapseData.motors[motorNumber].steps[j - 1] = steps;
+      }
+
+      timelapseData.motors[motorNumber].positions[j] = positions[j];
+    }
+
+    timelapseData.motors[motorNumber].lastPosition = positions[0];
 
     Motor *motor = &motors[motorNumber];
-
-    float moveTime = 0.0f;
-    calculatePointToPoint(motorNumber, motor->position + steps);
-    for (int k = 0; k < P2P_MOVE_COUNT; k++)
+    for (int j = 0; j < timelapseData.positionCount - 1; j++)
     {
-      if (motor->moveTime[k] == 0)
-        break;
+      float moveTime = 0.0f;
+      calculatePointToPoint(motorNumber, motor->position + timelapseData.motors[motorNumber].steps[j]);
+      for (int k = 0; k < P2P_MOVE_COUNT; k++)
+      {
+        if (motor->moveTime[k] == 0)
+          break;
 
-      moveTime += motor->moveTime[k];
-    }
+        moveTime += motor->moveTime[k];
+      }
 
-    if ((timelapseData.exposureTimeMillis + (1.07 * 1000 * moveTime) + timelapseData.restMoveTime) > (timelapseData.intervalSeconds * 1000))
-    {
-      timelapseData.status = TIMELAPSE_ERROR_MOVE_SHOOT_TIME;
-      return;
+      if ((timelapseData.exposureTimeMillis + (1.07 * 1000 * moveTime) + timelapseData.restMoveTime) > (timelapseData.intervalSeconds * 1000))
+      {
+        timelapseData.status = TIMELAPSE_ERROR_MOVE_SHOOT_TIME;
+        return;
+      }
     }
   }
 
@@ -2102,7 +2153,7 @@ void setupTimelapse(UserCmd userCmd)
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable)
     {
-      processGoPositionNoSend(i, motor.startPosition);
+      processGoPositionNoSend(i, motor.positions[0]);
     }
   }
 }
