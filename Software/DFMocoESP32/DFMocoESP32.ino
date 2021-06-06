@@ -2007,13 +2007,6 @@ void IRAM_ATTR executeTimelaseMotion(void)
     if (motor.enable)
     {
       int32_t newPosition = motor.positions[timelapseData.currentIteration] + getNewTimelapsePosition(i, timelapseData.currentIteration, timelapseData.currentIterationImageCounter);
-      if (i == 0)
-      {
-        Serial.print("NewPosition: ");
-        Serial.println(newPosition);
-        Serial.print("Diff: ");
-        Serial.println(newPosition - timelapseData.motors[i].lastPosition);
-      }
       timelapseData.motors[i].lastPosition = newPosition;
       processGoPositionNoSend(i, newPosition);
     }
@@ -2196,31 +2189,6 @@ void setupTimelapse(UserCmd userCmd)
       timelapseData.motors[motorNumber].v1[j - 1] = v1;
 
       int32_t newEndPosition = positions[j - 1] + getNewTimelapsePosition(motorNumber, j - 1, iterations);
-      if (motorNumber == 0)
-      {
-        Serial.print("sGes: ");
-        Serial.print(sGes);
-        Serial.print("iterations: ");
-        Serial.print(iterations);
-        Serial.print("t0: ");
-        Serial.print(t0);
-        Serial.print("t1: ");
-        Serial.print(t1);
-        Serial.print("t2: ");
-        Serial.print(t2);
-        Serial.print("t3: ");
-        Serial.print(t3);
-        Serial.print("v0: ");
-        Serial.print(v0);
-        Serial.print("v1: ");
-        Serial.print(v1);
-        Serial.print("a1: ");
-        Serial.print(a1);
-        Serial.print("a2: ");
-        Serial.print(a2);
-        Serial.print("newEndPosition: ");
-        Serial.println(newEndPosition);
-      }
       positions[j] = newEndPosition;
       timelapseData.motors[motorNumber].positions[j] = positions[j];
     }
@@ -2258,11 +2226,6 @@ void setupTimelapse(UserCmd userCmd)
     if (motor.enable)
     {
       int32_t newPosition = motor.positions[0] + getNewTimelapsePosition(i, timelapseData.currentIteration, timelapseData.currentIterationImageCounter);
-      if (i == 0)
-      {
-        Serial.print("NewPosition: ");
-        Serial.println(newPosition);
-      }
       processGoPositionNoSend(i, newPosition);
     }
   }
