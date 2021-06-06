@@ -48,6 +48,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
     private var timelapseInterval: Int = 0
     private var timelapseExposure: Int = 0
     private var timelapseRest: Int = 0
+    private var timelapseRamp: Int = 0
     private var timelapseEnabledPositions: IntArray = intArrayOf(1,0,0,1)
     private var timelapsePosition: Array<IntArray> = Array(4) { IntArray(4) { 0 } }
 
@@ -127,6 +128,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
         timelapseInterval = sharedPref.getInt(getString(R.string.pref_timelapse_interval), 8)
         timelapseExposure = sharedPref.getInt(getString(R.string.pref_timelapse_exposure), 4000)
         timelapseRest = sharedPref.getInt(getString(R.string.pref_timelapse_rest), 500)
+        timelapseRamp = sharedPref.getInt(getString(R.string.pref_timelapse_ramp), 10)
 
         timelapsePosition[0][0] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m1), 0)
         timelapsePosition[0][1] = sharedPref.getInt(getString(R.string.pref_timelapse_pos1_m2), 0)
@@ -152,7 +154,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
 
         updateTimelapseUI()
 
-        iv_timelapse_images.setOnClickListener {
+        val imagesClick = View.OnClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
                 val newFragment = NumberPickerDialog(
                     _title = "Images",
@@ -165,8 +167,10 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                 newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
             }
         }
+        iv_timelapse_images.setOnClickListener(imagesClick)
+        tv_timelapse_images.setOnClickListener(imagesClick)
 
-        iv_timelapse_interval.setOnClickListener {
+        val intervalClick = View.OnClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
                 val newFragment = NumberPickerDialog(
                     _title = "Interval",
@@ -179,8 +183,10 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                 newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
             }
         }
+        iv_timelapse_interval.setOnClickListener(intervalClick)
+        tv_timelapse_interval.setOnClickListener(intervalClick)
 
-        iv_timelapse_exposure.setOnClickListener {
+        val exposureClick = View.OnClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
                 val newFragment = NumberPickerDialog(
                     _title = "Exposure",
@@ -193,8 +199,10 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                 newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
             }
         }
+        iv_timelapse_exposure.setOnClickListener(exposureClick)
+        tv_timelapse_exposure.setOnClickListener(exposureClick)
 
-        iv_timelapse_rest.setOnClickListener {
+        val restClick = View.OnClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
                 val newFragment = NumberPickerDialog(
                     _title = "Exposure",
@@ -207,6 +215,24 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                 newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
             }
         }
+        iv_timelapse_rest.setOnClickListener(restClick)
+        tv_timelapse_rest.setOnClickListener(restClick)
+
+        val rampClick = View.OnClickListener {
+            if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE) {
+                val newFragment = NumberPickerDialog(
+                    _title = "Ramp",
+                    _subtitle = "Choose the ramp for the timelapse moves between 0 and 40",
+                    _numberPickerType = NumberPickerType.RAMP,
+                    _initValue = timelapseRamp,
+                    _digits = 2,
+                    _info = "%"
+                )
+                newFragment.show(supportFragmentManager, TAG_NUMBER_PICKER_DIALOG)
+            }
+        }
+        iv_timelapse_ramp.setOnClickListener(rampClick)
+        tv_timelapse_ramp.setOnClickListener(rampClick)
 
         tv_timelapse_pos2_images.setOnClickListener {
             if (mBound && mService.customMode == MotionControllerCustomMode.NO_CUSTOM_MODE && timelapseEnabledPositions[1] == 1) {
@@ -401,6 +427,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                     override val interval: Int = timelapseInterval
                     override val exposureTime: Int = timelapseExposure
                     override val restTime: Int = timelapseRest
+                    override val ramp: Int = timelapseRamp
                     override val motorData: Array<TimelapseDataMotor> = Array(mService.motorCount) { motorNumberIt ->
                         object : TimelapseDataMotor {
                             override val motorNumber: Int = motorNumberIt + 1
@@ -503,6 +530,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
         tv_timelapse_interval.text = "${timelapseInterval}s"
         tv_timelapse_exposure.text = "${timelapseExposure}ms"
         tv_timelapse_rest.text = "${timelapseRest}ms"
+        tv_timelapse_ramp.text = "${timelapseRamp}%"
 
         tv_timelapse_duration.text = (timelapseImagesTotal * timelapseInterval).seconds.toString()
         tv_timelapse_duration.text = "${formatDuration((timelapseImagesTotal * timelapseInterval).seconds)}"
@@ -595,6 +623,9 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
             NumberPickerType.REST -> {
                 timelapseRest = value
             }
+            NumberPickerType.RAMP -> {
+                timelapseRamp = if (value > 40) 40 else value
+            }
             NumberPickerType.POS2_IMAGES -> {
                 timelapseImagesPos2 = value
             }
@@ -686,6 +717,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                 sharedPref.putInt(getString(R.string.pref_timelapse_interval), timelapseInterval)
                 sharedPref.putInt(getString(R.string.pref_timelapse_exposure), timelapseExposure)
                 sharedPref.putInt(getString(R.string.pref_timelapse_rest), timelapseRest)
+                sharedPref.putInt(getString(R.string.pref_timelapse_ramp), timelapseRamp)
                 sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m1), timelapsePosition[0][0])
                 sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m2), timelapsePosition[0][1])
                 sharedPref.putInt(getString(R.string.pref_timelapse_pos1_m3), timelapsePosition[0][2])
@@ -855,6 +887,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                                 tv_timelapse_interval.setTextColor(ContextCompat.getColor(context, R.color.black));
                                 tv_timelapse_exposure.setTextColor(ContextCompat.getColor(context, R.color.black));
                                 tv_timelapse_rest.setTextColor(ContextCompat.getColor(context, R.color.black));
+                                tv_timelapse_ramp.setTextColor(ContextCompat.getColor(context, R.color.black));
                             }
                         }
                     }
@@ -872,7 +905,10 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                                 timelapseExposure = timelapseStatus.exposure
                             }
                             if (timelapseStatus.rest != -1) {
-                                timelapseRest
+                                timelapseRest = timelapseStatus.rest
+                            }
+                            if (timelapseStatus.rest != -1) {
+                                timelapseRamp = timelapseStatus.ramp
                             }
 
                             when (timelapseStatus.status) {
@@ -924,6 +960,18 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                                     tv_timelapse_info.text =
                                         getString(R.string.timelapse_status_error_16)
                                 }
+                                17 -> {
+                                    tv_timelapse_info.text =
+                                        getString(R.string.timelapse_status_error_17)
+                                }
+                                18 -> {
+                                    tv_timelapse_info.text =
+                                        getString(R.string.timelapse_status_error_18)
+                                }
+                                19 -> {
+                                    tv_timelapse_info.text =
+                                        getString(R.string.timelapse_status_error_19)
+                                }
                             }
 
                             updateTimelapseUI()
@@ -944,6 +992,7 @@ class CustomMode : AppCompatActivity(), IPickedNumber {
                             tv_timelapse_interval.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                             tv_timelapse_exposure.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                             tv_timelapse_rest.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
+                            tv_timelapse_ramp.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                         }
                     }
                 }

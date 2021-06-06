@@ -32,7 +32,7 @@ cr --> Reset camera mode
 ```
 
 ## Timelapse
-Shoot a standalone timelapse, after the setup you can disconnect the phone.
+Shoot a standalone timelapse, after the setup you can disconnect the phone. // TODO UPDATE!
 ```
 tl [imageCount] [intervalSeconds] [exposureTimeMilliSeconds] [motionRestTimeMilliSeconds] [[motorNumber] [startPosition] [endPosition]]*
 ```
@@ -53,6 +53,7 @@ pa 1 12 200 2 12 400 1000 5000
 ```
 
 ## Version History
+- Version 1.6.0 Timelapse Multi Position with Ramping
 - Version 1.5.2 Add standalone panorama mode
 - Version 1.5.1 Add standalone timelapse mode
 - Version 1.5.0 Add Camera Focus / Shutter

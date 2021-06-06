@@ -294,7 +294,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textView15"
@@ -311,17 +311,18 @@
                     android:id="@+id/textView28"
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/intervalTime"
                     android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="@+id/textView15"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_timelapse_images" />
 
                 <TextView
                     android:id="@+id/tv_timelapse_pos_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/timelapse_p_1"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -358,14 +359,13 @@
                     android:id="@+id/tv_timelapse_pos_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:text="@string/timelapse_p_4"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_constraintEnd_toStartOf="@+id/iv_timelapse_pos4_goto"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/tv_timelapse_pos4_m1"
-                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_timelapse_pos_1" />
 
                 <ImageView
                     android:id="@+id/iv_timelapse_pos1_goto"
@@ -961,10 +961,21 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    app:layout_constraintEnd_toEndOf="@+id/textView7"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/textView7"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_timelapse_rest" />
+
+                <TextView
+                    android:id="@+id/tv_timelapse_ramp"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     app:layout_constraintEnd_toEndOf="@+id/textView30"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/textView30"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_timelapse_rest" />
+                    app:layout_constraintTop_toBottomOf="@+id/iv_timelapse_ramp" />
 
                 <TextView
                     android:id="@+id/tv_timelapse_duration"
@@ -1087,10 +1098,24 @@
                     android:scaleType="fitXY"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
+                    app:layout_constraintEnd_toEndOf="@+id/textView7"
+                    app:layout_constraintStart_toStartOf="@+id/textView7"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7"
+                    app:srcCompat="@drawable/ic_rest" />
+
+                <ImageView
+                    android:id="@+id/iv_timelapse_ramp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     app:layout_constraintEnd_toEndOf="@+id/textView30"
                     app:layout_constraintStart_toStartOf="@+id/textView30"
-                    app:layout_constraintTop_toBottomOf="@+id/textView30"
-                    app:srcCompat="@drawable/ic_rest" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView7"
+                    app:srcCompat="@drawable/ic_ramp" />
 
                 <TextView
                     android:id="@+id/textView29"
@@ -1098,17 +1123,29 @@
                     android:layout_height="wrap_content"
                     android:text="@string/exposureTime"
                     android:textAlignment="center"
-                    app:layout_constraintEnd_toStartOf="@+id/textView30"
+                    app:layout_constraintEnd_toStartOf="@+id/textView7"
                     app:layout_constraintStart_toEndOf="@+id/textView28"
+                    app:layout_constraintTop_toTopOf="@+id/textView28" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/restTime"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toStartOf="@+id/textView30"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/textView29"
                     app:layout_constraintTop_toTopOf="@+id/textView28" />
 
                 <TextView
                     android:id="@+id/textView30"
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/restTime"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/stepRamp"
                     android:textAlignment="center"
-                    app:layout_constraintEnd_toEndOf="@+id/textView17"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/textView28" />
 
                 <Button
@@ -1116,7 +1153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider4" />
@@ -1143,7 +1180,7 @@
                     android:id="@+id/divider"
                     android:layout_width="409dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1163,7 +1200,7 @@
                     android:id="@+id/divider4"
                     android:layout_width="409dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
