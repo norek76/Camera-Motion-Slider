@@ -33,6 +33,7 @@
     <string name="intervalTime">Interval</string>
     <string name="exposureTime">Exposure</string>
     <string name="restTime">Rest</string>
+    <string name="stepRamp">Step-Ramp</string>
     <string name="end">End</string>
     <string name="timelapse_status_setup">Setup</string>
     <string name="timelapse_status_running">Running</string>
@@ -47,8 +48,11 @@
     <string name="timelapse_status_error_12">Error: Rest must be greater than 0.</string>
     <string name="timelapse_status_error_13">Error: Positions must be more than 1.</string>
     <string name="timelapse_status_error_14">Error: Images must be greater than 1.</string>
-    <string name="timelapse_status_error_15">Error: Interval to small for the selected movement.</string>
-    <string name="timelapse_status_error_16">Error: Position not reached in interval time</string>
+    <string name="timelapse_status_error_15">Error: Images count must be in a row.</string>
+    <string name="timelapse_status_error_16">Error: Ramping must be between 0 and 49.</string>
+    <string name="timelapse_status_error_17">Error: Position Ramping not possible, increase the position range.</string>
+    <string name="timelapse_status_error_18">Error: Interval to small for the selected movement.</string>
+    <string name="timelapse_status_error_19">Error: Position not reached in interval time</string>
 
     <string name="panorama_mode">Panorama Mode</string>
 
@@ -59,6 +63,7 @@
     <string name="pref_timelapse_interval">pref-timelapse-interval</string>
     <string name="pref_timelapse_exposure">pref-timelapse-exposure</string>
     <string name="pref_timelapse_rest">pref-timelapse-rest</string>
+    <string name="pref_timelapse_ramp">pref-timelapse-ramp</string>
     <string name="pref_timelapse_pos2_enabled">pref-timelapse-pos2-enabled</string>
     <string name="pref_timelapse_pos3_enabled">pref-timelapse-pos3-enabled</string>
     <string name="pref_timelapse_pos1_m1">pref-timelapse-pos1-m1</string>

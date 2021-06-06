@@ -3,7 +3,7 @@
 #include <BluetoothSerial.h>
 
 #define DFMOCO_VERSION 1
-#define DFMOCO_VERSION_STRING "1.5.2"
+#define DFMOCO_VERSION_STRING "1.6.0"
 
 #define USER_CMD_ARGS 40
 struct UserCmd
@@ -203,13 +203,16 @@ char *txBufPtr;
 #define TIMELAPSE_IMAGE 3
 #define TIMELAPSE_MOVE 4
 // Timelapse Errors
-#define TIMELAPSE_ERROR_ARG1_GT_0 10
-#define TIMELAPSE_ERROR_ARG2_GT_0 11
-#define TIMELAPSE_ERROR_ARG3_GE_0 12
-#define TIMELAPSE_ERROR_ARG4_LT_2 13
-#define TIMELAPSE_ERROR_ARG5_GT_1 14
-#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME 15
-#define TIMELAPSE_ERROR_POSITION 16
+#define TIMELAPSE_ERROR_INTERVAL_LT_1 10
+#define TIMELAPSE_ERROR_EXPOSURE_LT_1 11
+#define TIMELAPSE_ERROR_REST_LT_0 12
+#define TIMELAPSE_ERROR_POSITION_COUNT_BETWEEN_2_4 13
+#define TIMELAPSE_ERROR_IMAGES_LE_1 14
+#define TIMELAPSE_ERROR_IMAGES_NOT_IN_ROW 15
+#define TIMELAPSE_ERROR_RAMP_BETWEEN_0_40 16
+#define TIMELAPSE_ERROR_ACC_RAMP 17
+#define TIMELAPSE_ERROR_MOVE_SHOOT_TIME 18
+#define TIMELAPSE_ERROR_POSITION 19
 // Panorama Status
 #define PANORAMA_SETUP 0
 #define PANORAMA_RUNNING 1
@@ -228,13 +231,20 @@ char *txBufPtr;
 #define PANORAMA_ERROR_EXP_LT_50 13
 #define PANORAMA_ERROR_RST_LT_1 14
 
+#define MAX_POSITION_COUNT 4
+#define MAX_ITERATION_COUNT MAX_POSITION_COUNT - 1
+
 struct TimelapseMotor
 {
   boolean enable;
-  int32_t steps[3];
+  int32_t time[MAX_ITERATION_COUNT][4];
+  double acc[MAX_ITERATION_COUNT];
+  double dec[MAX_ITERATION_COUNT];
+  double v0[MAX_ITERATION_COUNT];
+  double v1[MAX_ITERATION_COUNT];
   uint32_t velocity;
   uint32_t acceleration;
-  int32_t positions[4];
+  int32_t positions[MAX_POSITION_COUNT];
   int32_t lastPosition;
 };
 
@@ -245,6 +255,7 @@ struct Timelapse
   uint32_t imagesCount[3];
   uint32_t exposureTimeMillis;
   uint32_t restMoveTime;
+  uint32_t ramp;
   uint32_t positionCount;
   uint32_t currentIteration;
   uint32_t currentIterationImageCounter;
@@ -549,7 +560,7 @@ void setup()
   // setup serial connection
   SERIAL_DEVICE.begin(57600);
 
-  messageQueue = xQueueCreate(100, sizeof(word));
+  messageQueue = xQueueCreate(200, sizeof(word));
   if (messageQueue == NULL)
   {
     Serial.println("Error creating the queue");
@@ -656,7 +667,7 @@ void loop()
   {
     unsigned int element;
     messageCounter++;
-    if (messageCounter % 5 == 0 && xQueueReceive(messageQueue, &element, 0) == pdTRUE)
+    if (messageCounter % 3 == 0 && xQueueReceive(messageQueue, &element, 0) == pdTRUE)
     {
       sendMessageQueue(highByte(element), lowByte(element));
     }
@@ -1557,6 +1568,8 @@ void sendMessageQueue(byte msg, byte motorIndex)
       dualSerial.print(timelapseData.exposureTimeMillis);
       dualSerial.print(" ");
       dualSerial.print(timelapseData.restMoveTime);
+      dualSerial.print(" ");
+      dualSerial.print(timelapseData.ramp);
       break;
     case CAM_MODE_PANORAMA:
       dualSerial.print(" ");
@@ -1993,7 +2006,14 @@ void IRAM_ATTR executeTimelaseMotion(void)
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable)
     {
-      uint32_t newPosition = motor.positions[timelapseData.currentIteration] + (timelapseData.currentIterationImageCounter * motor.steps[timelapseData.currentIteration]);
+      int32_t newPosition = motor.positions[timelapseData.currentIteration] + getNewTimelapsePosition(i, timelapseData.currentIteration, timelapseData.currentIterationImageCounter);
+      if (i == 0)
+      {
+        Serial.print("NewPosition: ");
+        Serial.println(newPosition);
+        Serial.print("Diff: ");
+        Serial.println(newPosition - timelapseData.motors[i].lastPosition);
+      }
       timelapseData.motors[i].lastPosition = newPosition;
       processGoPositionNoSend(i, newPosition);
     }
@@ -2041,46 +2061,62 @@ void setupTimelapse(UserCmd userCmd)
   timelapseData.totalImages = 0;
   timelapseData.currentIteration = 0;
   timelapseData.intervalSeconds = userCmd.args[0];
-  if (timelapseData.intervalSeconds <= 0)
+  if (timelapseData.intervalSeconds < 1)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG1_GT_0;
+    timelapseData.status = TIMELAPSE_ERROR_INTERVAL_LT_1;
     return;
   }
   timelapseData.exposureTimeMillis = userCmd.args[1];
-  if (timelapseData.exposureTimeMillis <= 0)
+  if (timelapseData.exposureTimeMillis < 1)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG2_GT_0;
+    timelapseData.status = TIMELAPSE_ERROR_EXPOSURE_LT_1;
     return;
   }
   timelapseData.restMoveTime = userCmd.args[2];
   if (timelapseData.restMoveTime < 0)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG3_GE_0;
+    timelapseData.status = TIMELAPSE_ERROR_REST_LT_0;
     return;
   }
-  timelapseData.positionCount = userCmd.args[3];
-  if (timelapseData.positionCount < 2)
+  timelapseData.ramp = userCmd.args[3];
+  if (timelapseData.ramp < 0 || timelapseData.ramp > 40)
   {
-    timelapseData.status = TIMELAPSE_ERROR_ARG4_LT_2;
+    timelapseData.status = TIMELAPSE_ERROR_RAMP_BETWEEN_0_40;
+    return;
+  }
+  timelapseData.positionCount = userCmd.args[4];
+  if (timelapseData.positionCount < 2 || timelapseData.positionCount > 4)
+  {
+    timelapseData.status = TIMELAPSE_ERROR_POSITION_COUNT_BETWEEN_2_4;
     return;
   }
 
-  timelapseData.totalImages = userCmd.args[3 + timelapseData.positionCount - 1];
+  timelapseData.totalImages = userCmd.args[4 + timelapseData.positionCount - 1];
+  if (timelapseData.totalImages <= 1)
+  {
+    timelapseData.status = TIMELAPSE_ERROR_IMAGES_LE_1;
+    return;
+  }
   timelapseData.imagesCount[timelapseData.positionCount - 2] = timelapseData.totalImages;
 
   for (int i = timelapseData.positionCount - 2; i > 0; i--)
   {
-    uint32_t imageCount = userCmd.args[3 + i];    
+    uint32_t imageCount = userCmd.args[4 + i];
     if (imageCount <= 1)
     {
-      timelapseData.status = TIMELAPSE_ERROR_ARG5_GT_1;
+      timelapseData.status = TIMELAPSE_ERROR_IMAGES_LE_1;
+      return;
+    }
+    if (timelapseData.imagesCount[i] < imageCount)
+    {
+      timelapseData.status = TIMELAPSE_ERROR_IMAGES_NOT_IN_ROW;
       return;
     }
 
     timelapseData.imagesCount[i] = timelapseData.imagesCount[i] - imageCount;
     timelapseData.imagesCount[i - 1] = imageCount;
   }
-  
+
   timelapseData.imagesCount[0] = timelapseData.imagesCount[0] - 1;
 
   for (int i = 0; i < MOTOR_COUNT; i++)
@@ -2089,14 +2125,10 @@ void setupTimelapse(UserCmd userCmd)
     for (int j = 0; j < timelapseData.positionCount; j++)
     {
       timelapseData.motors[i].positions[j] = 0;
-      if (j < (timelapseData.positionCount - 1))
-      {
-        timelapseData.motors[i].steps[j] = 0;
-      }
     }
   }
 
-  for (int i = 3 + timelapseData.positionCount; i < userCmd.argCount; i += (1 + timelapseData.positionCount))
+  for (int i = 4 + timelapseData.positionCount; i < userCmd.argCount; i += (1 + timelapseData.positionCount))
   {
     int32_t motorNumber = userCmd.args[i] - 1;
     timelapseData.motors[motorNumber].enable = true;
@@ -2105,19 +2137,91 @@ void setupTimelapse(UserCmd userCmd)
     for (int j = 0; j < timelapseData.positionCount; j++)
     {
       positions[j] = userCmd.args[i + 1 + j];
-      if (j > 0)
+    }
+
+    for (int j = 1; j < timelapseData.positionCount; j++)
+    {
+      int32_t sGes = positions[j] - positions[j - 1];
+      double ramp1 = (double)timelapseData.ramp * 0.01;
+      double ramp2 = 0;
+      if (j == timelapseData.positionCount - 1)
       {
-        int32_t distance = positions[j] - positions[j - 1];
-        int32_t steps = abs(distance) / (timelapseData.imagesCount[j - 1]);
-        if (distance < 0)
+        ramp2 = (double)timelapseData.ramp * 0.01;
+      }
+      else
+      {
+        int32_t sGesNext = positions[j + 1] - positions[j];
+        if ((sGes > 0 && sGesNext < 0) || (sGes < 0 && sGesNext > 0))
         {
-          steps = -1 * steps;
+          ramp2 = (double)timelapseData.ramp * 0.01;
         }
-        int32_t newEndPosition = positions[j - 1] + ((timelapseData.imagesCount[j - 1]) * steps);
-        positions[j] = newEndPosition;
-        timelapseData.motors[motorNumber].steps[j - 1] = steps;
+      }
+      int32_t v0 = 0;
+      if (j > 1 && (((sGes > 0) && timelapseData.motors[motorNumber].v1[j - 2] > 0) || ((sGes < 0) && timelapseData.motors[motorNumber].v1[j - 2] < 0)))
+      {
+        v0 = timelapseData.motors[motorNumber].v1[j - 2];
+      }
+      int32_t v2 = 0;
+      int32_t iterations = timelapseData.imagesCount[j - 1];
+      int32_t t0 = 0;
+      int32_t t1 = (int32_t)(round((double)(iterations - t0) * ramp1));
+      int32_t t3 = iterations;
+      int32_t t2 = iterations - (int32_t)(round((iterations - t0) * ramp2));
+      double v1 = (2 * sGes - (v0 * t1) + (v0 * t0) - (v2 * t3) + (v2 * t2)) / (t2 + t3 - t0 - t1);
+      if ((sGes > 0 && v1 < 0) || (sGes < 0 && v1 > 0))
+      {
+        timelapseData.status = TIMELAPSE_ERROR_ACC_RAMP;
+        return;
+      }
+      double a1 = 0;
+      double a2 = 0;
+      int32_t deltaT1 = t1 - t0;
+      int32_t deltaT3 = t3 - t2;
+      if (deltaT1 > 0)
+      {
+        a1 = (v1 - v0) / deltaT1;
+      }
+      if (deltaT3 > 0)
+      {
+        a2 = (v2 - v1) / deltaT3;
       }
 
+      timelapseData.motors[motorNumber].time[j - 1][0] = t0;
+      timelapseData.motors[motorNumber].time[j - 1][1] = t1;
+      timelapseData.motors[motorNumber].time[j - 1][2] = t2;
+      timelapseData.motors[motorNumber].time[j - 1][3] = t3;
+      timelapseData.motors[motorNumber].acc[j - 1] = a1;
+      timelapseData.motors[motorNumber].dec[j - 1] = a2;
+      timelapseData.motors[motorNumber].v0[j - 1] = v0;
+      timelapseData.motors[motorNumber].v1[j - 1] = v1;
+
+      int32_t newEndPosition = positions[j - 1] + getNewTimelapsePosition(motorNumber, j - 1, iterations);
+      if (motorNumber == 0)
+      {
+        Serial.print("sGes: ");
+        Serial.print(sGes);
+        Serial.print("iterations: ");
+        Serial.print(iterations);
+        Serial.print("t0: ");
+        Serial.print(t0);
+        Serial.print("t1: ");
+        Serial.print(t1);
+        Serial.print("t2: ");
+        Serial.print(t2);
+        Serial.print("t3: ");
+        Serial.print(t3);
+        Serial.print("v0: ");
+        Serial.print(v0);
+        Serial.print("v1: ");
+        Serial.print(v1);
+        Serial.print("a1: ");
+        Serial.print(a1);
+        Serial.print("a2: ");
+        Serial.print(a2);
+        Serial.print("newEndPosition: ");
+        Serial.println(newEndPosition);
+      }
+      positions[j] = newEndPosition;
       timelapseData.motors[motorNumber].positions[j] = positions[j];
     }
 
@@ -2127,7 +2231,7 @@ void setupTimelapse(UserCmd userCmd)
     for (int j = 0; j < timelapseData.positionCount - 1; j++)
     {
       float moveTime = 0.0f;
-      calculatePointToPoint(motorNumber, motor->position + timelapseData.motors[motorNumber].steps[j]);
+      calculatePointToPoint(motorNumber, motor->position + (int32_t)(round(timelapseData.motors[motorNumber].v1[j - 1])));
       for (int k = 0; k < P2P_MOVE_COUNT; k++)
       {
         if (motor->moveTime[k] == 0)
@@ -2153,9 +2257,39 @@ void setupTimelapse(UserCmd userCmd)
     TimelapseMotor motor = timelapseData.motors[i];
     if (motor.enable)
     {
-      processGoPositionNoSend(i, motor.positions[0]);
+      int32_t newPosition = motor.positions[0] + getNewTimelapsePosition(i, timelapseData.currentIteration, timelapseData.currentIterationImageCounter);
+      if (i == 0)
+      {
+        Serial.print("NewPosition: ");
+        Serial.println(newPosition);
+      }
+      processGoPositionNoSend(i, newPosition);
     }
   }
+}
+
+int32_t getNewTimelapsePosition(int motorNumber, int32_t it, int32_t itImage)
+{
+  int32_t t1 = timelapseData.motors[motorNumber].time[it][1];
+  if (itImage < t1)
+    t1 = itImage;
+  double s0 = 0.5 * timelapseData.motors[motorNumber].acc[it] * pow(t1, 2) + timelapseData.motors[motorNumber].v0[it] * t1;
+  if (itImage <= t1)
+    return (int32_t)(round(s0));
+
+  int32_t t2 = timelapseData.motors[motorNumber].time[it][2];
+  if (itImage < t2)
+    t2 = itImage;
+  double s1 = timelapseData.motors[motorNumber].v1[it] * (t2 - t1);
+  if (itImage <= t2)
+    return (int32_t)(round(s0 + s1));
+
+  int32_t t3 = timelapseData.motors[motorNumber].time[it][3];
+  if (itImage < t3)
+    t3 = itImage;
+  double s2 = 0.5 * timelapseData.motors[motorNumber].dec[it] * pow((t3 - t2), 2) + timelapseData.motors[motorNumber].v1[it] * (t3 - t2);
+
+  return (int32_t)(round(s0 + s1 + s2));
 }
 
 void processTimelapse()

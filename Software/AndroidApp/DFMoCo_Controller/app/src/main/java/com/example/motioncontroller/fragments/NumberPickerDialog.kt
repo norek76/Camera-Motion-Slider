@@ -22,6 +22,7 @@ enum class NumberPickerType {
     INTERVAL,
     EXPOSURE,
     REST,
+    RAMP,
     POS2_IMAGES,
     POS3_IMAGES
 }
